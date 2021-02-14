@@ -4,25 +4,31 @@
 
 using namespace std;
 
- TEST(ArrayTest, vector) {
-  auto str = NcString::allocWithCString("hello world");
+TEST(ArrayTest, vector) {
 
-  // cast to base
-  sp<NcObject> base = str;
+  sp<NcString> perm;
 
-  // cast to derived
-  str = static_pointer_cast<NcString>(base);
+  {
+    auto str = NcString::allocWithCString("hello world");
 
-  MyArrayRef<NcString> v = MyArray<NcString>::alloc();
-  v->addObject(str);
-  v->addObject(str);
+    auto v = NcArrayRef<NcString>::alloc();
+    v->addObject(str);
+    v->addObject(str);
 
-  auto pieces = str->split(" ");
-  ASSERT_EQ(pieces.size(), 2);
-  for (auto s : pieces) {
-    v->addObject(NcString::allocWithSlice(s));
+    auto pieces = str->split(" ");
+    ASSERT_EQ(pieces.size(), 2);
+    for (auto s : pieces) {
+      v->addObject(NcString::allocWithSlice(s));
+    }
+
+    EXPECT_STREQ(v[0]->cstr(), "hello world");
+    EXPECT_STREQ(v[1]->cstr(), "hello world");
+    EXPECT_STREQ(v[2]->cstr(), "hello");
+    EXPECT_STREQ(v[3]->cstr(), "world");
+
+    perm = v[0];
+    EXPECT_EQ(perm.use_count(), 4);
   }
 
-  EXPECT_STREQ(v[2]->cstr(), "hello");
-  EXPECT_STREQ(v[3]->cstr(), "world");
+  EXPECT_EQ(perm.use_count(), 1);
 }

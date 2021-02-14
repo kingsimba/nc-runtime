@@ -3,9 +3,9 @@
 #include "basic_types.h"
 
 template <typename T>
-class MyArray : public NcObject {
+class NcArray : public NcObject {
 public:
-  static sp<MyArray<T>> alloc() { return make_shared<MyArray<T>>(); }
+  static sp<NcArray<T>> alloc() { return make_shared<NcArray<T>>(); }
 
   void addObject(sp<T> obj) { this->array_.push_back(obj); }
   sp<T> objectAtIndex(int i) { return this->array_[i]; }
@@ -18,13 +18,14 @@ private:
 };
 
 template <typename T>
-class MyArrayRef {
+class NcArrayRef {
 public:
-  MyArrayRef(sp<MyArray<T>> arr) : array_(arr) {}
+  static NcArrayRef<T> alloc() { return NcArray<T>::alloc(); }
+  NcArrayRef(sp<NcArray<T>> arr) : array_(arr) {}
   sp<T> operator[](size_t i) { return this->array_->objectAtIndex((int)i); }
 
-  sp<MyArray<T>> operator->() { return array_; }
+  NcArray<T>* operator->() { return array_.get(); }
 
 private:
-  sp<MyArray<T>> array_;
+  sp<NcArray<T>> array_;
 };

@@ -18,7 +18,7 @@ class StringSlice;
  */
 class StringCharIter {
 public:
-  StringCharIter(StringSlice& slice);
+  StringCharIter(const StringSlice& slice);
 
   bool next(wchar32* cOut) { return next(cOut, NULL); }
   bool next(wchar32* cOut, int* consumedBytesOut);
@@ -43,7 +43,7 @@ private:
  */
 class StringSubsliceIter {
 public:
-  StringSubsliceIter(StringSlice& slice, StringSlice& sep);
+  StringSubsliceIter(const StringSlice& slice, const StringSlice& sep);
 
   bool next(StringSlice* slice_out) { return next(slice_out, NULL); }
   bool next(StringSlice* slice_out, Range* rangeOut);
@@ -75,7 +75,7 @@ public:
     m_length = len;
   }
 
-  forceinline void Init(const char* str, int len) {
+  forceinline void init(const char* str, int len) {
     m_str = (char*)str;
     m_length = len;
   }
@@ -83,11 +83,11 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // Accessors
 
-  forceinline const char* bytes() { return m_str; }
-  forceinline int length() { return m_length; }
+  forceinline const char* bytes() const { return m_str; }
+  forceinline int length() const { return m_length; }
 
-  forceinline StringCharIter iter() { return StringCharIter(*this); }
-  forceinline StringSubsliceIter iterBySpliting(StringSlice sep) { return StringSubsliceIter(*this, sep); }
+  forceinline StringCharIter iter() const { return StringCharIter(*this); }
+  forceinline StringSubsliceIter iterBySpliting(StringSlice sep) const { return StringSubsliceIter(*this, sep); }
 
   //////////////////////////////////////////////////////////////////////////
   // Conversions
@@ -139,12 +139,12 @@ protected:
   int m_length;
 };
 
-inline StringCharIter::StringCharIter(StringSlice& slice) {
+inline StringCharIter::StringCharIter(const StringSlice& slice) {
   m_str = slice.bytes();
   m_length = slice.length();
 }
 
-inline StringSubsliceIter::StringSubsliceIter(StringSlice& slice, StringSlice& sep) {
+inline StringSubsliceIter::StringSubsliceIter(const StringSlice& slice, const StringSlice& sep) {
   m_str = m_strBegin = slice.bytes();
   m_strEnd = m_str + slice.length();
   m_sep = sep.bytes();

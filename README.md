@@ -2,16 +2,18 @@
 
 This is a proof-of-concept project. It's used to demonstrate some ideas such as:
 
-1. An efficient `StringSlice` which is way faster than STL string.
-2. Some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
-
-   - Objective-C style lock:
+1. String classes can be created and are both more efficient and intuitive than std::string.
 
    ```cpp
-   synchronized(m_array) {
-
-   }
+   auto s = StringSlice("You should name a 分隔符 variable with the same care 分隔符 as you are "
+                       "naming your first born child.");
+   auto pieces = s.split("分隔符 ");
+   EXPECT_TRUE(pieces[0].equals("You should name a "));
+   EXPECT_TRUE(pieces[1].equals("variable with the same care "));
+   EXPECT_TRUE(pieces[2].equals("as you are naming your first born child."));
    ```
+
+2. Some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
 
    - All objects can be converted into string.
 

@@ -3,7 +3,7 @@ BasedOnStyle: Google
 DerivePointerAlignment: false
 PointerAlignment: Left
 #
-AccessModifierOffset: -1
+AccessModifierOffset: -2
 UseTab: Always
 ColumnLimit: 120
 SortIncludes: false

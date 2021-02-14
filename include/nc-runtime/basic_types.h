@@ -7,6 +7,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 #ifdef _MSC_VER
+#  define NC_OS_WIN
+#else
+#  define NC_OS_UNIX
+#endif
+
+#ifdef NC_OS_WIN
 #  define forceinline __forceinline
 #else
 #  define forceinline inline
@@ -23,6 +29,10 @@ typedef signed short i16;
 typedef signed int i32;
 
 typedef char32_t wchar32;
+typedef size_t Handle;
+
+#define invalidHandle 0
+#define countof(o) (sizeof(o) / sizeof((o)[0]))
 
 struct Range {
   int location;

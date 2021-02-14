@@ -4,5 +4,7 @@
 
 class NcObject {
 public:
-  virtual sp<NcString> toString() = 0;
+  virtual sp<NcString> toString();
+
+  virtual ~NcObject() {}
 };
