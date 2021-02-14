@@ -1,0 +1,10 @@
+BasedOnStyle: Google
+# Force pointers to the type for C++.
+DerivePointerAlignment: false
+PointerAlignment: Left
+#
+AccessModifierOffset: -1
+UseTab: Always
+ColumnLimit: 120
+SortIncludes: false
+IndentPPDirectives: AfterHash
