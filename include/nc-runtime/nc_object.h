@@ -26,6 +26,7 @@ public:
   ~sptr() { release(m_ptr); }
 
   sptr<T>& operator=(const sptr<T>& p) {
+    release(m_ptr);
     m_ptr = p.get();
     m_ptr->_retain();
     return *this;
@@ -33,14 +34,28 @@ public:
 
   template <typename Derived>
   sptr<T>& operator=(const sptr<Derived>& p) {
+    release(m_ptr);
     m_ptr = p.get();
     m_ptr->_retain();
     return *this;
   }
 
-  forceinline T* get() const { return m_ptr; }
+  // compatible with std::shared_ptr
   forceinline int use_count() { return m_ptr->retainCount(); }
+  forceinline void reset() {
+    release(m_ptr);
+    m_ptr = NULL;
+  }
+  forceinline T* get() const { return m_ptr; }
   forceinline T* operator->() const { return m_ptr; }
+
+  /**
+   * Implicit conversion to T*.
+   * 
+   * Usually, implicit conversion is not a good idea. https://www.informit.com/articles/article.aspx?p=31529&seqNum=7
+   * But I still need it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
+   */
+  forceinline operator T*() const { return m_ptr; }
 
 private:
   T* m_ptr;
@@ -59,9 +74,13 @@ public:
   virtual sptr<NcString> toString();
 
 // private:
-  forceinline void _retain() { m_rc.fetch_add(1); }
+  forceinline void _retain() {
+    if (this != NULL) {
+      m_rc.fetch_add(1);
+    }
+  }
   inline void _release() {
-    if (m_rc.fetch_sub(1) == 0) {
+    if (m_rc.fetch_sub(1) == 1) {
       delete this;
     }
   }
@@ -76,10 +95,16 @@ private:
 
 template<typename T>
 forceinline T* retain(NcObject* o) {
-  if (o != NULL) {
-    o->_retain();
-  }
+  o->_retain();
   return (T*)o;
 }
 
-forceinline void release(NcObject* o) { if (o != NULL) o->_release(); }
+forceinline void release(NcObject* o) {
+  if (o != NULL) o->_release();
+}
+
+// to prevent error caused by releasing smart pointer through implicit conversion to T*
+template<typename T>
+forceinline void release(sptr<T>& o) {
+  o.reset();
+}

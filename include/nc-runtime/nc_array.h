@@ -8,7 +8,7 @@ class NcArray : public NcObject {
 public:
   static sptr<NcArray<T>> alloc() { return new NcArray(); }
 
-  void addObject(sptr<T> obj) { this->array_.push_back(obj); }
+  void addObject(const sptr<T>& obj) { this->array_.push_back(obj); }
   sptr<T> objectAtIndex(int i) { return this->array_[i]; }
 
   // from NcObject
@@ -21,8 +21,8 @@ private:
 template <typename T>
 class NcArrayRef {
 public:
-  static NcArrayRef<T> alloc() { return NcArray<T>::alloc().get(); }
-  NcArrayRef(NcArray<T>* arr) : array_(arr) {}
+  static NcArrayRef<T> alloc() { return NcArray<T>::alloc(); }
+  NcArrayRef(sptr<NcArray<T>>& arr) : array_(arr) {}
   sptr<T> operator[](size_t i) { return this->array_->objectAtIndex((int)i); }
 
   NcArray<T>* operator->() { return array_.get(); }

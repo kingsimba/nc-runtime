@@ -9,7 +9,7 @@ TEST(NcString, basic) {
   EXPECT_EQ(s->length(), 5);
 
   // must call .get() to convert to ordinary pointer.
-  EXPECT_EQ(_calculateStringLength(s.get()), 5);
+  EXPECT_EQ(_calculateStringLength(s), 5);
 
   s = NcString::allocWithBytes("cat litter", 10);
   EXPECT_STREQ(s->cstr(), "cat litter");
