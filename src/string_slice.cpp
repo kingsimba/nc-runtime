@@ -111,4 +111,4 @@ Range StringSlice::findSliceFrom(int start, StringSlice needle) {
   return Range_make((int)(newStr - m_str), needle.m_length);
 }
 
-sp<NcString> StringSlice::toString() { return NcString::allocWithBytes(m_str, m_length); }
+sptr<NcString> StringSlice::toString() { return NcString::allocWithBytes(m_str, m_length); }
