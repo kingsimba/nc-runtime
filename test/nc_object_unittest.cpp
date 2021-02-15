@@ -3,20 +3,32 @@
 
 class MyBox : public NcObject {
 public:
-  static sp<MyBox> alloc() { return std::make_shared<MyBox>(); }
+  static sptr<MyBox> alloc() { return new MyBox(); }
 
   MyBox(){};
 };
 
-TEST(NcObject, cast) {
+TEST(NcObject, rcAndCast) {
   auto box = MyBox::alloc();
+  EXPECT_EQ(box->retainCount(), 1);
+
+  sptr<MyBox> box2(box); // copy constructor
+  EXPECT_EQ(box->retainCount(), 2);
+
+  sptr<MyBox> box3;
+  box3 = box2;  // == operator
+  EXPECT_EQ(box->retainCount(), 3);
 
   // cast to base
-  sp<NcObject> base = box;
-  EXPECT_EQ(box.use_count(), 2);
+  sptr<NcObject> base(box);  // copy constructor
+  EXPECT_EQ(box->retainCount(), 4);
+
+  sptr<NcObject> base2;
+  base2 = box;  // == operator
+  EXPECT_EQ(box->retainCount(), 5);
 
   // cast to derived
-  auto box2 = std::static_pointer_cast<MyBox>(base);
-  EXPECT_EQ(box.use_count(), 3);
-  EXPECT_TRUE(box.get() == box2.get());
+  auto derived = static_pointer_cast<MyBox>(base);
+  EXPECT_EQ(derived->retainCount(), 5);
+  EXPECT_TRUE(derived.get() == box.get());
 }

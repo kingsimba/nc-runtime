@@ -4,7 +4,7 @@
 static int _calculateStringLength(NcString* str) { return str->length(); }
 
 TEST(NcString, basic) {
-  sp<NcString> s = NcString::allocWithCString("hello");
+  sptr<NcString> s = NcString::allocWithCString("hello");
   EXPECT_STREQ(s->cstr(), "hello");
   EXPECT_EQ(s->length(), 5);
 
@@ -21,7 +21,7 @@ TEST(NcString, basic) {
 }
 
 TEST(NcString, join) {
-  sp<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
+  sptr<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
   EXPECT_STREQ(s->cstr(), "hello---world");
   EXPECT_EQ(s->length(), 13);
 }

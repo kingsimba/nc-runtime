@@ -103,7 +103,7 @@ public:
   }
 
   // Create a standalone NcString
-  sp<NcString> toString();
+  sptr<NcString> toString();
 
   //////////////////////////////////////////////////////////////////////////
   // Search
