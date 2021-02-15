@@ -53,7 +53,7 @@ public:
    * Implicit conversion to T*.
    * 
    * Usually, implicit conversion is not a good idea. https://www.informit.com/articles/article.aspx?p=31529&seqNum=7
-   * But I still need it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
+   * But I still want it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
    */
   forceinline operator T*() const { return m_ptr; }
 
@@ -67,13 +67,23 @@ sptr<T1> static_pointer_cast(const sptr<T2>& r) noexcept {
   return sptr<T1>(derived);
 }
 
+/**
+ * The base class of the foundation framework. It contains useful functions, such as toString() and isKindOf().
+ */
 class NcObject {
 public:
   forceinline int retainCount() { return m_rc; }
 
+  /**
+   * Convert any object to string
+   */
   virtual sptr<NcString> toString();
 
-// private:
+  template<typename ToType>
+  forceinline bool isKindOf() {
+    return dynamic_cast<ToType*>(this) != NULL;
+  }
+      // private:
   forceinline void _retain() {
     if (this != NULL) {
       m_rc.fetch_add(1);

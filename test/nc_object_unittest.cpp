@@ -10,6 +10,16 @@ private:
   ~MyBox(){};
 };
 
+class MyString : public NcObject {
+public:
+  static sptr<MyString> alloc() { return new MyString(); }
+
+private:
+  MyString(){};
+  ~MyString(){};
+};
+
+
 TEST(NcObject, rcAndCast) {
   auto box = MyBox::alloc();
   EXPECT_EQ(box->retainCount(), 1);
@@ -70,4 +80,12 @@ TEST(NcObject, retainReleaseSmartPointer) {
   EXPECT_TRUE(box == NULL);
   EXPECT_TRUE(box2 != NULL);
   EXPECT_EQ(box2->retainCount(), 1);
+}
+
+TEST(NcObject, isKindOf) {
+  auto box = MyBox::alloc();
+  EXPECT_EQ(box->retainCount(), 1);
+  EXPECT_TRUE(box->isKindOf<MyBox>());
+  EXPECT_TRUE(box->isKindOf<NcObject>());
+  EXPECT_FALSE(box->isKindOf<MyString>());
 }
