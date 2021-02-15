@@ -17,6 +17,7 @@ TEST(ArrayTest, vector) {
     EXPECT_EQ(str->retainCount(), 3);
 
     auto pieces = str->split(" ");
+    EXPECT_EQ(str->retainCount(), 5); // +2 because slices holds reference to the string
     ASSERT_EQ(pieces.size(), 2);
     for (auto s : pieces) {
       v->addObject(NcString::allocWithSlice(s));
@@ -27,8 +28,8 @@ TEST(ArrayTest, vector) {
     EXPECT_STREQ(v[2]->cstr(), "hello");
     EXPECT_STREQ(v[3]->cstr(), "world");
 
-    perm = v[0];
-    EXPECT_EQ(perm->retainCount(), 4);
+    perm = v[0];  // +1
+    EXPECT_EQ(perm->retainCount(), 6);
   }
 
   EXPECT_EQ(perm->retainCount(), 1);

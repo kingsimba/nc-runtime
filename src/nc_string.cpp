@@ -20,7 +20,7 @@ void NcString::initWithBytes(const char* str, size_t len) {
   initByTakingBytes(copy, len);
 }
 
-void NcString::initByJoiningSlices(const std::vector<StringSlice>& slices, StringSlice sep) {
+void NcString::initByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {
   if (slices.empty()) {
     m_str = "";
     return;

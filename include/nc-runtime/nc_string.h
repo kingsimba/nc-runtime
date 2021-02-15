@@ -42,7 +42,7 @@ public:
   /**
    * Create a string from a slice. Same as StringSlice::toString().
    */
-  static sptr<NcString> allocWithSlice(StringSlice str) {
+  static sptr<NcString> allocWithSlice(const StringSlice& str) {
     auto o = new NcString();
     o->initWithBytes(str.bytes(), str.length());
     return o;
@@ -52,7 +52,7 @@ public:
    * Create a string by joining pieces with a separator.
    * For example: joining ["hello", "world"] with "---" will produce "hello---world".
    */
-  static sptr<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, StringSlice sep) {
+  static sptr<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {
     auto o = new NcString();
     o->initByJoiningSlices(slices, sep);
     return o;
@@ -60,6 +60,12 @@ public:
 
   forceinline const char* cstr() { return m_str; }
   forceinline int length() { return m_length; }
+
+  StringSlice toSlice() { return StringSlice(this); }
+
+  // overwrite functions in StringSlice. Because we have to keep the RC
+  std::vector<StringSlice> split(const StringSlice& sep) { return this->toSlice().split(sep); }
+  forceinline StringSlice subslice(int start, int length) { return this->toSlice().subslice(start, length); }
 
   // from NcObject
   virtual sptr<NcString> toString() override { return sptr<NcString>(this); }
@@ -76,7 +82,7 @@ private:
     m_shouldFree = true;
   }
   
-  void initByJoiningSlices(const std::vector<StringSlice>& slices, StringSlice sep);
+  void initByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep);
 
 private:
   bool m_shouldFree;

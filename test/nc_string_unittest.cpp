@@ -26,11 +26,22 @@ TEST(NcString, join) {
   EXPECT_EQ(s->length(), 13);
 }
 
-//TEST(NcString, split) {
-//  // ERROR: slices contains invalid memory.
-//  // Because the smart point created with NcString::allocWithCString() is freed
-//  vector<StringSlice> slices = NcString::allocWithCString("hello---world")->split("---");
-//  auto s = NcString::allocByJoiningSlices(slices, " ");
-//  EXPECT_STREQ(s->cstr(), "hello world");
-//  EXPECT_EQ(s->length(), 11);
-//}
+TEST(NcString, toSlice) {
+  sptr<NcString> s = NcString::allocWithCString("hello world");
+  auto slice = s->toSlice();
+  EXPECT_EQ(s->retainCount(), 2); // slice holds a reference to the string
+}
+
+TEST(NcString, split) {
+  vector<StringSlice> slices = NcString::allocWithCString("hello---world")->split("---");
+  auto s = NcString::allocByJoiningSlices(slices, " ");
+  EXPECT_STREQ(s->cstr(), "hello world");
+  EXPECT_EQ(s->length(), 11);
+}
+
+TEST(NcString, subslice) {
+  auto str = NcString::allocWithCString("hello---world");
+  auto slice = str->subslice(5, 2);
+  EXPECT_EQ(str->retainCount(), 2);
+  EXPECT_TRUE(slice.equals("--"));
+}

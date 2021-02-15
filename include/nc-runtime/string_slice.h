@@ -44,6 +44,16 @@ private:
 class StringSubsliceIter {
 public:
   StringSubsliceIter(const StringSlice& slice, const StringSlice& sep);
+  StringSubsliceIter(StringSubsliceIter&& r) noexcept {
+    this->m_strBegin = r.m_strBegin;
+    this->m_strEnd = r.m_strEnd;
+    this->m_str = r.m_str;
+    this->m_ncstring = r.m_ncstring;
+    this->m_sep = r.m_sep;
+    this->m_sepLength = r.m_sepLength;
+    r.m_ncstring = NULL;
+  }
+  ~StringSubsliceIter();
 
   bool next(StringSlice* slice_out) { return next(slice_out, NULL); }
   bool next(StringSlice* slice_out, Range* rangeOut);
@@ -52,6 +62,7 @@ private:
   const char* m_strBegin;
   const char* m_strEnd;
   const char* m_str;
+  NcString* m_ncstring;
 
   const char* m_sep;
   int m_sepLength;
@@ -65,20 +76,33 @@ public:
   forceinline StringSlice() {
     m_str = NULL;
     m_length = 0;
+    m_ncstring = NULL;
+  }
+  StringSlice(const StringSlice& r) noexcept;
+  forceinline StringSlice(StringSlice&& r) noexcept {
+    m_str = r.m_str;
+    m_length = r.m_length;
+    m_ncstring = r.m_ncstring;
+    r.m_ncstring = NULL;
   }
   forceinline StringSlice(const char* str) {
     m_str = (char*)str;
     m_length = (int)strlen(str);
+    m_ncstring = NULL;
   }
   forceinline StringSlice(const char* str, int len) {
     m_str = (char*)str;
     m_length = len;
+    m_ncstring = NULL;
   }
+  forceinline StringSlice(const char* str, int len, NcString* internalStr) {
+    m_ncstring = NULL;
+    initWithString(str, len, internalStr);
+  };
+  StringSlice(NcString* str);
+  ~StringSlice();
 
-  forceinline void init(const char* str, int len) {
-    m_str = (char*)str;
-    m_length = len;
-  }
+  void initWithString(const char* str, int len, NcString* ncstring);
 
   //////////////////////////////////////////////////////////////////////////
   // Accessors
@@ -87,7 +111,7 @@ public:
   forceinline int length() const { return m_length; }
 
   forceinline StringCharIter iter() const { return StringCharIter(*this); }
-  forceinline StringSubsliceIter iterBySpliting(StringSlice sep) const { return StringSubsliceIter(*this, sep); }
+  forceinline StringSubsliceIter iterBySpliting(const StringSlice& sep) const { return StringSubsliceIter(*this, sep); }
 
   //////////////////////////////////////////////////////////////////////////
   // Conversions
@@ -109,8 +133,8 @@ public:
   // Search
 
   // Find subslice
-  forceinline Range findSlice(StringSlice needle) { return findSliceFrom(0, needle); }
-  Range findSliceFrom(int start, StringSlice needle);
+  forceinline Range findSlice(const StringSlice& needle) { return findSliceFrom(0, needle); }
+  Range findSliceFrom(int start, const StringSlice& needle);
 
   // Find Unicode character
   forceinline Range find(wchar32 code) { return findFrom(0, code); }
@@ -125,8 +149,8 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // Actions
 
-  forceinline StringSlice subslice(int start, int length) { return StringSlice(m_str + start, length); }
-  std::vector<StringSlice> split(StringSlice sep);
+  forceinline StringSlice subslice(int start, int length) { return StringSlice(m_str + start, length, m_ncstring); }
+  std::vector<StringSlice> split(const StringSlice& sep);
 
   //////////////////////////////////////////////////////////////////////////
   // Equals
@@ -134,21 +158,20 @@ public:
   forceinline bool equals(StringSlice* r) { return m_length == r->m_length && memcmp(m_str, r->m_str, m_length) == 0; }
   forceinline bool equals(const char* r) { return m_length == strlen(r) && memcmp(m_str, r, m_length) == 0; }
 
+  //////////////////////////////////////////////////////////////////////////
+  // private
+
+  forceinline NcString* internalString() const { return m_ncstring; }
+
 protected:
   char* m_str;
   int m_length;
+  NcString* m_ncstring;
 };
 
 inline StringCharIter::StringCharIter(const StringSlice& slice) {
   m_str = slice.bytes();
   m_length = slice.length();
-}
-
-inline StringSubsliceIter::StringSubsliceIter(const StringSlice& slice, const StringSlice& sep) {
-  m_str = m_strBegin = slice.bytes();
-  m_strEnd = m_str + slice.length();
-  m_sep = sep.bytes();
-  m_sepLength = sep.length();
 }
 
 inline int StringSlice::findFrom(int start, char c) {

@@ -47,12 +47,22 @@ static const char* _strstr(const char* s1, const char* s1End, const char* s2, si
   return p;
 }
 
+ StringSubsliceIter::StringSubsliceIter(const StringSlice& slice, const StringSlice& sep) {
+  m_str = m_strBegin = slice.bytes();
+  m_strEnd = m_str + slice.length();
+  m_ncstring = retain(slice.internalString());
+  m_sep = sep.bytes();
+  m_sepLength = sep.length();
+}
+
+ StringSubsliceIter::~StringSubsliceIter() { release(m_ncstring); }
+
 bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut) {
   if (m_str == m_strEnd) return false;
 
   const char* newStr = _strstr(m_str, m_strEnd, m_sep, m_sepLength);
 
-  *cOut = StringSlice(m_str, (int)(newStr - m_str));
+  cOut->initWithString(m_str, (int)(newStr - m_str), m_ncstring);
   if (rangeOut != NULL) *rangeOut = Range_make((int)(m_str - m_strBegin), cOut->length());
 
   if (newStr != m_strEnd) {
@@ -64,7 +74,7 @@ bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut) {
   return true;
 }
 
-std::vector<StringSlice> StringSlice::split(StringSlice sep) {
+std::vector<StringSlice> StringSlice::split(const StringSlice& sep) {
   std::vector<StringSlice> sv;
   auto iter = this->iterBySpliting(sep);
   StringSlice slice;
@@ -75,6 +85,27 @@ std::vector<StringSlice> StringSlice::split(StringSlice sep) {
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+StringSlice::StringSlice(NcString* str) {
+  m_str = (char*)str->cstr();
+  m_length = str->length();
+  m_ncstring = retain(str);
+}
+
+StringSlice::StringSlice(const StringSlice& r) noexcept {
+  m_str = r.m_str;
+  m_length = r.m_length;
+  m_ncstring = retain(r.m_ncstring);
+}
+
+StringSlice::~StringSlice() { release(m_ncstring); }
+
+void StringSlice::initWithString(const char* str, int len, NcString* ncstring) {
+  m_str = (char*)str;
+  m_length = len;
+  release(m_ncstring);
+  m_ncstring = retain(ncstring);
+}
 
 Range StringSlice::findFrom(int start, wchar32 code) {
   auto iter = this->subslice(start, m_length - start).iter();
@@ -101,7 +132,7 @@ int StringSlice::rfind(char c) {
   return -1;
 }
 
-Range StringSlice::findSliceFrom(int start, StringSlice needle) {
+Range StringSlice::findSliceFrom(int start, const StringSlice& needle) {
   const char* strEnd = m_str + m_length;
   const char* newStr = _strstr(m_str + start, strEnd, needle.m_str, needle.m_length);
   if (newStr == strEnd) {

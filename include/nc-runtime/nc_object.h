@@ -104,7 +104,7 @@ private:
 };
 
 template<typename T>
-forceinline T* retain(NcObject* o) {
+forceinline T* retain(T* o) {
   o->_retain();
   return (T*)o;
 }
