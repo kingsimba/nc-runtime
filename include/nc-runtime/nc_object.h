@@ -63,7 +63,7 @@ private:
 
 template <class T1, class T2>
 sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
-  T1* derived = static_cast<typename T1*>(r.get());
+  T1* derived = static_cast<T1*>(r.get());
   return sp<T1>(derived);
 }
 

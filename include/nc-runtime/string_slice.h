@@ -202,7 +202,7 @@ public:
   }
 
 protected:
-  char* m_str;
+  const char* m_str;
   int m_length;
   NcString* m_ncstring;
 };

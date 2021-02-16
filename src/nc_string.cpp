@@ -68,7 +68,7 @@ sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
 
 NcString::~NcString() {
   if (m_shouldFree) {
-    free(m_str);
+    free((char*)m_str);
   }
 }
 
