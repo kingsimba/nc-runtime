@@ -33,9 +33,10 @@ TEST(NcString, literal) {
   // s1 is exactly the same as s2, because of the literal string manager.
   EXPECT_EQ(s1.get(), s2.get());
   
+  // Calling retain() or release() has no effect
   EXPECT_EQ(s1->retainCount(), INT_MAX);
   EXPECT_EQ(retain<NcString>(s1)->retainCount(), INT_MAX);
-  release(s1);
+  release(s1.get());
   EXPECT_EQ(s1->retainCount(), INT_MAX);
 
   auto s3 = "hello world"_s;

@@ -139,8 +139,6 @@ StringSlice::StringSlice(const StringSlice& r) noexcept {
   m_ncstring = retain(r.m_ncstring);
 }
 
-StringSlice::~StringSlice() { release(m_ncstring); }
-
 void StringSlice::initWithString(const char* str, int len, NcString* ncstring) {
   m_str = (char*)str;
   m_length = len;

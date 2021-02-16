@@ -100,7 +100,7 @@ public:
     initWithString(str, len, internalStr);
   };
   StringSlice(NcString* str);
-  ~StringSlice();
+  forceinline ~StringSlice() { release((NcObject*)m_ncstring); }
 
   void initWithString(const char* str, int len, NcString* ncstring);
 

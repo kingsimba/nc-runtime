@@ -120,6 +120,5 @@ forceinline void release(NcObject* o) {
 // to prevent error caused by releasing smart pointer through implicit conversion to T*
 template<typename T>
 forceinline void release(sp<T>& o) {
-  if (o->retainCount() != INT_MAX)
-    o.reset();
+  o->ERROR_should_not_call_release_on_smart_pointer();
 }

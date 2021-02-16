@@ -72,10 +72,10 @@ TEST(NcObject, retainReleaseSmartPointer) {
 
   EXPECT_TRUE(box != NULL);
 
-  // retain. This is unnecessary. Still, we support it to prevent error.
+  // retain. This is unnecessary(should use box2 = box). 
+  // But still, we support it to prevent error.
   sp<MyBox> box2 = retain<MyBox>(box);
-  // release. Totally legal
-  release(box);
+  box.reset();
 
   EXPECT_TRUE(box == NULL);
   EXPECT_TRUE(box2 != NULL);
