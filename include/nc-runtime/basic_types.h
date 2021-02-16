@@ -20,11 +20,18 @@
 #  define forceinline inline
 #endif
 
+#if defined(_M_X64) || defined(__amd64__) || defined(__LP64__) || defined(__x86_64__)
+#  define NC_ENVIRONMENT_64 1
+#else
+#  define NC_ENVIRONMENT_32 1
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
+typedef uint64_t u64;
 
 typedef signed char i8;
 typedef signed short i16;

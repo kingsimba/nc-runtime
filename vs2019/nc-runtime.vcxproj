@@ -261,6 +261,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\nc_stdlib.cpp" />
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime.dir\cmake_pch.cxx">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/_build/CMakeFiles/nc-runtime.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -279,6 +280,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/_build/CMakeFiles/nc-runtime.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/_build/nc-runtime.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClInclude Include="..\include\nc-runtime\nc_stdlib.h" />
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\basic_types.h" />
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\nc_array.h" />
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\nc_log.h" />

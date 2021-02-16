@@ -22,6 +22,9 @@
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\3rd-party\src\jansson\utf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nc_stdlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\basic_types.h">
@@ -59,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime.dir\RelWithDebInfo\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nc-runtime\nc_stdlib.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

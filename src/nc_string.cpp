@@ -1,5 +1,50 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_string.h"
+#include "nc_stdlib.h"
+#include <mutex>
+#include <unordered_map>
+
+using namespace std;
+
+// create one NcString object for each literal string
+class GlobalStringManager {
+public:
+  sptr<NcString> addString(const char* cstr, size_t len) {
+    static mutex s_mutex;
+
+    sptr<NcString> str;
+
+    s_mutex.lock();
+    auto iter = m_map.find((size_t)cstr);
+    if (iter == m_map.end()) {
+      str = NcString::allocWithLiteralCString(cstr, len);
+      m_map.insert(iter, std::make_pair((size_t)cstr, str));
+    } else {
+      str = iter->second;
+    }
+    s_mutex.unlock();
+
+    return str;
+  }
+
+  ~GlobalStringManager() {
+    auto iter = m_map.begin();
+    while (iter != m_map.end()) {
+      iter->second->_deleteThis();
+      iter++;
+    }
+  }
+
+private:
+  unordered_map<size_t, sptr<NcString>> m_map;
+};
+
+static GlobalStringManager g_stringManager;
+
+sptr<NcString> operator"" _s(const char* literalStr, size_t len) { return g_stringManager.addString(literalStr, len); }
+
+//////////////////////////////////////////////////////////////////////////
+// NcString
 
 sptr<NcString> NcString::allocWithBytes(const char* str, size_t len) {
   char* buffer;

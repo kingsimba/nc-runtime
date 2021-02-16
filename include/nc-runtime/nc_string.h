@@ -57,6 +57,14 @@ public:
     return o;
   }
 
+  static sptr<NcString> allocWithLiteralCString(const char* str, size_t len) {
+    auto o = new NcString(true);
+    o->m_str = (char*)str;
+    o->m_length = len;
+    o->m_shouldFree = false;
+    return o;
+  }
+
   //////////////////////////////////////////////////////////////////////////
   /// Accessors
 
@@ -84,6 +92,7 @@ public:
 
 private:
   NcString() : m_shouldFree(false) {}
+  NcString(bool isStatic) : NcObject(true), m_shouldFree(false) {}
   ~NcString();
 
   void initByTakingBytes(char* str, size_t len) {
@@ -97,3 +106,5 @@ private:
 private:
   bool m_shouldFree;
 };
+
+sptr<NcString> operator""_s(const char* literalStr, size_t len);

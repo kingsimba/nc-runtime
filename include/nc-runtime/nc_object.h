@@ -85,18 +85,22 @@ public:
   }
       // private:
   forceinline void _retain() {
-    if (this != NULL) {
+    if (this != NULL && m_rc != INT_MAX) {
       m_rc.fetch_add(1);
     }
   }
   inline void _release() {
-    if (m_rc.fetch_sub(1) == 1) {
+    if (m_rc != INT_MAX && m_rc.fetch_sub(1) == 1) {
       delete this;
     }
+  }
+  forceinline void _deleteThis() {
+    delete this;
   }
 
 protected:
   NcObject() : m_rc(1) {}
+  NcObject(bool /*isStatic*/) : m_rc(INT_MAX) {}
   virtual ~NcObject() {}
 
 private:
@@ -116,5 +120,6 @@ forceinline void release(NcObject* o) {
 // to prevent error caused by releasing smart pointer through implicit conversion to T*
 template<typename T>
 forceinline void release(sptr<T>& o) {
-  o.reset();
+  if (o->retainCount() != INT_MAX)
+    o.reset();
 }

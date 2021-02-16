@@ -170,3 +170,41 @@ But at the cost of making it harder to read or navigate:
    ```
 
 But overall, I think it's worthwhile to use `auto`. Especially for complex types. But for basic types, I prefer to make the type explicit.
+
+## String literals
+
+C++11 support customized suffix for string literals.
+
+```cpp
+sp<NcString> operator""_s(const char* literalStr, size_t len);
+```
+
+This enables creating of literal NcString object.
+
+```cpp
+sp<NcString> s = "hello world"_s;
+```
+
+It has `retainCount()` at INT_MAX.
+Calling retain() or release() on it has no effect.
+With a global string manager, it's possible to make sure only one NcString object is created for each string literal.
+
+```cpp
+TEST(NcString, literal) {
+  sp<NcString> s1, s2;
+  for (int i = 0; i < 2; i++) {
+    sp<NcString> s = "hello world"_s;
+    if (i == 0)
+      s1 = s;
+    else
+      s2 = s;
+  }
+
+  // s1 is exactly the same as s2, because of the literal string manager.
+  EXPECT_EQ(s1.get(), s2.get());
+
+  auto s3 = "hello world"_s;
+  // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
+  EXPECT_EQ(s1.get(), s3.get());
+}
+```
