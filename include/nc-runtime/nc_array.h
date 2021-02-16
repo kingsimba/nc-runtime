@@ -1,7 +1,7 @@
 #pragma once
 
 #include "basic_types.h"
-#include "nc_object.h"
+#include "nc_string.h"
 
 template <typename T>
 class NcArray : public NcObject {
@@ -23,6 +23,9 @@ class NcArrayRef {
 public:
   static NcArrayRef<T> alloc() { return NcArray<T>::alloc(); }
   NcArrayRef(sp<NcArray<T>>& arr) : array_(arr) {}
+  NcArrayRef(sp<NcArray<T>>&& arr) : array_(std::move(arr)) { }
+
+  // allow using []
   sp<T> operator[](size_t i) { return this->array_->objectAtIndex((int)i); }
 
   NcArray<T>* operator->() { return array_.get(); }
