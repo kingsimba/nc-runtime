@@ -75,6 +75,10 @@ TEST(NcObject, retainReleaseSmartPointer) {
   // retain. This is unnecessary(should use box2 = box). 
   // But still, we support it to prevent error.
   sp<MyBox> box2 = retain<MyBox>(box);
+
+  // ERROR: This will not increase RC. So it's an error.
+  // sp<MyBox> box2 = box.get();
+
   box.reset();
 
   EXPECT_TRUE(box == NULL);
