@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime-test.dir\cmake_pch.cxx">
+    <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\cmake_pch.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\3rd-party\src\googletest-1.10.0\src\gtest-all.cc">
@@ -13,16 +13,16 @@
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_array_unittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_object_unittest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_stdlib_unittest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_string_unittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\string_slice_unittest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\test\nc_object_unittest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\test\nc_stdlib_unittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,16 +33,16 @@
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\stdafx_nc_runtime_test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime-test.dir\Debug\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\Debug\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime-test.dir\Release\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\Release\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime-test.dir\MinSizeRel\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\MinSizeRel\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\_build\CMakeFiles\nc-runtime-test.dir\RelWithDebInfo\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\RelWithDebInfo\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
   </ItemGroup>
@@ -51,13 +51,13 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{6DB6CCC9-A9A1-3447-AC14-BC793D18942C}</UniqueIdentifier>
+      <UniqueIdentifier>{593C3030-1C95-3402-8E27-BA4700715212}</UniqueIdentifier>
     </Filter>
     <Filter Include="Precompile Header File">
-      <UniqueIdentifier>{7507E896-3EA0-3317-8E65-363792027B0B}</UniqueIdentifier>
+      <UniqueIdentifier>{CB252D5A-DC44-30F4-8C1F-1BFDC6FCC72C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{C0B052F3-5FF5-3E6F-9EE3-D184EFDFFE7C}</UniqueIdentifier>
+      <UniqueIdentifier>{714A2786-B9CB-3CAA-AB29-47048C5E2400}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -189,7 +189,10 @@ public:
   // private
 
   forceinline NcString* internalString() const { return m_ncstring; }
-  const StringSlice& operator=(const StringSlice& r) { this->initWithString(r.m_str, r.m_length, r.m_ncstring); }
+  forceinline const StringSlice& operator=(const StringSlice& r) {
+    this->initWithString(r.m_str, r.m_length, r.m_ncstring);
+    return *this;
+  }
 
 protected:
   char* m_str;

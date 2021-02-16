@@ -17,6 +17,11 @@ set_target_properties(${PROJ} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRE
 set_target_properties(${PROJ} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 target_include_directories(${PROJ} PRIVATE "src" "include/nc-runtime" "3rd-party/include")
 add_definitions(-D_CRTDBG_MAP_ALLOC)
+
+if (WIN32)
+	SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /GF")	# enable string pool
+endif()
+
 target_precompile_headers(${PROJ} PRIVATE "src/stdafx_nc_runtime.h")
 
 ########################################################################################
