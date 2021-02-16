@@ -58,14 +58,27 @@ public:
     return o;
   }
 
+  //////////////////////////////////////////////////////////////////////////
+  /// Accessors
+
   forceinline const char* cstr() { return m_str; }
   forceinline int length() { return m_length; }
 
-  StringSlice toSlice() { return StringSlice(this); }
-
-  // overwrite functions in StringSlice. Because we have to keep the RC
-  std::vector<StringSlice> split(const StringSlice& sep) { return this->toSlice().split(sep); }
   forceinline StringSlice subslice(int start, int length) { return this->toSlice().subslice(start, length); }
+  forceinline StringSlice subsliceInRange(Range range) { return this->toSlice().subsliceInRange(range); }
+  forceinline StringSlice subsliceFrom(int start) { return this->toSlice().subsliceFrom(start); }
+
+  //////////////////////////////////////////////////////////////////////////
+  /// Operations
+
+  forceinline StringSlice toSlice() { return StringSlice(this); }
+
+  // Design Notes: overwrite functions in StringSlice. Because we have to keep the RC
+  forceinline std::vector<StringSlice> split(const StringSlice& sep) { return this->toSlice().split(sep); }
+
+  forceinline int splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum) {
+    return toSlice().splitWithLimit(sep, slicesOut, maxNum);
+  }
 
   // from NcObject
   virtual sptr<NcString> toString() override { return sptr<NcString>(this); }

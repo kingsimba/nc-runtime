@@ -74,6 +74,16 @@ bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut) {
   return true;
 }
 
+StringSlice StringSlice::subsliceFrom(int start) {
+  if (start < 0) {
+    assert(m_length + start >= 0);
+    return StringSlice(m_str + (m_length + start), -start, m_ncstring);
+  } else {
+    assert(start <= m_length);
+    return StringSlice(m_str + start, m_length - start, m_ncstring);
+  }
+}
+
 std::vector<StringSlice> StringSlice::split(const StringSlice& sep) {
   std::vector<StringSlice> sv;
   auto iter = this->iterBySpliting(sep);
@@ -82,6 +92,36 @@ std::vector<StringSlice> StringSlice::split(const StringSlice& sep) {
     sv.push_back(slice);
   }
   return sv;
+}
+
+int StringSlice::splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum) {
+  int created = 0;
+  std::vector<StringSlice> sv;
+  auto iter = this->iterBySpliting(sep);
+  StringSlice slice;
+  while (created < maxNum && iter.next(&slice)) {
+    slicesOut[created++] = std::move(slice);
+  }
+  return created;
+}
+
+sptr<NcString> StringSlice::stringByReplacingStringInRange(Range range, const StringSlice& replacement) {
+  if (!range.isValid()) {
+    return this->toString();
+  }
+  assert(range.end() <= m_length);
+
+  size_t len = (size_t)m_length + replacement.length() - range.length;
+  char* buffer = (char*)malloc(len + 1);
+  buffer[len] = 0;
+
+  size_t loc = 0;
+  memcpy(buffer, m_str, range.location);
+  loc += range.location;
+  memcpy(buffer + loc, replacement.bytes(), replacement.length());
+  loc += replacement.length();
+  memcpy(buffer + loc, m_str + range.end(), (size_t)m_length - range.end());
+  return NcString::allocByTakingBytes(buffer, len);
 }
 
 //////////////////////////////////////////////////////////////////////////

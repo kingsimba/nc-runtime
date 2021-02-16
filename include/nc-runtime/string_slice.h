@@ -149,8 +149,35 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // Actions
 
+  /**
+   * Create a subslice
+   */
   forceinline StringSlice subslice(int start, int length) { return StringSlice(m_str + start, length, m_ncstring); }
+  forceinline StringSlice subsliceInRange(Range range) {
+    return StringSlice(m_str + range.location, range.length, m_ncstring);
+  }
+
+  /**
+   * Negative number means from the end. For example "hello".subsliceFrom(-3) == "llo"
+   */
+  StringSlice subsliceFrom(int start);
+
+  /**
+   * Split into pieces with a separator string
+   * 
+   * split "hello--world" with "--" will produce ["hello", "world"]
+   */
   std::vector<StringSlice> split(const StringSlice& sep);
+
+  /**
+    * A fast on stack version. return the number of slices actually created
+    */
+  int splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum);
+
+  /**
+   * Replace part of a string
+   */
+  sptr<NcString> stringByReplacingStringInRange(Range range, const StringSlice& replacement);
 
   //////////////////////////////////////////////////////////////////////////
   // Equals
@@ -162,6 +189,7 @@ public:
   // private
 
   forceinline NcString* internalString() const { return m_ncstring; }
+  const StringSlice& operator=(const StringSlice& r) { this->initWithString(r.m_str, r.m_length, r.m_ncstring); }
 
 protected:
   char* m_str;

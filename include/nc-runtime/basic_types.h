@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <atomic>
+#include <assert.h>
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -38,10 +39,15 @@ typedef size_t Handle;
 struct Range {
   int location;
   int length;
+  forceinline int end() { return this->location + this->length; }
+  forceinline bool isValid() { return location >= 0; }
 };
 
 static Range invalidRange{-1, 0};
 static forceinline Range Range_make(int location, int length) { return Range{location, length}; }
+
+forceinline bool operator==(const Range& l, const Range& r) { return l.location == r.location && l.length == r.length; }
+forceinline bool operator!=(const Range& l, const Range& r) { return l.location != r.location || l.length != r.length; }
 
 //////////////////////////////////////////////////////////////////////////
 

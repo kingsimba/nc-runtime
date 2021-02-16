@@ -31,9 +31,8 @@ void NcString::initByJoiningSlices(const std::vector<StringSlice>& slices, const
     totalLen += s.length();
   }
   totalLen += sep.length() * (slices.size() - 1);
-  totalLen += 1;  // '\0'
 
-  char* str = (char*)malloc(totalLen);
+  char* str = (char*)malloc(totalLen + 1);
   totalLen = 0;
   for (size_t i = 0; i < slices.size(); i++) {
     const StringSlice& s = slices[i];
