@@ -3,7 +3,7 @@
 
 class MyBox : public NcObject {
 public:
-  static sptr<MyBox> alloc() { return new MyBox(); }
+  static sp<MyBox> alloc() { return new MyBox(); }
 
 private:
   MyBox(){};
@@ -12,7 +12,7 @@ private:
 
 class MyString : public NcObject {
 public:
-  static sptr<MyString> alloc() { return new MyString(); }
+  static sp<MyString> alloc() { return new MyString(); }
 
 private:
   MyString(){};
@@ -24,18 +24,18 @@ TEST(NcObject, rcAndCast) {
   auto box = MyBox::alloc();
   EXPECT_EQ(box->retainCount(), 1);
 
-  sptr<MyBox> box2(box); // copy constructor
+  sp<MyBox> box2(box); // copy constructor
   EXPECT_EQ(box->retainCount(), 2);
 
-  sptr<MyBox> box3;
+  sp<MyBox> box3;
   box3 = box2;  // == operator
   EXPECT_EQ(box->retainCount(), 3);
 
   // cast to base
-  sptr<NcObject> base(box);  // copy constructor
+  sp<NcObject> base(box);  // copy constructor
   EXPECT_EQ(box->retainCount(), 4);
 
-  sptr<NcObject> base2;
+  sp<NcObject> base2;
   base2 = box;  // == operator
   EXPECT_EQ(box->retainCount(), 5);
 
@@ -47,10 +47,10 @@ TEST(NcObject, rcAndCast) {
 }
 
 TEST(NcObject, copyNULL) {
-  sptr<MyBox> box;
+  sp<MyBox> box;
   EXPECT_TRUE(box == NULL);
 
-  sptr<MyBox> box2(box);
+  sp<MyBox> box2(box);
   EXPECT_TRUE(box2 == NULL);
 }
 
@@ -73,7 +73,7 @@ TEST(NcObject, retainReleaseSmartPointer) {
   EXPECT_TRUE(box != NULL);
 
   // retain. This is unnecessary. Still, we support it to prevent error.
-  sptr<MyBox> box2 = retain<MyBox>(box);
+  sp<MyBox> box2 = retain<MyBox>(box);
   // release. Totally legal
   release(box);
 

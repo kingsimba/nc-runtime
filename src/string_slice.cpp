@@ -105,7 +105,7 @@ int StringSlice::splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, 
   return created;
 }
 
-sptr<NcString> StringSlice::stringByReplacingStringInRange(Range range, const StringSlice& replacement) {
+sp<NcString> StringSlice::stringByReplacingStringInRange(Range range, const StringSlice& replacement) {
   if (!range.isValid()) {
     return this->toString();
   }
@@ -183,4 +183,4 @@ Range StringSlice::findSliceFrom(int start, const StringSlice& needle) {
   return Range_make((int)(newStr - m_str), needle.m_length);
 }
 
-sptr<NcString> StringSlice::toString() { return NcString::allocWithBytes(m_str, m_length); }
+sp<NcString> StringSlice::toString() { return NcString::allocWithBytes(m_str, m_length); }

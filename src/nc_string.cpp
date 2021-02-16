@@ -9,10 +9,10 @@ using namespace std;
 // create one NcString object for each literal string
 class GlobalStringManager {
 public:
-  sptr<NcString> addString(const char* cstr, size_t len) {
+  sp<NcString> addString(const char* cstr, size_t len) {
     static mutex s_mutex;
 
-    sptr<NcString> str;
+    sp<NcString> str;
 
     s_mutex.lock();
     auto iter = m_map.find((size_t)cstr);
@@ -36,17 +36,17 @@ public:
   }
 
 private:
-  unordered_map<size_t, sptr<NcString>> m_map;
+  unordered_map<size_t, sp<NcString>> m_map;
 };
 
 static GlobalStringManager g_stringManager;
 
-sptr<NcString> operator"" _s(const char* literalStr, size_t len) { return g_stringManager.addString(literalStr, len); }
+sp<NcString> operator"" _s(const char* literalStr, size_t len) { return g_stringManager.addString(literalStr, len); }
 
 //////////////////////////////////////////////////////////////////////////
 // NcString
 
-sptr<NcString> NcString::allocWithBytes(const char* str, size_t len) {
+sp<NcString> NcString::allocWithBytes(const char* str, size_t len) {
   char* buffer;
   auto rtn = allocButFillContentLater(len, &buffer);
   memcpy(buffer, str, len);
@@ -54,7 +54,7 @@ sptr<NcString> NcString::allocWithBytes(const char* str, size_t len) {
   return rtn;
 }
 
-sptr<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut) {
+sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut) {
   size_t totalLen = sizeof(NcString) + strLength + 1;
   NcString* o = (NcString*)malloc(totalLen);
   new (o) NcString();

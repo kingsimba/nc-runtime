@@ -6,26 +6,26 @@
  * Smart pointer of NcObject
  */
 template <typename T>
-class sptr {
+class sp {
 public:
-  forceinline sptr() { m_ptr = NULL; }
-  forceinline sptr(T* p) { m_ptr = p; }
-  forceinline sptr(const sptr<T>& p) {
+  forceinline sp() { m_ptr = NULL; }
+  forceinline sp(T* p) { m_ptr = p; }
+  forceinline sp(const sp<T>& p) {
     m_ptr = p.get();
     m_ptr->_retain();
   }
   template <typename Derived>
-  forceinline sptr(const sptr<Derived>& p) {
+  forceinline sp(const sp<Derived>& p) {
     m_ptr = p.get();
     m_ptr->_retain();
   }
-  forceinline sptr(sptr&& r) {
+  forceinline sp(sp&& r) {
     m_ptr = r.m_ptr;
     r.m_ptr = NULL;
   }
-  ~sptr() { release(m_ptr); }
+  ~sp() { release(m_ptr); }
 
-  sptr<T>& operator=(const sptr<T>& p) {
+  sp<T>& operator=(const sp<T>& p) {
     release(m_ptr);
     m_ptr = p.get();
     m_ptr->_retain();
@@ -33,7 +33,7 @@ public:
   }
 
   template <typename Derived>
-  sptr<T>& operator=(const sptr<Derived>& p) {
+  sp<T>& operator=(const sp<Derived>& p) {
     release(m_ptr);
     m_ptr = p.get();
     m_ptr->_retain();
@@ -62,9 +62,9 @@ private:
 };
 
 template <class T1, class T2>
-sptr<T1> static_pointer_cast(const sptr<T2>& r) noexcept {
+sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
   T1* derived = static_cast<typename T1*>(r.get());
-  return sptr<T1>(derived);
+  return sp<T1>(derived);
 }
 
 /**
@@ -77,7 +77,7 @@ public:
   /**
    * Convert any object to string
    */
-  virtual sptr<NcString> toString();
+  virtual sp<NcString> toString();
 
   template<typename ToType>
   forceinline bool isKindOf() {
@@ -119,7 +119,7 @@ forceinline void release(NcObject* o) {
 
 // to prevent error caused by releasing smart pointer through implicit conversion to T*
 template<typename T>
-forceinline void release(sptr<T>& o) {
+forceinline void release(sp<T>& o) {
   if (o->retainCount() != INT_MAX)
     o.reset();
 }

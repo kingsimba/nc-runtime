@@ -6,7 +6,7 @@ using namespace std;
 
 TEST(ArrayTest, vector) {
 
-  sptr<NcString> perm;
+  sp<NcString> perm;
 
   {
     auto str = NcString::allocWithCString("hello world");

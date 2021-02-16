@@ -127,7 +127,7 @@ public:
   }
 
   // Create a standalone NcString
-  sptr<NcString> toString();
+  sp<NcString> toString();
 
   //////////////////////////////////////////////////////////////////////////
   // Search
@@ -177,7 +177,7 @@ public:
   /**
    * Replace part of a string
    */
-  sptr<NcString> stringByReplacingStringInRange(Range range, const StringSlice& replacement);
+  sp<NcString> stringByReplacingStringInRange(Range range, const StringSlice& replacement);
 
   //////////////////////////////////////////////////////////////////////////
   // Equals

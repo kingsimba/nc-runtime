@@ -4,7 +4,7 @@
 static int _calculateStringLength(NcString* str) { return str->length(); }
 
 TEST(NcString, basic) {
-  sptr<NcString> s = NcString::allocWithCString("hello");
+  sp<NcString> s = NcString::allocWithCString("hello");
   EXPECT_STREQ(s->cstr(), "hello");
   EXPECT_EQ(s->length(), 5);
 
@@ -21,9 +21,9 @@ TEST(NcString, basic) {
 }
 
 TEST(NcString, literal) {
-  sptr<NcString> s1, s2;
+  sp<NcString> s1, s2;
   for (int i = 0; i < 2; i++) {
-    sptr<NcString> s = "hello world"_s;
+    sp<NcString> s = "hello world"_s;
     if (i == 0)
       s1 = s;
     else
@@ -44,13 +44,13 @@ TEST(NcString, literal) {
 }
 
 TEST(NcString, join) {
-  sptr<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
+  sp<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
   EXPECT_STREQ(s->cstr(), "hello---world");
   EXPECT_EQ(s->length(), 13);
 }
 
 TEST(NcString, toSlice) {
-  sptr<NcString> s = NcString::allocWithCString("hello world");
+  sp<NcString> s = NcString::allocWithCString("hello world");
   auto slice = s->toSlice();
   EXPECT_EQ(s->retainCount(), 2); // slice holds a reference to the string
 }

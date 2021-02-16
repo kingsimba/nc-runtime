@@ -9,12 +9,12 @@ public:
   /**
    * Create a string by C string. |str| must ends with \0.
    */
-  static sptr<NcString> allocWithCString(const char* str) { return allocWithBytes(str, strlen(str)); }
+  static sp<NcString> allocWithCString(const char* str) { return allocWithBytes(str, strlen(str)); }
 
   /**
    * Create a string by copying bytes. |str| could not ends with \0.
    */
-  static sptr<NcString> allocWithBytes(const char* str, size_t len);
+  static sp<NcString> allocWithBytes(const char* str, size_t len);
 
   /**
    * Create a string by taking the ownership of the memory.
@@ -25,7 +25,7 @@ public:
    * @param len
    *   length of the string |str|.
    */
-  static sptr<NcString> allocByTakingBytes(char* str, size_t len) {
+  static sp<NcString> allocByTakingBytes(char* str, size_t len) {
     auto o = new NcString();
     o->initByTakingBytes(str, len);
     return o;
@@ -34,7 +34,7 @@ public:
   /**
    * Create a string from a slice. Same as StringSlice::toString().
    */
-  static sptr<NcString> allocWithSlice(const StringSlice& str) {
+  static sp<NcString> allocWithSlice(const StringSlice& str) {
     return allocWithBytes(str.bytes(), str.length());
   }
 
@@ -45,19 +45,19 @@ public:
    *   This is an optimization. The string object and the text buffer are created with a single malloc().
    *   The user should fill the content right after, including \0.
    */
-  static sptr<NcString> allocButFillContentLater(size_t strLength, char** strOut);
+  static sp<NcString> allocButFillContentLater(size_t strLength, char** strOut);
 
   /**
    * Create a string by joining pieces with a separator.
    * For example: joining ["hello", "world"] with "---" will produce "hello---world".
    */
-  static sptr<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {
+  static sp<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {
     auto o = new NcString();
     o->initByJoiningSlices(slices, sep);
     return o;
   }
 
-  static sptr<NcString> allocWithLiteralCString(const char* str, size_t len) {
+  static sp<NcString> allocWithLiteralCString(const char* str, size_t len) {
     auto o = new NcString(true);
     o->m_str = (char*)str;
     o->m_length = len;
@@ -88,7 +88,7 @@ public:
   }
 
   // from NcObject
-  virtual sptr<NcString> toString() override { return sptr<NcString>(this); }
+  virtual sp<NcString> toString() override { return sp<NcString>(this); }
 
 private:
   NcString() : m_shouldFree(false) {}
@@ -107,4 +107,4 @@ private:
   bool m_shouldFree;
 };
 
-sptr<NcString> operator""_s(const char* literalStr, size_t len);
+sp<NcString> operator""_s(const char* literalStr, size_t len);

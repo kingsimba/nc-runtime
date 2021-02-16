@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdlib.h>
-#include <memory>
 #include <vector>
 #include <atomic>
 #include <assert.h>
@@ -55,13 +54,6 @@ static forceinline Range Range_make(int location, int length) { return Range{loc
 
 forceinline bool operator==(const Range& l, const Range& r) { return l.location == r.location && l.length == r.length; }
 forceinline bool operator!=(const Range& l, const Range& r) { return l.location != r.location || l.length != r.length; }
-
-//////////////////////////////////////////////////////////////////////////
-
-template <typename T>
-using sp = std::shared_ptr<T>;
-template <typename T>
-using svector = std::vector<sp<T>>;
 
 //////////////////////////////////////////////////////////////////////////
 
