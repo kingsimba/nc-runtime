@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/kingsimba/nc-runtime/workflows/CMake/badge.svg)](https://github.com/kingsimba/nc-runtime/actions)
+
 > **WARNING:** A work in progress
 
 # NC-Runtime
