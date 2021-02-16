@@ -59,25 +59,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\lib\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">nc-runtime-test.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">nc-runtime-test</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\lib\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">nc-runtime-test.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">nc-runtime-test</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\lib\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">nc-runtime-test.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">nc-runtime-test</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\kingsimba\Documents\git\github\nc-runtime\lib\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">nc-runtime-test.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">nc-runtime-test</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
@@ -91,7 +91,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -119,8 +119,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/Debug/nc-runtime-test.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/Debug/nc-runtime-test.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/Debug/nc-runtime-test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/Debug/nc-runtime-test.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -162,8 +162,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/Release/nc-runtime-test.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/Release/nc-runtime-test.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/Release/nc-runtime-test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/Release/nc-runtime-test.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -205,8 +205,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/MinSizeRel/nc-runtime-test.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/MinSizeRel/nc-runtime-test.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/MinSizeRel/nc-runtime-test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/MinSizeRel/nc-runtime-test.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -247,8 +247,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/RelWithDebInfo/nc-runtime-test.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/RelWithDebInfo/nc-runtime-test.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/RelWithDebInfo/nc-runtime-test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/kingsimba/Documents/git/github/nc-runtime/lib/RelWithDebInfo/nc-runtime-test.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -313,7 +313,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\test\nc_log_unittest.cpp" />
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\cmake_pch.cxx">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -370,6 +369,24 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/nc-runtime-test.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_array_unittest.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/nc-runtime-test.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/nc-runtime-test.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/nc-runtime-test.dir/MinSizeRel/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/nc-runtime-test.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_log_unittest.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
