@@ -32,13 +32,27 @@ TEST(StringSlice, split) {
 }
 
 TEST(StringSlice, find) {
-  auto s = StringSlice("hello 世界");
+  auto s = "hello 世界"_s;
   EXPECT_EQ(s.find(U'世'), Range_make(6, 3));
   EXPECT_EQ(s.find(U'界'), Range_make(9, 3));
 
   EXPECT_EQ(s.find('l'), 2);
   EXPECT_EQ(s.rfind('l'), 3);
   EXPECT_EQ(s.find('t'), -1);
+}
+
+TEST(StringSlice, startsEndsWith) {
+  auto s = "hello 世界"_s;
+
+  EXPECT_TRUE(s.startsWith("hello "));
+  EXPECT_TRUE(s.startsWith("hello 世界"));
+  EXPECT_FALSE(s.startsWith("hello 世界1"));
+  EXPECT_FALSE(s.startsWith("世界"));
+
+  EXPECT_TRUE(s.endsWith("hello 世界"));
+  EXPECT_TRUE(s.endsWith("世界"));
+  EXPECT_FALSE(s.endsWith("1hello 世界"));
+  EXPECT_FALSE(s.endsWith("hello"));
 }
 
 TEST(StringSlice, replace) {

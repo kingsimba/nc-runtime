@@ -113,6 +113,13 @@ public:
   forceinline StringCharIter iter() const { return StringCharIter(*this); }
   forceinline StringSubsliceIter iterBySpliting(const StringSlice& sep) const { return StringSubsliceIter(*this, sep); }
 
+  forceinline bool startsWith(const StringSlice& r) {
+    return m_length >= r.m_length && memcmp(m_str, r.m_str, r.m_length) == 0;
+  }
+  forceinline bool endsWith(const StringSlice& r) {
+    return m_length >= r.m_length && memcmp(m_str + m_length - r.m_length, r.m_str, r.m_length) == 0;
+  }
+
   //////////////////////////////////////////////////////////////////////////
   // Conversions
 
@@ -211,3 +218,5 @@ inline int StringSlice::findFrom(int start, char c) {
   }
   return -1;
 }
+
+inline StringSlice operator""_s(const char* literalStr, size_t len) { return StringSlice(literalStr, len); }

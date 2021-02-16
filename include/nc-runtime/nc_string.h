@@ -107,4 +107,4 @@ private:
   bool m_shouldFree;
 };
 
-sp<NcString> operator""_s(const char* literalStr, size_t len);
+sp<NcString> operator""_str(const char* literalStr, size_t len);

@@ -28,8 +28,8 @@ This is a proof-of-concept project. It's used to demonstrate some ideas such as:
 
    ```cpp
    auto arr = NcArray<NcString>::alloc();
-   arr->addObject(_S("Obj1"));
-   arr->addObject(_S("Obj2"));
+   arr->addObject("Obj1"_str);
+   arr->addObject("Obj2"_str);
    EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Obj1\", \"Obj2\"]");
    ```
 
@@ -176,15 +176,18 @@ But overall, I think it's worthwhile to use `auto`. Especially for complex types
 C++11 support customized suffix for string literals.
 
 ```cpp
-sp<NcString> operator""_s(const char* literalStr, size_t len);
+sp<NcString> operator""_str(const char* literalStr, size_t len);
+StringSlice operator""_s(const char* literalStr, size_t len);
 ```
 
-This enables creating of literal NcString object.
+This enables creating of literal NcString object or StringSlice.
 
 ```cpp
-sp<NcString> s = "hello world"_s;
+sp<NcString> str = "hello world"_str;
+StringSlice slice = "hello world"_s;
 ```
 
+NcString object created in this way is considered "static".
 It has `retainCount()` at INT_MAX.
 Calling retain() or release() on it has no effect.
 With a global string manager, it's possible to make sure only one NcString object is created for each string literal.
@@ -193,7 +196,7 @@ With a global string manager, it's possible to make sure only one NcString objec
 TEST(NcString, literal) {
   sp<NcString> s1, s2;
   for (int i = 0; i < 2; i++) {
-    sp<NcString> s = "hello world"_s;
+    sp<NcString> s = "hello world"_str;
     if (i == 0)
       s1 = s;
     else

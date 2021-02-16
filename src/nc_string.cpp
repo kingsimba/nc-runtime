@@ -41,7 +41,7 @@ private:
 
 static GlobalStringManager g_stringManager;
 
-sp<NcString> operator"" _s(const char* literalStr, size_t len) { return g_stringManager.addString(literalStr, len); }
+sp<NcString> operator"" _str(const char* literalStr, size_t len) { return g_stringManager.addString(literalStr, len); }
 
 //////////////////////////////////////////////////////////////////////////
 // NcString

@@ -23,7 +23,7 @@ TEST(NcString, basic) {
 TEST(NcString, literal) {
   sp<NcString> s1, s2;
   for (int i = 0; i < 2; i++) {
-    sp<NcString> s = "hello world"_s;
+    sp<NcString> s = "hello world"_str;
     if (i == 0)
       s1 = s;
     else
@@ -39,7 +39,7 @@ TEST(NcString, literal) {
   release(s1.get());
   EXPECT_EQ(s1->retainCount(), INT_MAX);
 
-  auto s3 = "hello world"_s;
+  auto s3 = "hello world"_str;
   // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
   EXPECT_EQ(s1.get(), s3.get());
 }
