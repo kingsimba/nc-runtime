@@ -53,7 +53,13 @@ public:
    */
   static sp<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {
     auto o = new NcString();
-    o->initByJoiningSlices(slices, sep);
+    o->initByJoiningSlices(&slices[0], slices.size(), sep);
+    return o;
+  }
+
+  static sp<NcString> allocByJoiningSlices(StringSlice* slices, size_t sliceCount, const StringSlice& sep) {
+    auto o = new NcString();
+    o->initByJoiningSlices(slices, sliceCount, sep);
     return o;
   }
 
@@ -101,7 +107,7 @@ private:
     m_shouldFree = true;
   }
   
-  void initByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep);
+  void initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep);
 
 private:
   bool m_shouldFree;

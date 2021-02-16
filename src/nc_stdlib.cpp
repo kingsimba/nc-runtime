@@ -31,3 +31,35 @@ size_t Math_hashSizeT(size_t o) {
   return Math_hashU32(o);
 #endif
 }
+
+void* StackOrHeapAllocator::alloc(size_t requirement) {
+  void* rtn;
+  if (m_usedStackSize + requirement <= m_stackSize) {
+    rtn = m_stackBuffer + m_usedStackSize;
+    m_usedStackSize += requirement;
+  } else if (m_heapPointerCount < countof(m_heapPointers)) {
+    rtn = malloc(requirement);
+    m_heapPointers[m_heapPointerCount++] = rtn;
+  } else {
+    if (m_moreHeapPointers == NULL) {
+      m_moreHeapPointers = new std::vector<void*>();
+      m_moreHeapPointers->reserve(32);
+    }
+    rtn = malloc(requirement);
+    m_moreHeapPointers->push_back(rtn);
+  }
+
+  return rtn;
+}
+
+StackOrHeapAllocator::~StackOrHeapAllocator() {
+  for (size_t i = 0; i < m_heapPointerCount; i++) {
+    free(m_heapPointers[i]);
+  }
+  if (m_moreHeapPointers != NULL) {
+    for (size_t i = 0; i < m_moreHeapPointers->size(); i++) {
+      free(m_moreHeapPointers->at(i));
+    }
+    delete m_moreHeapPointers;
+  }
+}

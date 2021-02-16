@@ -213,3 +213,37 @@ TEST(NcString, literal) {
   EXPECT_EQ(s1.get(), s3.get());
 }
 ```
+
+## StackOrHeapAllocator
+
+In some functions, stack is enough for most cases. But occasionally, larger memory is required.
+
+For example, in NcLog_write(), `char message[2048]' is very, very likely to be enough, but we can't count on it. StackOrHeapAllocator is invented exactly for that.
+
+```cpp
+TEST(Stdlib, stackOrHeapAllocator) {
+  u8* stack = (u8*)alloca(1024);
+  StackOrHeapAllocator allocator(stack, 1024);
+  EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 0);
+  EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 512);
+  EXPECT_GT(allocator.allocArray<u8>(1) - stack, 4096); // stack used up, so it's on heap
+}
+```
+
+## Log System
+
+There are often too many aims for a log system:
+
+1. filter with level
+2. filter with tags
+3. generated message should contains file, line number, functions name
+4. support writing to debugger/console/file/remote server
+5. support packaging if file is too large
+
+I think the last two requirements are too task-dependent.
+(For example, if you are writing server programs, you may want to collect logs with Kubernetes
+and then send to Elasticsearch)
+So I shall write a log system which only support the first 3 requirements.
+By default, the log messages will be written to Visual Studio Debugger(Windows) and
+console(Windows & Linux).
+But the default behavior can be overridden with NcLog_setCallback().

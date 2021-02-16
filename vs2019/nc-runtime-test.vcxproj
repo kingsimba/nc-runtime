@@ -313,6 +313,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\nc_log_unittest.cpp" />
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime-test.dir\cmake_pch.cxx">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime-test.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

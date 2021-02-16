@@ -72,25 +72,26 @@ NcString::~NcString() {
   }
 }
 
-void NcString::initByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {
-  if (slices.empty()) {
+void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep) {
+  if (sliceCount == 0) {
     m_str = "";
     return;
   }
 
   size_t totalLen = 0;
-  for (const auto& s : slices) {
+  for (size_t i = 0; i < sliceCount; i++) {
+    const StringSlice& s = slices[i];
     totalLen += s.length();
   }
-  totalLen += sep.length() * (slices.size() - 1);
+  totalLen += sep.length() * (sliceCount - 1);
 
   char* str = (char*)malloc(totalLen + 1);
   totalLen = 0;
-  for (size_t i = 0; i < slices.size(); i++) {
+  for (size_t i = 0; i < sliceCount; i++) {
     const StringSlice& s = slices[i];
     memcpy(str + totalLen, s.bytes(), s.length());
     totalLen += s.length();
-    if (i != slices.size() - 1) {
+    if (i != sliceCount - 1) {
       memcpy(str + totalLen, sep.bytes(), sep.length());
       totalLen += sep.length();
     }
