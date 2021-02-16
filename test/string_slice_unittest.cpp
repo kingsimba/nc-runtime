@@ -44,15 +44,16 @@ TEST(StringSlice, find) {
 TEST(StringSlice, startsEndsWith) {
   auto s = "hello 世界"_s;
 
-  EXPECT_TRUE(s.startsWith("hello "));
-  EXPECT_TRUE(s.startsWith("hello 世界"));
-  EXPECT_FALSE(s.startsWith("hello 世界1"));
-  EXPECT_FALSE(s.startsWith("世界"));
+  // using _s is faster. Because the compiler will determine the length. Not through strlen()
+  EXPECT_TRUE(s.startsWith("hello "_s));
+  EXPECT_TRUE(s.startsWith("hello 世界"_s));
+  EXPECT_FALSE(s.startsWith("hello 世界1"_s));
+  EXPECT_FALSE(s.startsWith("世界"_s));
 
-  EXPECT_TRUE(s.endsWith("hello 世界"));
-  EXPECT_TRUE(s.endsWith("世界"));
-  EXPECT_FALSE(s.endsWith("1hello 世界"));
-  EXPECT_FALSE(s.endsWith("hello"));
+  EXPECT_TRUE(s.endsWith("hello 世界"_s));
+  EXPECT_TRUE(s.endsWith("世界"_s));
+  EXPECT_FALSE(s.endsWith("1hello 世界"_s));
+  EXPECT_FALSE(s.endsWith("hello"_s));
 }
 
 TEST(StringSlice, replace) {

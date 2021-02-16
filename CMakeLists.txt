@@ -29,6 +29,10 @@ set(TEST_PROJ "nc-runtime-test")
 file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h" "3rd-party/src/googletest-1.10.0/*.h" "3rd-party/src/googletest-1.10.0/src/gtest-all.cc")
 add_executable(${TEST_PROJ} ${TEST_SRC})
 target_link_libraries(${TEST_PROJ} PRIVATE "nc-runtime")
-target_link_libraries(${TEST_PROJ} PRIVATE pthread)
+
+if (NOT WIN32)
+	target_link_libraries(${TEST_PROJ} PRIVATE pthread)	# google test needs pthread on Linux
+endif()
+
 target_include_directories(${TEST_PROJ} PRIVATE "src" "include/nc-runtime" "3rd-party/include" "3rd-party/src/googletest-1.10.0")
 target_precompile_headers(${TEST_PROJ} PRIVATE "test/stdafx_nc_runtime_test.h")
