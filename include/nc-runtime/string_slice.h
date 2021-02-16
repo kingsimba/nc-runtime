@@ -183,8 +183,15 @@ public:
 
   /**
    * Replace part of a string
+   * 
+   * @rtn return the new string
    */
-  sp<NcString> stringByReplacingStringInRange(Range range, const StringSlice& replacement);
+  sp<NcString> replaceInRange(Range range, const StringSlice& replacement);
+
+  /**
+   * Count the occurrences of target string
+   */
+  int countSlice(const StringSlice& target);
 
   //////////////////////////////////////////////////////////////////////////
   // Equals

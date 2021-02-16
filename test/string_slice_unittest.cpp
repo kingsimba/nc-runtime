@@ -8,6 +8,11 @@ TEST(StringSlice, subslice) {
   EXPECT_STREQ(s.subsliceFrom(3).toString()->cstr(), "err is human, to forgive divine.");
   EXPECT_STREQ(s.subslice(10, 5).toString()->cstr(), "human");
   EXPECT_STREQ(s.subsliceInRange(Range_make(10, 5)).toString()->cstr(), "human");
+
+  // count subslice
+  EXPECT_EQ("hello world hello world hello"_s.countSlice("hello"), 3);
+  EXPECT_EQ("hello"_s.countSlice("hello"), 1);
+  EXPECT_EQ("hello"_s.countSlice("hello world"), 0);
 }
 
 TEST(StringSlice, split) {
@@ -60,6 +65,6 @@ TEST(StringSlice, replace) {
   auto str = NcString::allocWithCString("folder1/folder2/file.png");
   auto pos = str->rfind('.');
   ASSERT_TRUE(pos != -1);
-  EXPECT_STREQ(str->stringByReplacingStringInRange(Range_make(pos, str->length() - pos), ".jpg")->cstr(),
+  EXPECT_STREQ(str->replaceInRange(Range_make(pos, str->length() - pos), ".jpg")->cstr(),
 	       "folder1/folder2/file.jpg");
 }

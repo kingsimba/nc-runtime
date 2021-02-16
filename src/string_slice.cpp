@@ -105,7 +105,7 @@ int StringSlice::splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, 
   return created;
 }
 
-sp<NcString> StringSlice::stringByReplacingStringInRange(Range range, const StringSlice& replacement) {
+sp<NcString> StringSlice::replaceInRange(Range range, const StringSlice& replacement) {
   if (!range.isValid()) {
     return this->toString();
   }
@@ -123,6 +123,26 @@ sp<NcString> StringSlice::stringByReplacingStringInRange(Range range, const Stri
   memcpy(buffer + loc, m_str + range.end(), (size_t)m_length - range.end());
   buffer[len] = '\0';
   return rtn;
+}
+
+int StringSlice::countSlice(const StringSlice& target) {
+  if (target.length() > m_length) return 0;
+
+  const char* t = target.bytes();
+  int tLength = target.length();
+  const char* s = m_str;
+  const char* yEnd = m_str + m_length - tLength;
+
+  /* Brutal force Searching */
+  // TODO: replace with a better algorithm at http://www-igm.univ-mlv.fr/~lecroq/string/
+  int count = 0;
+  for (const char* yb = s; s <= yEnd; s++) {
+    if (memcmp(t, s, tLength) == 0) {
+      count++;
+    }
+  }
+
+  return count;
 }
 
 //////////////////////////////////////////////////////////////////////////
