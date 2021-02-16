@@ -1,23 +1,30 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_string.h"
 
+sptr<NcString> NcString::allocWithBytes(const char* str, size_t len) {
+  char* buffer;
+  auto rtn = allocButFillContentLater(len, &buffer);
+  memcpy(buffer, str, len);
+  buffer[len] = 0;
+  return rtn;
+}
+
+sptr<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut) {
+  size_t totalLen = sizeof(NcString) + strLength + 1;
+  NcString* o = (NcString*)malloc(totalLen);
+  new (o) NcString();
+  char* buffer = (char*)(o + 1);
+  o->m_str = buffer;
+  o->m_length = (int)strLength;
+  o->m_shouldFree = false;
+  *strOut = buffer;
+  return o;
+}
+
 NcString::~NcString() {
   if (m_shouldFree) {
     free(m_str);
   }
-}
-
-void NcString::initWithCString(const char* str) {
-  m_str = strdup(str);
-  m_length = strlen(str);
-  m_shouldFree = true;
-}
-
-void NcString::initWithBytes(const char* str, size_t len) {
-  char* copy = (char*)malloc(len + 1);
-  memcpy(copy, str, len);
-  copy[len] = 0;
-  initByTakingBytes(copy, len);
 }
 
 void NcString::initByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep) {

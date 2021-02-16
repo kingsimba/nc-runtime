@@ -112,8 +112,8 @@ sptr<NcString> StringSlice::stringByReplacingStringInRange(Range range, const St
   assert(range.end() <= m_length);
 
   size_t len = (size_t)m_length + replacement.length() - range.length;
-  char* buffer = (char*)malloc(len + 1);
-  buffer[len] = 0;
+  char* buffer;
+  auto rtn = NcString::allocButFillContentLater(len, &buffer);
 
   size_t loc = 0;
   memcpy(buffer, m_str, range.location);
@@ -121,7 +121,8 @@ sptr<NcString> StringSlice::stringByReplacingStringInRange(Range range, const St
   memcpy(buffer + loc, replacement.bytes(), replacement.length());
   loc += replacement.length();
   memcpy(buffer + loc, m_str + range.end(), (size_t)m_length - range.end());
-  return NcString::allocByTakingBytes(buffer, len);
+  buffer[len] = '\0';
+  return rtn;
 }
 
 //////////////////////////////////////////////////////////////////////////

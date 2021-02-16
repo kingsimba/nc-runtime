@@ -9,20 +9,12 @@ public:
   /**
    * Create a string by C string. |str| must ends with \0.
    */
-  static sptr<NcString> allocWithCString(const char* str) {
-    auto o = new NcString();
-    o->initWithCString(str);
-    return o;
-  }
+  static sptr<NcString> allocWithCString(const char* str) { return allocWithBytes(str, strlen(str)); }
 
   /**
    * Create a string by copying bytes. |str| could not ends with \0.
    */
-  static sptr<NcString> allocWithBytes(const char* str, size_t len) {
-    auto o = new NcString();
-    o->initWithBytes(str, len);
-    return o;
-  }
+  static sptr<NcString> allocWithBytes(const char* str, size_t len);
 
   /**
    * Create a string by taking the ownership of the memory.
@@ -43,10 +35,17 @@ public:
    * Create a string from a slice. Same as StringSlice::toString().
    */
   static sptr<NcString> allocWithSlice(const StringSlice& str) {
-    auto o = new NcString();
-    o->initWithBytes(str.bytes(), str.length());
-    return o;
+    return allocWithBytes(str.bytes(), str.length());
   }
+
+  /**
+   * Return a partially created String.
+   * 
+   * @remarks
+   *   This is an optimization. The string object and the text buffer are created with a single malloc().
+   *   The user should fill the content right after, including \0.
+   */
+  static sptr<NcString> allocButFillContentLater(size_t strLength, char** strOut);
 
   /**
    * Create a string by joining pieces with a separator.
@@ -87,8 +86,6 @@ private:
   NcString() : m_shouldFree(false) {}
   ~NcString();
 
-  void initWithCString(const char* str);
-  void initWithBytes(const char* str, size_t len);
   void initByTakingBytes(char* str, size_t len) {
     m_str = str;
     m_length = (int)len;
