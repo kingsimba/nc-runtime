@@ -13,6 +13,9 @@
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_array_unittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_log_unittest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\nc_object_unittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -23,9 +26,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\test\string_slice_unittest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\test\nc_log_unittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

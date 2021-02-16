@@ -34,5 +34,8 @@ if (NOT WIN32)
 	target_link_libraries(${TEST_PROJ} PRIVATE pthread)	# google test needs pthread on Linux
 endif()
 
+set_target_properties(${TEST_PROJ} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set_target_properties(${TEST_PROJ} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set_target_properties(${TEST_PROJ} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 target_include_directories(${TEST_PROJ} PRIVATE "src" "include/nc-runtime" "3rd-party/include" "3rd-party/src/googletest-1.10.0")
 target_precompile_headers(${TEST_PROJ} PRIVATE "test/stdafx_nc_runtime_test.h")
