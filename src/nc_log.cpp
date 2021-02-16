@@ -54,12 +54,12 @@ void NcLog_write(LogLevel level, const char* file, int line, const char* func, c
 #ifdef NC_OS_WIN
 #include <windows.h>
 void Dal_writeLog(const char* str) {
-  printf(str);
+  printf("%s", str);
   OutputDebugStringA(str);
 }
 
 #else
 void Dal_writeLog(const char* str) {
-  printf(str);
+  printf("%s", str);
 }
 #endif
