@@ -41,7 +41,7 @@ TEST(ArrayTest, find) {
     v->addObject(NcString::allocWithCString("world"));
 
     auto startWord = "w"_s;
-    auto& obj = v->find([&](NcString* v) {
+    auto obj = v->find([&](NcString* v) {
       return v->startsWith(startWord);
     });
 
