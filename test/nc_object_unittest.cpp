@@ -41,7 +41,7 @@ TEST(NcObject, rcAndCast) {
 
   // cast to derived
   auto derived = static_pointer_cast<MyBox>(base);
-  EXPECT_EQ(derived.use_count(), 5);
+  EXPECT_EQ(derived.use_count(), 6);
   EXPECT_TRUE(derived.get() == box.get());
   EXPECT_TRUE(derived == box);
 }
