@@ -12,15 +12,19 @@ public:
   sp<T>& objectAtIndex(int i) { return this->m_array[i]; }
 
   /**
-   * Find a object
+   * Find an object
    * 
+   * @return
+   *  return NULL if not found.
+   * 
+   * @remarks
    * ```
    * auto v = NcArray<NcString>::alloc();
    * v->addObject("hello"_str);
    * v->addObject("world"_str);
-   * auto obj = v->find([](NcString* v) {
-   *   if (v->startsWith("w")) return true;
-   *   return false;
+   * auto startWord = "w"_s;
+   * auto obj = v->find([&](NcString* v) {
+   *   return v->startsWith(startWord);
    * });
    * ```
    */

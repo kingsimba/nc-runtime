@@ -40,17 +40,16 @@ TEST(ArrayTest, find) {
     v->addObject(NcString::allocWithCString("hello"));
     v->addObject(NcString::allocWithCString("world"));
 
-    auto& obj = v->find([](NcString* v) {
-      if (v->startsWith("w")) return true;
-      return false;
+    auto startWord = "w"_s;
+    auto& obj = v->find([&](NcString* v) {
+      return v->startsWith(startWord);
     });
 
     ASSERT_TRUE(obj != NULL);
     EXPECT_STREQ(obj->cstr(), "world");
 
     obj = v->find([](NcString* v) {
-      if (v->startsWith("s")) return true;
-      return false;
+      return v->startsWith("s");
     });
 
     ASSERT_TRUE(obj == NULL);
