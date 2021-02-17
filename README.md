@@ -303,3 +303,11 @@ So I shall write a log system which only support the first 3 requirements.
 By default, the log messages will be written to Visual Studio Debugger(Windows) and
 console(Windows & Linux).
 But the default behavior can be overridden with NcLog_setCallback().
+
+## Visual Studio Visualizer
+
+`nc-runtime.natvis` is used to improve the debugging experience in Visual Studio.
+
+Visualizer are included for `NcArray`, `sp`, `NcString`, `StringSlice` etc
+
+![](vs_visualizer/visualizer.png)
