@@ -71,6 +71,8 @@ public:
     return o;
   }
 
+  static sp<NcString> format(const char* format, ...);
+
   //////////////////////////////////////////////////////////////////////////
   /// Accessors
 

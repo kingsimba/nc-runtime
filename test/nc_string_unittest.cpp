@@ -69,3 +69,8 @@ TEST(NcString, subslice) {
   EXPECT_EQ(str->retainCount(), 2);
   EXPECT_TRUE(slice.equals("--"));
 }
+
+TEST(NcString, format) {
+  EXPECT_STREQ(NcString::format("%s shall come", "The Day")->cstr(), "The Day shall come");
+  EXPECT_STREQ(NcString::format("%zu is a large number", 12345678901234)->cstr(), "12345678901234 is a large number");
+}

@@ -3,6 +3,7 @@
 #include "nc_stdlib.h"
 #include <mutex>
 #include <unordered_map>
+#include <stdarg.h>
 
 using namespace std;
 
@@ -63,6 +64,19 @@ sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
   o->m_length = (int)strLength;
   o->m_shouldFree = false;
   *strOut = buffer;
+  return o;
+}
+
+sp<NcString> NcString::format(const char* format, ...) {
+  va_list va;
+  va_start(va, format);
+  size_t len = vsnprintf(NULL, 0, format, va);
+  va_end(va);
+  va_start(va, format);
+  char* buffer;
+  auto o = NcString::allocButFillContentLater(len, &buffer);
+  vsnprintf(buffer, len + 1, format, va);
+  va_end(va);
   return o;
 }
 
