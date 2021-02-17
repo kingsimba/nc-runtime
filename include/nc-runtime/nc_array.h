@@ -8,8 +8,12 @@ class NcArray : public NcObject {
 public:
   static sp<NcArray<T>, T> alloc() { return new NcArray(); }
 
-  void addObject(const sp<T>& obj) { this->m_array.push_back(obj); }
-  sp<T>& objectAtIndex(int i) { return this->m_array[i]; }
+  forceinline int capacity() { return (int)m_array.capacity(); }
+  forceinline int size() { return (int)m_array.size(); }
+  forceinline void reserve(int newCapacity) { return m_array.reserve(newCapacity); }
+
+  forceinline void addObject(const sp<T>& obj) { this->m_array.push_back(obj); }
+  forceinline sp<T>& objectAtIndex(int i) { return this->m_array[i]; }
 
   /**
    * Find an object
@@ -42,9 +46,6 @@ public:
   forceinline sp<T>& operator[](int index) {
     return m_array[index];
   }
-
-  // from NcObject
-  virtual sp<NcString> toString() override { return NcString::allocWithCString("This is an array"); }
 
 private:
   std::vector< sp<T> > m_array;

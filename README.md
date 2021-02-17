@@ -311,3 +311,45 @@ But the default behavior can be overridden with NcLog_setCallback().
 Visualizer are included for `NcArray`, `sp`, `NcString`, `StringSlice` etc
 
 ![](vs_visualizer/visualizer.png)
+
+## Implement operator [] for `sp<NcArray>`
+
+`sp<NcArray>` should work just like ordinary array:
+
+```cpp
+auto v = NcArray<NcString>::alloc();
+v->addObject("hello"_str);
+auto& s = v[0]; // use []
+```
+
+To support than:
+
+1. Implement operator [] in `NcArray`
+
+   ```cpp
+   sp<T>& operator[](int index) {
+     return m_array[index];
+   }
+   ```
+
+1. `sp` must implement operator []
+
+   In order to detect element type, a second template parameter `ArrayElement` is added.
+
+   ```cpp
+   template <typename T, typename ArrayElement=T>
+   class sp {
+     /**
+     * For accessing array element(If it's an array)
+     */
+     forceinline sp<ArrayElement>& operator[](int index) {
+       return (*m_ptr)[index];
+     }
+   }
+   ```
+
+1. `NcArray::alloc()` 's return type should be `sp<NcArray<T>, T>`
+
+   ```cpp
+   static sp<NcArray<T>, T> alloc() { return new NcArray(); }
+   ```
