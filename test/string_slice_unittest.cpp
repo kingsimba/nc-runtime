@@ -55,24 +55,36 @@ TEST(StringSlice, split) {
   EXPECT_TRUE(pieces[1].equals("variable with the same care "));
   EXPECT_TRUE(pieces[2].equals("as you are naming your first born child."));
 
-  // non-exist splitter should produce a single result
-  pieces = s.split("non-exist");
-  ASSERT_EQ(pieces.size(), 1);
-  EXPECT_TRUE(pieces[0].length() == s.length());
-
   {
     StringSlice pieces[3];
     EXPECT_EQ(StringSlice("hello--world--hello--world").splitWithLimit("--", pieces, countof(pieces)), 3);
     EXPECT_TRUE(pieces[1].equals("world"));
   }
+}
 
-  {
-    auto s = "Fireworks-------Fireworks-------Fireworks-------Fireworks--"_s;
-    StringSlice slice;
-    auto slices = s.split("-------"_s);
-    ASSERT_EQ(slices.size(), 4);
-    EXPECT_STREQ(slices.back().toString()->cstr(), "Fireworks--");
-  }
+TEST(StringSlice, splitBug1) {
+  auto s = "Fireworks-------Fireworks-------Fireworks-------Fireworks--"_s;
+  StringSlice slice;
+  auto slices = s.split("-------"_s);
+  ASSERT_EQ(slices.size(), 4);
+  EXPECT_STREQ(slices.back().toString()->cstr(), "Fireworks--");
+}
+
+TEST(StringSlice, splitNonexistSep) {
+  // non-exist splitter should produce a single result
+  auto s = "hello world"_s;
+  auto pieces = s.split("non-exist");
+  ASSERT_EQ(pieces.size(), 1);
+  EXPECT_TRUE(pieces[0].length() == s.length());
+}
+
+TEST(StringSlice, splitShouldKeepEmptySlices) {
+  // 3 separators should create 4 slices
+  auto s = ",,,"_s;
+  StringSlice slice;
+  auto slices = s.split(","_s);
+  ASSERT_EQ(slices.size(), 4);
+  EXPECT_STREQ(slices.back().toString()->cstr(), "");
 }
 
 TEST(StringSlice, find) {

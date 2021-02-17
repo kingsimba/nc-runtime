@@ -51,6 +51,7 @@ public:
     this->m_ncstring = r.m_ncstring;
     this->m_sep = r.m_sep;
     this->m_sepLength = r.m_sepLength;
+    this->m_foundSep = r.m_foundSep;
     r.m_ncstring = NULL;
   }
   ~StringSubsliceIter();
@@ -66,6 +67,7 @@ protected:
 
   const char* m_sep;
   int m_sepLength;
+  bool m_foundSep;
 };
 
 /**

@@ -50,18 +50,21 @@ static const char* _strstr(const char* s1, const char* s1End, const char* s2, si
   return p;
 }
 
- StringSubsliceIter::StringSubsliceIter(const StringSlice& slice, const StringSlice& sep) {
+StringSubsliceIter::StringSubsliceIter(const StringSlice& slice, const StringSlice& sep) {
   m_str = m_strBegin = slice.bytes();
   m_strEnd = m_str + slice.length();
   m_ncstring = retain(slice.internalString());
   m_sep = sep.bytes();
   m_sepLength = sep.length();
+  m_foundSep = false;
 }
 
- StringSubsliceIter::~StringSubsliceIter() { release(m_ncstring); }
+StringSubsliceIter::~StringSubsliceIter() { release(m_ncstring); }
 
 bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut) {
-  if (m_str == m_strEnd) return false;
+  if (m_str == m_strEnd && !m_foundSep) {
+    return false;
+  }
 
   const char* newStr = _strstr(m_str, m_strEnd, m_sep, m_sepLength);
 
@@ -70,8 +73,10 @@ bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut) {
 
   if (newStr != m_strEnd) {
     m_str = newStr + m_sepLength;
+    m_foundSep = true;
   } else {
     m_str = newStr;
+    m_foundSep = false;
   }
 
   return true;
