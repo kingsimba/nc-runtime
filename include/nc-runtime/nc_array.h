@@ -27,21 +27,21 @@ public:
    * v->addObject("hello"_str);
    * v->addObject("world"_str);
    * auto startWord = "w"_s;
-   * auto obj = v->find([&](NcString* v) {
+   * auto obj = v->findWithCondition([&](NcString* v) {
    *   return v->startsWith(startWord);
    * });
    * ```
    */
-  template<typename Finder>
-  sp<T> find(const Finder& finder) {
-    for (auto& obj : m_array) {
-      if (finder(obj.get())) {
-        return obj;
-      }
-    }
+  sp<T> findWithCondition(std::function<bool (T* obj)> func);
 
-    return NULL;
+  /*
+   * return -1 if not found. It uses NcObject::equals() for comparison
+   */
+  int indexOfObject(T* r) {
+    return indexOfObjectWithCondition([=](T* obj) { return obj == r || obj->equals(r); });
   }
+  
+  int indexOfObjectWithCondition(std::function<bool(T* obj)> func);
 
   forceinline sp<T>& operator[](int index) {
     return m_array[index];
@@ -51,3 +51,25 @@ private:
   std::vector< sp<T> > m_array;
 };
 
+template <typename T>
+sp<T> NcArray<T>::findWithCondition(std::function<bool(T* obj)> func) {
+  for (auto& obj : m_array) {
+    if (func(obj.get())) {
+      return obj;
+    }
+  }
+
+  return NULL;
+}
+
+template <typename T>
+int NcArray<T>::indexOfObjectWithCondition(std::function<bool(T* obj)> func) {
+  int len = (int)m_array.size();
+  for (int i = 0; i < len; i++) {
+    if (func(m_array[i].get())) {
+      return i;
+    }
+  }
+
+  return -1;
+}

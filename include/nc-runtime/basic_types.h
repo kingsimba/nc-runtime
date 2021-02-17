@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <atomic>
+#include <functional>
 #include <assert.h>
 #include <limits.h>
 #include <string.h>

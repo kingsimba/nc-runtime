@@ -1,6 +1,6 @@
 # Changelog
 
-- 2021-02-17 Add NcArray::find()
+- 2021-02-17 Add NcArray::findWithCondition(), indexOfObject(), indexOfObjectWithCondition()
 - 2021-02-17 Update Visual Studio Visualizer.
 - 2021-02-16 Add NcString::format(). StringSlice::tokenize().
 - 2021-02-16 Add log system. Add StackOrHeapAllocator.

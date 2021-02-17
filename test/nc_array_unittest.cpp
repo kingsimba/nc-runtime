@@ -41,16 +41,22 @@ TEST(ArrayTest, find) {
     v->addObject(NcString::allocWithCString("world"));
 
     auto startWord = "w"_s;
-    auto obj = v->find([&](NcString* v) {
+    auto obj = v->findWithCondition([&](NcString* v) {
       return v->startsWith(startWord);
     });
 
     ASSERT_TRUE(obj != NULL);
     EXPECT_STREQ(obj->cstr(), "world");
 
-    obj = v->find([](NcString* v) {
+    obj = v->findWithCondition([](NcString* v) {
       return v->startsWith("s");
     });
 
     ASSERT_TRUE(obj == NULL);
+
+    EXPECT_EQ(v->indexOfObjectWithCondition([&](NcString* v) { return v->startsWith(startWord); }), 1);
+    EXPECT_EQ(v->indexOfObjectWithCondition([&](NcString* v) { return v->startsWith("s"_s); }), -1);
+
+    EXPECT_EQ(v->indexOfObject(NcString::allocWithCString("hello")), 0);
+    EXPECT_EQ(v->indexOfObject(NcString::allocWithCString("non-exist")), -1);
 }
