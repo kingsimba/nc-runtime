@@ -30,11 +30,11 @@ They may not be the best ideas. But I hope you may find some pieces useful.
    sp<NcString> p2 = retain(raw);   // raw -> sp
    ```
 
-   This is important to implement things like `NcString::allocWithCString("hello---world")->split("---")`.
+   This is important for things like `NcString::allocWithCString("hello---world")->split("---")`. See design notes below.
 
-2. I want a String class which is intuitive to use and efficient.
+2. I want a string class which is both intuitive and efficient.
 
-   `StringSlices` is always on stack. It only contains a `char*` and `length`. So it's very fast.
+   `StringSlices` is always on stack. It only contains a `char*` and a `length`. There is no heap memory allocation. So it's very fast.
 
    ```cpp
    StringSlice slice = "hello---world"_s;
@@ -43,7 +43,7 @@ They may not be the best ideas. But I hope you may find some pieces useful.
    EXPECT_TRUE(pieces[1].equals("world"));
    ```
 
-   `NcString` is on heap.
+   `NcString` is on heap. There is one `malloc()` for each string.
 
    ```cpp
    auto str = NcString::allocWithCString("hello---world");
@@ -58,41 +58,62 @@ They may not be the best ideas. But I hope you may find some pieces useful.
 
    ```cpp
    "freeman"_s.startsWith("free");
+   "freeman"_s.endsWith("man");
    EXPECT_EQ("internationalization"_s.countSlice("tion"), 2);
-   auto str = NcString::format("%s shall come", "The Day");
+   auto str = NcString::format("%s shall come", "The Day"); // The Day shall come
    ```
 
 3. I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
 
    - Type identification
 
-   ```cpp
-   sp<NcObject> box = MyBox::alloc();
-   EXPECT_TRUE(box->isKindOf<MyBox>());
-   EXPECT_TRUE(box->isKindOf<NcObject>());
-   EXPECT_FALSE(box->isKindOf<NcString>());
-   ```
+     ```cpp
+     sp<NcObject> box = MyBox::alloc();
+     EXPECT_TRUE(box->isKindOf<MyBox>());
+     EXPECT_TRUE(box->isKindOf<NcObject>());
+     EXPECT_FALSE(box->isKindOf<NcString>());
+     ```
 
    - All objects can be converted in string.
 
-   ```cpp
-   auto str = o->toString();
-   ```
+     ```cpp
+     auto str = o->toString();
+     ```
 
    - C style format can be extended to support any NcObject.
 
+     ```cpp
+     auto arr = NcArray<NcString>::alloc();
+     arr->addObject("Earth"_str);
+     arr->addObject("Mars"_str);
+     arr[1] = "Jupiter"_str;
+     EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
+     ```
+
+4. StackOrHeapAllocator
+
+   In some functions, stack is enough for most cases. But occasionally, larger memory is required.
+
+   For example, in NcLog_write(), `char message[2048]' is very, very likely to be enough, but we can't count on it. StackOrHeapAllocator is invented exactly for situations like that.
+
    ```cpp
-   auto arr = NcArray<NcString>::alloc();
-   arr->addObject("Earth"_str);
-   arr->addObject("Mars"_str);
-   arr[1] = "Jupiter"_str;
-   EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
+   TEST(Stdlib, stackOrHeapAllocator) {
+     u8* stack = (u8*)alloca(1024);
+     StackOrHeapAllocator allocator(stack, 1024);
+     EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 0);
+     EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 512);
+     EXPECT_GT(allocator.allocArray<u8>(1) - stack, 4096); // stack used up, so it's on heap
+
+     // no leak
+   }
    ```
 
-4. Many more good stuff.
+   All allocated memory will be freed when `allocator` goes out of scope.
+
+5. Many more good stuffs.
 
    - Log System
-   - StackOrHeapAllocator
+   - NcCache
 
 # Design Notes
 
@@ -267,22 +288,6 @@ TEST(NcString, literal) {
   auto s3 = "hello world"_s;
   // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
   EXPECT_EQ(s1.get(), s3.get());
-}
-```
-
-## StackOrHeapAllocator
-
-In some functions, stack is enough for most cases. But occasionally, larger memory is required.
-
-For example, in NcLog_write(), `char message[2048]' is very, very likely to be enough, but we can't count on it. StackOrHeapAllocator is invented exactly for that.
-
-```cpp
-TEST(Stdlib, stackOrHeapAllocator) {
-  u8* stack = (u8*)alloca(1024);
-  StackOrHeapAllocator allocator(stack, 1024);
-  EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 0);
-  EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 512);
-  EXPECT_GT(allocator.allocArray<u8>(1) - stack, 4096); // stack used up, so it's on heap
 }
 ```
 
