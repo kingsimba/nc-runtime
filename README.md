@@ -358,3 +358,26 @@ To support than:
    ```cpp
    static sp<NcArray<T>, T> alloc() { return new NcArray(); }
    ```
+
+## Closure(Lambda Functions)
+
+`NcArray::findWithCondition()` uses lambda expression.
+See https://www.cprogramming.com/c++11/c++11-lambda-closures.html.
+
+```cpp
+auto v = NcArray<NcString>::alloc();
+v->addObject(NcString::allocWithCString("hello"));
+v->addObject(NcString::allocWithCString("world"));
+
+auto startWord = "w"_s;
+auto obj = v->findWithCondition([&](NcString* v) {
+   return v->startsWith(startWord);
+});
+```
+
+The capture syntax is more convenient than the old `userData`:
+
+```cpp
+typedef bool(*ArrayFinder)(T* obj, void* userData);
+sp<T> findWithCondition(Array finder, void* userData);
+```
