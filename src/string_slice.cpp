@@ -42,6 +42,9 @@ static int _strncmp(const char* s1, const char* s1End, const char* s2, size_t s2
 static const char* _strstr(const char* s1, const char* s1End, const char* s2, size_t s2len) {
   const char* p = s1;
   for (; (p = _strchr(p, s1End, *s2)) != NULL; p++) {
+    if (s1End - p < s2len) {
+      return s1End;
+    }
     if (_strncmp(p, s1End, s2, s2len) == 0) return p;
   }
   return p;
@@ -86,7 +89,7 @@ StringSlice StringSlice::subsliceFrom(int start) {
 
 std::vector<StringSlice> StringSlice::split(const StringSlice& sep) {
   std::vector<StringSlice> sv;
-  auto iter = this->iterBySpliting(sep);
+  auto iter = this->iterForSplitting(sep);
   StringSlice slice;
   while (iter.next(&slice)) {
     sv.push_back(slice);
@@ -97,12 +100,22 @@ std::vector<StringSlice> StringSlice::split(const StringSlice& sep) {
 int StringSlice::splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum) {
   int created = 0;
   std::vector<StringSlice> sv;
-  auto iter = this->iterBySpliting(sep);
+  auto iter = this->iterForSplitting(sep);
   StringSlice slice;
   while (created < maxNum && iter.next(&slice)) {
     slicesOut[created++] = std::move(slice);
   }
   return created;
+}
+
+std::vector<StringSlice> StringSlice::tokenize(const StringSlice& seps) {
+  std::vector<StringSlice> sv;
+  auto iter = this->iterForTokenizing(seps);
+  StringSlice slice;
+  while (iter.next(&slice)) {
+    sv.push_back(slice);
+  }
+  return sv;
 }
 
 sp<NcString> StringSlice::replaceInRange(Range range, const StringSlice& replacement) {
@@ -202,3 +215,31 @@ Range StringSlice::findSliceFrom(int start, const StringSlice& needle) {
 }
 
 sp<NcString> StringSlice::toString() { return NcString::allocWithBytes(m_str, m_length); }
+
+bool StringTokenIter::next(StringSlice* sliceOut, Range* rangeOut) {
+  if (m_str == m_strEnd) return false;
+
+  // find first none-sep
+  const char* firstNonSep = NULL;
+  for (; m_str != m_strEnd; m_str++) {
+    if (memchr(m_sep, *m_str, m_sepLength) == NULL) {
+      firstNonSep = m_str;
+      break;
+    }
+  }
+
+  if (firstNonSep == NULL) return false;
+
+  // find first sep
+  m_str++;
+  for (; m_str != m_strEnd; m_str++) {
+    if (memchr(m_sep, *m_str, m_sepLength) != NULL) {
+      break;
+    }
+  }
+
+  sliceOut->initWithString(firstNonSep, (int)(m_str - firstNonSep), m_ncstring);
+  if (rangeOut != NULL) *rangeOut = Range_make((int)(firstNonSep - m_strBegin), sliceOut->length());
+
+  return true;
+}

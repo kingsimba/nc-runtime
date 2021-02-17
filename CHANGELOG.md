@@ -1,6 +1,6 @@
 # Changelog
 
-- 2021-02-16 Add NcString::format().
+- 2021-02-16 Add NcString::format(). StringSlice::tokenize().
 - 2021-02-16 Add log system. Add StackOrHeapAllocator.
 - 2021-02-16 Add StringSlice::countSlice()
 - 2021-02-16 "hello"\_s will create a StringSlice. Add startsWith() and endsWith().

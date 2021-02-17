@@ -2,6 +2,37 @@
 #include "string_slice.h"
 #include "nc_string.h"
 
+TEST(StringSlice, iter) {
+  auto iter = "To err is human, to forgive divine."_s.iterForSplitting(" ");
+  StringSlice slice;
+  bool found = false;
+  while (iter.next(&slice)) {
+    if (slice.equals("human,")) found = true;
+  }
+
+  EXPECT_TRUE(found);
+}
+
+TEST(StringSlice, tokenize) {
+  auto tokens = "Whoa! Fireworks!?"_s.tokenize(" ,?!");
+  ASSERT_EQ(tokens.size(), 2);
+  ASSERT_STREQ(tokens[0].toString()->cstr(), "Whoa");
+  ASSERT_STREQ(tokens[1].toString()->cstr(), "Fireworks");
+}
+
+//
+//TEST(StringSlice, splitPerformance) {
+//  auto s = "Whoa! Fireworks!? Whoa! Fireworks!?Whoa! Fireworks!?Whoa! Fireworks!?Whoa! Fireworks!?Whoa! Fireworks!?"_s;
+//  StringSlice slice;
+//  auto seps = "!?Whoa!"_s;
+//  for (int i = 0; i < 10000000; i++) {
+//    auto iter = s.iterForSplitting(seps);
+//    while (iter.next(&slice)) {
+//      
+//    }
+//  }
+//}
+
 TEST(StringSlice, subslice) {
   auto s = StringSlice("To err is human, to forgive divine.");
   EXPECT_STREQ(s.subsliceFrom(-7).toString()->cstr(), "divine.");
@@ -33,6 +64,15 @@ TEST(StringSlice, split) {
     StringSlice pieces[3];
     EXPECT_EQ(StringSlice("hello--world--hello--world").splitWithLimit("--", pieces, countof(pieces)), 3);
     EXPECT_TRUE(pieces[1].equals("world"));
+  }
+
+  {
+    auto s =
+        "Fireworks-------Fireworks-------Fireworks-------Fireworks--"_s;
+    StringSlice slice;
+    auto slices = s.split("-------"_s);
+    ASSERT_EQ(slices.size(), 4);
+    EXPECT_STREQ(slices.back().toString()->cstr(), "Fireworks--");
   }
 }
 

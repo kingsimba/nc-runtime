@@ -55,10 +55,10 @@ public:
   }
   ~StringSubsliceIter();
 
-  bool next(StringSlice* slice_out) { return next(slice_out, NULL); }
-  bool next(StringSlice* slice_out, Range* rangeOut);
+  forceinline bool next(StringSlice* sliceOut) { return next(sliceOut, NULL); }
+  bool next(StringSlice* sliceOut, Range* rangeOut);
 
-private:
+protected:
   const char* m_strBegin;
   const char* m_strEnd;
   const char* m_str;
@@ -67,6 +67,32 @@ private:
   const char* m_sep;
   int m_sepLength;
 };
+
+/**
+ * Split a string with a separator characters. It works like C function strtok().
+ *
+ * For example. "Whoa! Fireworks?".split(" |?") shall become ["Whoa" and "Fireworks"]
+ *
+ * ```
+ * auto iter = StringSlice("hello---world").iterBySpliting("---");
+ * StringSlice slice;
+ * while(iter.next(&slice)) {
+ *     use(slice);
+ * }
+ * ```
+ */
+class StringTokenIter : private StringSubsliceIter {
+public:
+  StringTokenIter(const StringSlice& slice, const StringSlice& sep) : StringSubsliceIter(slice, sep) {}
+  StringTokenIter(StringTokenIter&& r) noexcept : StringSubsliceIter(std::move(r)) {}
+
+  forceinline bool next(StringSlice* sliceOut) { return next(sliceOut, NULL); }
+  bool next(StringSlice* sliceOut, Range* rangeOut);
+
+private:
+  bool _isSep(char c);
+};
+
 
 /**
  * StringSlice uses UTF-8 encoding
@@ -110,8 +136,12 @@ public:
   forceinline const char* bytes() const { return m_str; }
   forceinline int length() const { return m_length; }
 
+  // iterate Unicode points
   forceinline StringCharIter iter() const { return StringCharIter(*this); }
-  forceinline StringSubsliceIter iterBySpliting(const StringSlice& sep) const { return StringSubsliceIter(*this, sep); }
+  // iterate slices separated by a |sep| string
+  forceinline StringSubsliceIter iterForSplitting(const StringSlice& sep) const { return StringSubsliceIter(*this, sep); }
+  // iterate slices separated by a groups of separators. Works like strtok()
+  forceinline StringTokenIter iterForTokenizing(const StringSlice& seps) const { return StringTokenIter(*this, seps); }
 
   forceinline bool startsWith(const StringSlice& r) {
     return m_length >= r.m_length && memcmp(m_str, r.m_str, r.m_length) == 0;
@@ -180,6 +210,13 @@ public:
     * A fast on stack version. return the number of slices actually created
     */
   int splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum);
+
+  /**
+   * Split into tokens. With SliceTokenIterator.
+   * 
+   * For "Whoa! Fireworks?", with |seps| = " ,.?!", the result is ["Whoa", "Fireworks"]
+   */
+  std::vector<StringSlice> tokenize(const StringSlice& seps);
 
   /**
    * Replace part of a string

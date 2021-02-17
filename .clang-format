@@ -4,7 +4,6 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 #
 AccessModifierOffset: -2
-UseTab: Always
 ColumnLimit: 120
 SortIncludes: false
 IndentPPDirectives: AfterHash
