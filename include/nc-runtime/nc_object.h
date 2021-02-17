@@ -5,7 +5,7 @@
 /**
  * Smart pointer of NcObject
  */
-template <typename T>
+template <typename T, typename ArrayElement=T>
 class sp {
 public:
   forceinline sp() { m_ptr = NULL; }
@@ -56,6 +56,13 @@ public:
    * But I still want it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
    */
   forceinline operator T*() const { return m_ptr; }
+
+  /**
+   * For accessing array element(If it's an array)
+   */
+  forceinline sp<ArrayElement>& operator[](int index) {
+    return (*m_ptr)[index];
+  }
 
 private:
   T* m_ptr;

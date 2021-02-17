@@ -22,10 +22,4 @@
       <ExpandedItem>m_array</ExpandedItem>
     </Expand>
   </Type>
-  <Type Name="NcArrayRef&lt;*&gt;">
-    <DisplayString>NcArrayRef {m_array.m_ptr->m_array}</DisplayString>
-	<Expand>
-      <ExpandedItem>m_array.m_ptr->m_array</ExpandedItem>
-    </Expand>
-  </Type>
 </AutoVisualizer>
