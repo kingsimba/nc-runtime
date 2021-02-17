@@ -4,25 +4,78 @@
 
 # NC-Runtime
 
-This is a proof-of-concept project. It's used to demonstrate some ideas such as:
+In my humble opinion, unlike other modern programming languages, C++ lacks some important infrastructures.
+Everyone have to invent their own wheel. And so am I.
 
-1. String classes can be created and are both more efficient and intuitive than std::string.
+This project contains the methodology & wheels which I found useful.
+They may not be the best ideas. But I hope you may find some pieces useful.
+
+1. `std::shared_ptr` gives a good direction in automating memory management.
+   But I'd like to offer a slightly different approach.
+
+   The smart pointer `sp` works in many ways like `std::shared_ptr`.
 
    ```cpp
-   auto s = StringSlice("You should name a 分隔符 variable with the same care 分隔符 as you are "
-                       "naming your first born child.");
-   auto pieces = s.split("分隔符 ");
-   EXPECT_TRUE(pieces[0].equals("You should name a "));
-   EXPECT_TRUE(pieces[1].equals("variable with the same care "));
-   EXPECT_TRUE(pieces[2].equals("as you are naming your first born child."));
+   // get() and use_count() works the same as std::shared_ptr
+   sp<NcData> data = NcData::allocWithBytes(buffer, len);
+   EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
+   EXPECT_EQ(data.use_count(), 1);
    ```
 
-2. Some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
-
-   - All objects can be converted into string.
+   But they also bear important differences. Such as: The raw pointer and smart pointer can be freely converted to each other.
 
    ```cpp
-   NcObject* o;
+   sp<NcString> p1 = NcString::allocWithCString("hello");
+   NcString* raw = p1.get();  // sp -> raw
+   sp<NcString> p2 = retain(raw);   // raw -> sp
+   ```
+
+   This is important to implement things like `NcString::allocWithCString("hello---world")->split("---")`.
+
+2. I want a String class which is intuitive to use and efficient.
+
+   `StringSlices` is always on stack. It only contains a `char*` and `length`. So it's very fast.
+
+   ```cpp
+   StringSlice slice = "hello---world"_s;
+   vector<StringSlice> pieces = slice.split("---");
+   EXPECT_TRUE(pieces[0].equals("hello"));
+   EXPECT_TRUE(pieces[1].equals("world"));
+   ```
+
+   `NcString` is on heap.
+
+   ```cpp
+   auto str = NcString::allocWithCString("hello---world");
+   // splitting a string will only create StringSlices. So it's very fast.
+   auto slices = str.split("---");
+   EXPECT_EQ(str->retainCount(), 3); // because each slice holds a reference to the string
+   EXPECT_TRUE(slices[0].equals("hello"));
+   EXPECT_TRUE(slices[1].equals("world"));
+   ```
+
+   Both `StringSlice` and `NcString` have rich set of functions, such as:
+
+   ```cpp
+   "freeman"_s.startsWith("free");
+   EXPECT_EQ("internationalization"_s.countSlice("tion"), 2);
+   auto str = NcString::format("%s shall come", "The Day");
+   ```
+
+3. I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
+
+   - Type identification
+
+   ```cpp
+   sp<NcObject> box = MyBox::alloc();
+   EXPECT_TRUE(box->isKindOf<MyBox>());
+   EXPECT_TRUE(box->isKindOf<NcObject>());
+   EXPECT_FALSE(box->isKindOf<NcString>());
+   ```
+
+   - All objects can be converted in string.
+
+   ```cpp
    auto str = o->toString();
    ```
 
@@ -30,20 +83,24 @@ This is a proof-of-concept project. It's used to demonstrate some ideas such as:
 
    ```cpp
    auto arr = NcArray<NcString>::alloc();
-   arr->addObject("Obj1"_str);
-   arr->addObject("Obj2"_str);
-   EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Obj1\", \"Obj2\"]");
+   arr->addObject("Earth"_str);
+   arr->addObject("Mars"_str);
+   arr[1] = "Jupiter"_str;
+   EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
    ```
+
+4. Many more good stuff.
+
+   - Log System
+   - StackOrHeapAllocator
 
 # Design Notes
 
-To be honest, I fall behind in terms of modern C++. Because I held a biased and negative attitude towards it and didn't spend much time to learn it.
-
-And in the New Years Days of 2021, I decide to rediscover modern C++. And see how things can be different if I use C++ 14. There must be some good parts in it.
+To be honest, I fall behind in terms of modern C++. Because I held a biased and negative attitude towards it and didn't spend much time to learn it. And in the New Years Days of 2021, I decide to rediscover modern C++. And see how things can be different if I use C++ 14.
 
 ## std::shared_ptr vs self-implemented smart pointer.
 
-Historically, I always do RC in a base class. And I want to try out `std::shared_ptr` this time.
+Historically, I always do RC in a base class. But I wanted to try out `std::shared_ptr` this time.
 
 The most important implementation difference I noticed is that:
 
@@ -98,9 +155,8 @@ TEST(NcString, split) {
 
 First, `NcString::allocWithCString()` creates `shared_ptr<NcString>`.
 Then `NcString::split()` split it into slices. Each slice should hold a RC to the original string.
-So in split() the RC must be increased.
-
-This is impossible with `std::shared_ptr`. You can't convert a raw pointer(`this`) back into a smart pointer.
+So in `split()` the RC must be increased.
+This is impossible with `std::shared_ptr`.
 
 And there is another slight inconveniency:
 
@@ -109,7 +165,6 @@ static int _calculateStringLength(NcString* str) { return str->length(); }
 
 TEST(NcString, basic) {
   sp<NcString> s = NcString::allocWithCString("hello");
-  EXPECT_STREQ(s->cstr(), "hello");
   // must call .get() to convert to ordinary pointer.
   EXPECT_EQ(_calculateStringLength(s.get()), 5);
 }
@@ -117,7 +172,7 @@ TEST(NcString, basic) {
 
 You have to call `.get()` to get a raw pointer. There is no implicit conversion, though for a good reason https://www.informit.com/articles/article.aspx?p=31529&seqNum=7.
 
-Third, with self-implemented RC in NcObject. I can append the text directly after the object.
+Third, with self-implemented RC in NcObject. I can do some deep optimization, like appending the text directly after the NcString object.
 Thus creating the string with a single allocation.
 
 ```cpp
@@ -126,11 +181,12 @@ class NcString
 public:
    static NcString* allocWithCString(const char* str) {
       size_t len = strlen(str) + 1;
-      NcString* mem = (NcString*)malloc(sizeof(NcString) + len);
-      char* strBuffer = (char*)(mem+1);
-      new(mem) NcString(); // call inplacement new
-      memcpy(strBuffer, str, len);
-      ...
+      NcString* o = (NcString*)malloc(sizeof(NcString) + len);
+      new(o) NcString(); // call placement new
+      o->m_length = len - 1;
+      o->m_str = (char*)(o+1);
+      memcpy(o->m_str, str, len);
+      return o;
    }
 }
 ```
@@ -158,7 +214,7 @@ But at the cost of making it harder to read or navigate:
    > behind the variable name, which is very nice.
    >
    > ```cpp
-   > auto slices : vector<StringSlice> = StringSlice("hello---world").split("---");
+   > auto slices : vector<StringSlice> = "hello---world"_s.split("---");
    > ```
 
 2. You can't easily ctrl+click to jump to type definition.
