@@ -34,3 +34,16 @@ TEST(ArrayTest, vector) {
 
   EXPECT_EQ(perm->retainCount(), 1);
 }
+
+TEST(ArrayTest, find) {
+    auto v = NcArrayRef<NcString>::alloc();
+    v->addObject("hello"_str);
+    v->addObject("world"_str);
+    auto obj = v->find([](NcString* v) {
+      if (v->startsWith("w")) return true;
+      return false;
+    });
+
+    ASSERT_TRUE(obj != NULL);
+    EXPECT_STREQ(obj->cstr(), "world");
+}
