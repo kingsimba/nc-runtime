@@ -1,8 +1,25 @@
 [![Actions Status](https://github.com/kingsimba/nc-runtime/workflows/CMake/badge.svg)](https://github.com/kingsimba/nc-runtime/actions)
 
+# NC-Runtime <!-- omit in toc -->
+
 > **WARNING:** A work in progress
 
-# NC-Runtime
+- [Contents](#contents)
+  - [Smart Pointer](#smart-pointer)
+  - [String Class](#string-class)
+  - [Foundation Classes: NcObject, NcArray, NcString, etc](#foundation-classes-ncobject-ncarray-ncstring-etc)
+  - [StackOrHeapAllocator](#stackorheapallocator)
+  - [Many more good stuffs](#many-more-good-stuffs)
+- [Design Notes](#design-notes)
+  - [std::shared_ptr vs self-implemented smart pointer.](#stdshared_ptr-vs-self-implemented-smart-pointer)
+  - [`auto` keyword](#auto-keyword)
+  - [String literals](#string-literals)
+  - [Log System](#log-system)
+  - [Visual Studio Visualizer](#visual-studio-visualizer)
+  - [Implement operator [] for `sp<NcArray>`](#implement-operator--for-spncarray)
+  - [Closure(Lambda Functions)](#closurelambda-functions)
+
+# Contents
 
 In my humble opinion, unlike other modern programming languages, C++ lacks some important infrastructures.
 Everyone have to invent their own wheel. And so am I.
@@ -10,110 +27,116 @@ Everyone have to invent their own wheel. And so am I.
 This project contains the methodology & wheels which I found useful.
 They may not be the best ideas. But I hope you may find some pieces useful.
 
-1. `std::shared_ptr` gives a good direction in automating memory management.
-   But I'd like to offer a slightly different approach.
+## Smart Pointer
 
-   The smart pointer `sp` works in many ways like `std::shared_ptr`.
+`std::shared_ptr` gives a good direction in automating memory management.
+But I'd like to offer a slightly different approach.
 
-   ```cpp
-   // get() and use_count() works the same as std::shared_ptr
-   sp<NcData> data = NcData::allocWithBytes(buffer, len);
-   EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
-   EXPECT_EQ(data.use_count(), 1);
-   ```
+The smart pointer `sp` works in many ways like `std::shared_ptr`.
 
-   But they also bear important differences. Such as: The raw pointer and smart pointer can be freely converted to each other.
+```cpp
+// get() and use_count() works the same as std::shared_ptr
+sp<NcData> data = NcData::allocWithBytes(buffer, len);
+EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
+EXPECT_EQ(data.use_count(), 1);
+```
 
-   ```cpp
-   sp<NcString> p1 = NcString::allocWithCString("hello");
-   NcString* raw = p1.get();  // sp -> raw
-   sp<NcString> p2 = retain(raw);   // raw -> sp
-   ```
+But they also bear important differences. Such as: The raw pointer and smart pointer can be freely converted to each other.
 
-   This is important for things like `NcString::allocWithCString("hello---world")->split("---")`. See design notes below.
+```cpp
+sp<NcString> p1 = NcString::allocWithCString("hello");
+NcString* raw = p1.get();  // sp -> raw
+sp<NcString> p2 = retain(raw);   // raw -> sp
+```
 
-2. I want a string class which is both intuitive and efficient.
+This is important for things like `NcString::allocWithCString("hello---world")->split("---")`. See design notes below.
 
-   `StringSlices` is always on stack. It only contains a `char*` and a `length`. There is no heap memory allocation. So it's very fast.
+## String Class
 
-   ```cpp
-   StringSlice slice = "hello---world"_s;
-   vector<StringSlice> pieces = slice.split("---");
-   EXPECT_TRUE(pieces[0].equals("hello"));
-   EXPECT_TRUE(pieces[1].equals("world"));
-   ```
+I want a string class which is both intuitive and efficient.
 
-   `NcString` is on heap. There is one `malloc()` for each string.
+`StringSlices` is always on stack. It only contains a `char*` and a `length`. There is no heap memory allocation. So it's very fast.
 
-   ```cpp
-   auto str = NcString::allocWithCString("hello---world");
-   // splitting a string will only create StringSlices. So it's very fast.
-   auto slices = str.split("---");
-   EXPECT_EQ(str->retainCount(), 3); // because each slice holds a reference to the string
-   EXPECT_TRUE(slices[0].equals("hello"));
-   EXPECT_TRUE(slices[1].equals("world"));
-   ```
+```cpp
+StringSlice slice = "hello---world"_s;
+vector<StringSlice> pieces = slice.split("---");
+EXPECT_TRUE(pieces[0].equals("hello"));
+EXPECT_TRUE(pieces[1].equals("world"));
+```
 
-   Both `StringSlice` and `NcString` have rich set of functions, such as:
+`NcString` is on heap. There is one `malloc()` for each string.
 
-   ```cpp
-   "freeman"_s.startsWith("free");
-   "freeman"_s.endsWith("man");
-   EXPECT_EQ("internationalization"_s.countSlice("tion"), 2);
-   auto str = NcString::format("%s shall come", "The Day"); // The Day shall come
-   ```
+```cpp
+auto str = NcString::allocWithCString("hello---world");
+// splitting a string will only create StringSlices. So it's very fast.
+auto slices = str.split("---");
+EXPECT_EQ(str->retainCount(), 3); // because each slice holds a reference to the string
+EXPECT_TRUE(slices[0].equals("hello"));
+EXPECT_TRUE(slices[1].equals("world"));
+```
 
-3. I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
+Both `StringSlice` and `NcString` have rich set of functions, such as:
 
-   - Type identification
+```cpp
+"freeman"_s.startsWith("free");
+"freeman"_s.endsWith("man");
+EXPECT_EQ("internationalization"_s.countSlice("tion"), 2);
+auto str = NcString::format("%s shall come", "The Day"); // The Day shall come
+```
 
-     ```cpp
-     sp<NcObject> box = MyBox::alloc();
-     EXPECT_TRUE(box->isKindOf<MyBox>());
-     EXPECT_TRUE(box->isKindOf<NcObject>());
-     EXPECT_FALSE(box->isKindOf<NcString>());
-     ```
+## Foundation Classes: NcObject, NcArray, NcString, etc
 
-   - All objects can be converted in string.
+I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
 
-     ```cpp
-     auto str = o->toString();
-     ```
-
-   - C style format can be extended to support any NcObject.
-
-     ```cpp
-     auto arr = NcArray<NcString>::alloc();
-     arr->addObject("Earth"_str);
-     arr->addObject("Mars"_str);
-     arr[1] = "Jupiter"_str;
-     EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
-     ```
-
-4. StackOrHeapAllocator
-
-   In some functions, stack is enough for most cases. But occasionally, larger memory is required.
-
-   For example, in NcLog_write(), `char message[2048]' is very, very likely to be enough, but we can't count on it. StackOrHeapAllocator is invented exactly for situations like that.
+- Type identification
 
    ```cpp
-   TEST(Stdlib, stackOrHeapAllocator) {
-     u8* stack = (u8*)alloca(1024);
-     StackOrHeapAllocator allocator(stack, 1024);
-     EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 0);
-     EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 512);
-     EXPECT_GT(allocator.allocArray<u8>(1) - stack, 4096); // stack used up, so it's on heap
-
-     // no leak
-   }
+   sp<NcObject> box = MyBox::alloc();
+   EXPECT_TRUE(box->isKindOf<MyBox>());
+   EXPECT_TRUE(box->isKindOf<NcObject>());
+   EXPECT_FALSE(box->isKindOf<NcString>());
    ```
 
-   All allocated memory will be freed when `allocator` goes out of scope.
+- All objects can be converted in string.
 
-5. Many more good stuffs.
+   ```cpp
+   auto str = o->toString();
+   ```
 
-   - Log System
-   - NcCache
+- C style format can be extended to support any NcObject.
+
+   ```cpp
+   auto arr = NcArray<NcString>::alloc();
+   arr->addObject("Earth"_str);
+   arr->addObject("Mars"_str);
+   arr[1] = "Jupiter"_str;
+   EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
+   ```
+
+## StackOrHeapAllocator
+
+In some functions, stack is enough for most cases. But occasionally, larger memory is required.
+
+For example, in NcLog_write(), `char message[2048]' is very, very likely to be enough, but we can't count on it. StackOrHeapAllocator is invented exactly for situations like that.
+
+```cpp
+TEST(Stdlib, stackOrHeapAllocator) {
+   u8* stack = (u8*)alloca(1024);
+   StackOrHeapAllocator allocator(stack, 1024);
+   EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 0);
+   EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 512);
+   EXPECT_GT(allocator.allocArray<u8>(1) - stack, 4096); // stack used up, so it's on heap
+
+   // no leak
+}
+```
+
+All allocated memory will be freed when `allocator` goes out of scope.
+
+## Many more good stuffs
+
+- Log System
+- NcCache
 
 # Design Notes
 
