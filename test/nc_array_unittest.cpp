@@ -37,14 +37,21 @@ TEST(ArrayTest, vector) {
 
 TEST(ArrayTest, find) {
     auto v = NcArray<NcString>::alloc();
-    v->addObject("hello"_str);
-    v->addObject("world"_str);
+    v->addObject(NcString::allocWithCString("hello"));
+    v->addObject(NcString::allocWithCString("world"));
 
-    auto obj = v->find([](NcString* v) {
+    auto& obj = v->find([](NcString* v) {
       if (v->startsWith("w")) return true;
       return false;
     });
 
     ASSERT_TRUE(obj != NULL);
     EXPECT_STREQ(obj->cstr(), "world");
+
+    obj = v->find([](NcString* v) {
+      if (v->startsWith("s")) return true;
+      return false;
+    });
+
+    ASSERT_TRUE(obj == NULL);
 }

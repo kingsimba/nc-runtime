@@ -67,8 +67,7 @@ TEST(StringSlice, split) {
   }
 
   {
-    auto s =
-        "Fireworks-------Fireworks-------Fireworks-------Fireworks--"_s;
+    auto s = "Fireworks-------Fireworks-------Fireworks-------Fireworks--"_s;
     StringSlice slice;
     auto slices = s.split("-------"_s);
     ASSERT_EQ(slices.size(), 4);
