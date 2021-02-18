@@ -5,6 +5,7 @@
 #include <atomic>
 #include <functional>
 #include <mutex>
+#include <thread>
 #include <assert.h>
 #include <limits.h>
 #include <string.h>
