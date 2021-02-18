@@ -4,3 +4,9 @@
 #include "nc_stdlib.h"
 
 using namespace std;
+
+namespace nc {
+
+}
+
+using namespace nc;

@@ -265,6 +265,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\message_loop_imple.cpp" />
+    <ClCompile Include="..\src\timer.cpp" />
+    <ClCompile Include="..\src\timer_manager.cpp" />
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime.dir\cmake_pch.cxx">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -283,6 +286,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/CMakeFiles/nc-runtime.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/kingsimba/Documents/git/github/nc-runtime/vs2019/nc-runtime.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClInclude Include="..\include\nc-runtime\message_loop.h" />
+    <ClInclude Include="..\include\nc-runtime\timer.h" />
+    <ClInclude Include="..\src\message_loop_imple.h" />
+    <ClInclude Include="..\src\timer_manager.h" />
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\basic_types.h" />
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\nc_array.h" />
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\nc_log.h" />
@@ -430,6 +437,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
