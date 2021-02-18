@@ -42,7 +42,7 @@ public:
    * ```
    */
   template <typename Func>
-  sp<T> findWithCondition(Func& func) {
+  sp<T> findWithCondition(Func func) {
     for (auto& obj : m_array)
       if (func(obj.get())) return obj;
     return NULL;
@@ -56,7 +56,7 @@ public:
   }
   
   template<typename Func>
-  int indexOfObjectWithCondition(Func& func) {
+  int indexOfObjectWithCondition(Func func) {
     int len = (int)m_array.size();
     for (int i = 0; i < len; i++)
       if (func(m_array[i].get()))
