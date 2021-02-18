@@ -25,6 +25,15 @@
     <ClCompile Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\3rd-party\src\jansson\utf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\message_loop_imple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\timer_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\include\nc-runtime\basic_types.h">
@@ -66,6 +75,18 @@
     <ClInclude Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\vs2019\CMakeFiles\nc-runtime.dir\RelWithDebInfo\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\message_loop_imple.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nc-runtime\message_loop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nc-runtime\timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\timer_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\kingsimba\Documents\git\github\nc-runtime\CMakeLists.txt" />
@@ -80,5 +101,8 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{714A2786-B9CB-3CAA-AB29-47048C5E2400}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

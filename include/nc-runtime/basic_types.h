@@ -64,3 +64,7 @@ forceinline bool operator!=(const Range& l, const Range& r) { return l.location 
 //////////////////////////////////////////////////////////////////////////
 
 class NcString;
+namespace nc {
+class MessageLoop;
+class Timer;
+}
