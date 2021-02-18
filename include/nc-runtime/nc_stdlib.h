@@ -96,9 +96,9 @@ private:
   ManualResetEventImple* m_imple;
 };
 
-class MutexGuard {
+class __MutexGuard__ {
 public:
-  MutexGuard(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
+  __MutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
 
   bool next() {
     if (!m_firstTime) return false;
@@ -112,5 +112,5 @@ private:
 };
 
 // clang-format off
-#define synchroized(o) for(MutexGuard guard(o##Mutex); guard.next(); )
+#define synchroized(o) for(__MutexGuard__ guard(o##Mutex); guard.next(); )
 // clang-format on

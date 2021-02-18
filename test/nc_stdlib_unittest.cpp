@@ -50,3 +50,28 @@ TEST(Stdlib, ManualResetEvent) {
   e.reset();
   EXPECT_GE(TimeTick::measure([&] { EXPECT_FALSE(e.waitWithTimeout(10)); }).ms(), 10);
 }
+
+TEST(Stdlib, MutexGuard) {
+  int counter = 0;
+  int counterUnprotected = 0;
+  const static int REPEAT = 10000;
+  recursive_mutex arrMutex;
+  thread t1([&] {
+    for (int i = 0; i < REPEAT; i++) {
+      synchroized(arr) { counter++; }  
+    }
+  }); 
+
+  thread t2([&] {
+    for (int i = 0; i < REPEAT; i++) {
+      synchroized(arr) { counter++; }
+      counterUnprotected++;
+    }
+  });
+
+  t1.join();
+  t2.join();
+
+  EXPECT_EQ(counter, REPEAT * 2);
+  EXPECT_NE(counterUnprotected, REPEAT * 2);
+}

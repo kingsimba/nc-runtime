@@ -82,6 +82,8 @@ public:
   using ArrayElement = NcObject;
 
 public:
+  static sp<NcObject> alloc() { return new NcObject(); }
+
   forceinline int retainCount() { return m_rc; }
 
   /**
