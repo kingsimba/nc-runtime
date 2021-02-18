@@ -8,12 +8,7 @@ struct TimeTick {
 
   // return the time used to run some code
   template<typename Func>
-  static TimeTick measure(Func func) {
-    TimeTick start = TimeTick::now();
-    func();
-    TimeTick elapsed = TimeTick::now() - start;
-    return elapsed;
-  }
+  static TimeTick measure(Func func);
 
   TimeTick() : __time(0) {}
   TimeTick(i64 ms) { __time = ms; }
@@ -114,3 +109,11 @@ private:
 // clang-format off
 #define synchroized(o) for(__MutexGuard__ guard(o##Mutex); guard.next(); )
 // clang-format on
+
+template <typename Func>
+TimeTick TimeTick::measure(Func func) {
+  TimeTick start = TimeTick::now();
+  func();
+  TimeTick elapsed = TimeTick::now() - start;
+  return elapsed;
+}
