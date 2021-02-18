@@ -1,5 +1,16 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_stdlib.h"
+#include <chrono>
+#include <mutex>
+#include <condition_variable>
+
+TimeTick TimeTick::now() {
+  using namespace std::chrono;
+  i64 n = (i64)(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
+  return TimeTick{n};
+}
+
+void Thread::sleep(TimeTick tick) { std::this_thread::sleep_for(std::chrono::milliseconds(tick.ms())); }
 
 u32 Math_hashString(const char* str) {
   u32 hash = 5381;
@@ -63,3 +74,55 @@ StackOrHeapAllocator::~StackOrHeapAllocator() {
     delete m_moreHeapPointers;
   }
 }
+
+class ManualResetEventImple {
+public:
+  ManualResetEventImple(bool signaled) : m_signaled(signaled) {}
+
+  void set() {
+    {
+      std::lock_guard<std::mutex> lock(m_mutex);
+      m_signaled = true;
+    }
+
+    // Notify all because until the event is manually
+    // reset, all waiters should be able to see event signaling
+    m_cv.notify_all();
+  }
+
+  void unset() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_signaled = false;
+  }
+
+  void wait() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    while (!m_signaled) {
+      m_cv.wait(lock);
+    }
+  }
+
+  bool waitWithTimeout(const TimeTick& t) {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    while (!m_signaled) {
+      std::chrono::system_clock::time_point until = std::chrono::system_clock::now() + std::chrono::milliseconds(t.ms());
+      if (m_cv.wait_until(lock, until) == cv_status::timeout) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+private:
+  std::mutex m_mutex;
+  std::condition_variable m_cv;
+  bool m_signaled;
+};
+
+ManualResetEvent::ManualResetEvent(bool signaled /*= false*/) { m_imple = new ManualResetEventImple(signaled); }
+ManualResetEvent::~ManualResetEvent() { delete m_imple; }
+void ManualResetEvent::set() { m_imple->set(); }
+void ManualResetEvent::reset() { m_imple->unset(); }
+void ManualResetEvent::wait() { m_imple->wait(); }
+bool ManualResetEvent::waitWithTimeout(const TimeTick& t) { return m_imple->waitWithTimeout(t); }

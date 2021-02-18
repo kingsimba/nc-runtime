@@ -9,6 +9,7 @@
   - [String Class](#string-class)
   - [Foundation Classes: NcObject, NcArray, NcString, etc](#foundation-classes-ncobject-ncarray-ncstring-etc)
   - [StackOrHeapAllocator](#stackorheapallocator)
+  - [ManualResetEvent](#manualresetevent)
   - [Many more good stuffs](#many-more-good-stuffs)
 - [Design Notes](#design-notes)
   - [std::shared_ptr vs self-implemented smart pointer.](#stdshared_ptr-vs-self-implemented-smart-pointer)
@@ -132,6 +133,41 @@ TEST(Stdlib, stackOrHeapAllocator) {
 ```
 
 All allocated memory will be freed when `allocator` goes out of scope.
+
+## ManualResetEvent
+
+It simulate Win32 API `SetEvent()`. With C++11's `condition_variable` it's much easier.
+I learned it from https://stackoverflow.com/questions/1501111/boost-equivalent-of-manualresetevent
+
+```cpp
+ManualResetEvent e;
+
+std::thread t([&] {
+   Thread::sleep(100);
+   e.set();
+});
+
+// must wait until reset
+TimeTick start = TimeTick::now(); 
+e.wait();
+TimeTick duration = TimeTick::now() - start;
+EXPECT_GE(duration.ms(), 100);
+
+t.join();
+
+// not reset(). So wait on it will not block
+start = TimeTick::now(); 
+e.wait();
+duration = TimeTick::now() - start;
+EXPECT_LT(duration.ms(), 1);
+
+// reset() again. Wait will block
+e.reset();
+start = TimeTick::now();
+EXPECT_FALSE(e.waitWithTimeout(10));
+duration = TimeTick::now() - start;
+EXPECT_GE(duration.ms(), 10);
+```
 
 ## Many more good stuffs
 
@@ -352,34 +388,35 @@ auto& s = v[0]; // use []
 
 To support than:
 
-1. Implement operator [] in `NcArray`
+1. In order to detect element type, a `NcObject::ArrayElement` and `NcArray::ArrayElement` are added.
 
+   NcObject::ArrayElement is unnecessary. There might be a better solution?
+   
    ```cpp
-   sp<T>& operator[](int index) {
-     return m_array[index];
+   class NcObject {
+   public:
+      using ArrayElement = NcObject;
+   }
+
+   template <typename T>
+   class NcArray : public NcObject {
+   public:
+      using ArrayElement = T;
    }
    ```
 
-1. `sp` must implement operator []
-
-   In order to detect element type, a second template parameter `ArrayElement` is added.
+2. Implement operator [] in `sp`
 
    ```cpp
-   template <typename T, typename ArrayElement=T>
+   template <typename T>
    class sp {
      /**
      * For accessing array element(If it's an array)
      */
-     forceinline sp<ArrayElement>& operator[](int index) {
-       return (*m_ptr)[index];
+     sp<T::ArrayElement>& operator[](int index) {
+       return m_ptr->objectAtIndex(index]);
      }
    }
-   ```
-
-1. `NcArray::alloc()` 's return type should be `sp<NcArray<T>, T>`
-
-   ```cpp
-   static sp<NcArray<T>, T> alloc() { return new NcArray(); }
    ```
 
 ## Closure(Lambda Functions)

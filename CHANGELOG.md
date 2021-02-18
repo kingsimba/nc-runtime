@@ -1,5 +1,8 @@
 # Changelog
 
+- 2021-02-18 Add Thread::sleep(). Make TimeTick a class. 
+- 2021-02-18 Change the implementation of `sp<NcArray>`'s operator[].
+- 2021-02-18 Add `synchroized()` and `ManualResetEvent`.
 - 2021-02-17 Add NcArray::findWithCondition(), indexOfObject(), indexOfObjectWithCondition()
 - 2021-02-17 Update Visual Studio Visualizer.
 - 2021-02-16 Add NcString::format(). StringSlice::tokenize().

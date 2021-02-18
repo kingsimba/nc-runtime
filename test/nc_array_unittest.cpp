@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST(ArrayTest, vector) {
+TEST(ArrayTest, basic) {
 
   sp<NcString> perm;
 
@@ -23,6 +23,9 @@ TEST(ArrayTest, vector) {
       v->addObject(NcString::allocWithSlice(s));
     }
 
+    EXPECT_EQ(v->firstObject(), str);
+    EXPECT_EQ(v->lastObject(), v->objectAtIndex(v->size() - 1));
+
     EXPECT_STREQ(v[0]->cstr(), "hello world");
     EXPECT_STREQ(v[1]->cstr(), "hello world");
     EXPECT_STREQ(v[2]->cstr(), "hello");
@@ -30,6 +33,11 @@ TEST(ArrayTest, vector) {
 
     perm = v[0];  // +1
     EXPECT_EQ(perm->retainCount(), 6);
+
+    // remove object
+    v->removeObjectAtIndex(2);
+    EXPECT_EQ(v->size(), 3);
+    EXPECT_STREQ(v[2]->cstr(), "world");
   }
 
   EXPECT_EQ(perm->retainCount(), 1);

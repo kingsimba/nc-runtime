@@ -2,6 +2,34 @@
 
 #include "basic_types.h"
 
+// in milliseconds
+struct TimeTick {
+  static TimeTick now();
+
+  // return the time used to run some code
+  template<typename Func>
+  static TimeTick measure(Func func) {
+    TimeTick start = TimeTick::now();
+    func();
+    TimeTick elapsed = TimeTick::now() - start;
+    return elapsed;
+  }
+
+  TimeTick() : __time(0) {}
+  TimeTick(i64 ms) { __time = ms; }
+  forceinline i64 ms() const { return __time; }
+
+  i64 __time;  // in milliseconds
+};
+
+forceinline TimeTick operator-(const TimeTick& l, const TimeTick& r) { return TimeTick{l.__time - r.__time}; }
+forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r) { return TimeTick{l.__time + r.__time}; }
+
+class Thread {
+public:
+  static void sleep(TimeTick tick); // sleep current thread for at least some time.
+};
+
 u32 Math_hashString(const char* str);
 u32 Math_hashU32(u32 o);
 u64 Math_hashU64(u64 o);
@@ -51,3 +79,38 @@ private:
   size_t m_heapPointerCount;
   std::vector<void*>* m_moreHeapPointers;
 };
+
+class ManualResetEventImple;
+
+class ManualResetEvent {
+public:
+  ManualResetEvent(bool signaled = false);
+  ~ManualResetEvent();
+
+  void set();
+  void reset();
+  void wait();
+  bool waitWithTimeout(const TimeTick& t);
+
+private:
+  ManualResetEventImple* m_imple;
+};
+
+class MutexGuard {
+public:
+  MutexGuard(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
+
+  bool next() {
+    if (!m_firstTime) return false;
+    m_firstTime = false;
+    return true;
+  }
+
+private:
+  std::lock_guard<std::recursive_mutex> m_guard;
+  bool m_firstTime;
+};
+
+// clang-format off
+#define synchroized(o) for(MutexGuard guard(o##Mutex); guard.next(); )
+// clang-format on

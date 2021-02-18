@@ -80,6 +80,15 @@ sp<NcString> NcString::format(const char* format, ...) {
   return o;
 }
 
+bool NcString::equals(NcObject* r) {
+  if (this == r) return true;
+  if (r->isKindOf<NcString>()) {
+    NcString* rstr = (NcString*)r;
+    return m_length == rstr->m_length && memcmp(m_str, rstr->m_str, m_length) == 0;
+  }
+  return false;
+}
+
 NcString::~NcString() {
   if (m_shouldFree) {
     free((char*)m_str);

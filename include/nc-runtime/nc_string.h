@@ -97,6 +97,7 @@ public:
 
   // from NcObject
   virtual sp<NcString> toString() override { return sp<NcString>(this); }
+  virtual bool equals(NcObject* r) override;
 
 private:
   NcString() : m_shouldFree(false) {}

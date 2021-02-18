@@ -5,7 +5,7 @@
 /**
  * Smart pointer of NcObject
  */
-template <typename T, typename ArrayElement=T>
+template <typename T>
 class sp {
 public:
   forceinline sp() { m_ptr = NULL; }
@@ -19,7 +19,7 @@ public:
     m_ptr = p.get();
     m_ptr->_retain();
   }
-  forceinline sp(sp&& r) {
+  forceinline sp(sp&& r) noexcept {
     m_ptr = r.m_ptr;
     r.m_ptr = NULL;
   }
@@ -60,8 +60,8 @@ public:
   /**
    * For accessing array element(If it's an array)
    */
-  forceinline sp<ArrayElement>& operator[](int index) {
-    return (*m_ptr)[index];
+  forceinline sp<typename T::ArrayElement>& operator[](int index) {
+    return m_ptr->objectAtIndex(index);
   }
 
 private:
@@ -79,6 +79,9 @@ sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
  */
 class NcObject {
 public:
+  using ArrayElement = NcObject;
+
+public:
   forceinline int retainCount() { return m_rc; }
 
   /**
@@ -86,11 +89,14 @@ public:
    */
   virtual sp<NcString> toString();
 
+  virtual bool equals(NcObject* r) { return this == r; }
+
   template<typename ToType>
   forceinline bool isKindOf() {
     return dynamic_cast<ToType*>(this) != NULL;
   }
-      // private:
+
+  // private:
   forceinline void _retain() {
     if (this != NULL && m_rc != INT_MAX) {
       m_rc.fetch_add(1);
