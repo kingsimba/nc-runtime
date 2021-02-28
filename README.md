@@ -50,13 +50,13 @@ NcString* raw = p1.get();  // sp -> raw
 sp<NcString> p2 = retain(raw);   // raw -> sp
 ```
 
-It allows to call functions with raw pointer parameters:
+This enables calling functions with raw pointer parameters:
 
 ```cpp
 void myFunction(NcString* str) // raw pointer
 
 sp<NcString> s = NcString::allocWithCString("abc");
-myFunction(s); // implicit conversion to raw pointer
+myFunction(s); // implicit conversion to raw pointer. Not possible with std::shared_ptr.
 ```
 
 And it allows to retake ownership from raw pointer.
@@ -67,10 +67,11 @@ void SomeObject::setName(NcString* name) {
 }
 ```
 
-Convert from strong to weak:
+Convert between strong/raw and weak:
 
 ```cpp
-auto w = str->weak();
+wp<NcString> w(str);	// strong/raw to weak
+auto s = w.lock(); // weak to strong
 ```
 
 ## String Class
