@@ -6,8 +6,11 @@ public:
   static sp<MyBox> alloc() { return new MyBox(); }
 
 private:
-  MyBox(){};
+  MyBox() { m_data = 3; };
   ~MyBox(){};
+
+private:
+  int m_data;
 };
 
 class MyString : public NcObject {
@@ -19,6 +22,28 @@ private:
   ~MyString(){};
 };
 
+TEST(NcObject, weak) {
+  auto box = MyBox::alloc();
+  EXPECT_EQ(box->retainCount(), 1);
+  EXPECT_EQ(box->weakCount(), 1);
+
+  wp<MyBox> w(box);
+  EXPECT_EQ(box->retainCount(), 1);
+  EXPECT_EQ(box->weakCount(), 2);
+
+  auto box2 = w.lock();
+  EXPECT_EQ(box->retainCount(), 2);
+  EXPECT_EQ(box->weakCount(), 2);
+
+  box.reset();
+  EXPECT_EQ(box2->retainCount(), 1);
+  EXPECT_EQ(box2->weakCount(), 2);
+
+  box2.reset();
+
+  box = w.lock();
+  EXPECT_TRUE(box == NULL);
+}
 
 TEST(NcObject, rcAndCast) {
   auto box = MyBox::alloc();
@@ -92,4 +117,11 @@ TEST(NcObject, isKindOf) {
   EXPECT_TRUE(box->isKindOf<MyBox>());
   EXPECT_TRUE(box->isKindOf<NcObject>());
   EXPECT_FALSE(box->isKindOf<MyString>());
+}
+
+TEST(NcObject, tryStd) {
+  auto s = std::make_shared<int>(3);
+  std::weak_ptr<int> w(s);
+  s.reset();
+  w.reset();
 }
