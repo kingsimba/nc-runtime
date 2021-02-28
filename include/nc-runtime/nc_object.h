@@ -87,8 +87,8 @@ sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
 template<typename T>
 class wp {
 public:
-  wp(sp<T>& r) {
-    m_ptr = r.get();
+  wp(T* r) {
+    m_ptr = r;
     m_ptr->_retainWeak();
   }
   ~wp() { m_ptr->_releaseWeak(); }

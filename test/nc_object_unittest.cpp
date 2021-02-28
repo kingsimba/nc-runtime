@@ -119,7 +119,7 @@ TEST(NcObject, isKindOf) {
   EXPECT_FALSE(box->isKindOf<MyString>());
 }
 
-TEST(NcObject, tryRc) {
+TEST(NcObject, tryStd) {
   auto s = std::make_shared<int>(3);
   std::weak_ptr<int> w(s);
   s.reset();

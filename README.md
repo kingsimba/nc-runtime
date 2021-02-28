@@ -33,7 +33,7 @@ They may not be the best ideas. But I hope you may find some pieces useful.
 `std::shared_ptr` gives a good direction in automating memory management.
 But I'd like to offer a slightly different approach.
 
-The smart pointer `sp` works in many ways like `std::shared_ptr`.
+The smart pointer `sp` and `wp` works in many ways like `std::shared_ptr` and `std::weak_ptr`.
 
 ```cpp
 // get() and use_count() works the same as std::shared_ptr
@@ -50,7 +50,28 @@ NcString* raw = p1.get();  // sp -> raw
 sp<NcString> p2 = retain(raw);   // raw -> sp
 ```
 
-This is important for things like `NcString::allocWithCString("hello---world")->split("---")`. See design notes below.
+It allows to call functions with raw pointer parameters:
+
+```cpp
+void myFunction(NcString* str) // raw pointer
+
+sp<NcString> s = NcString::allocWithCString("abc");
+myFunction(s); // implicit conversion to raw pointer
+```
+
+And it allows to retake ownership from raw pointer.
+
+```cpp
+void SomeObject::setName(NcString* name) {
+   m_name = retain(name);  // retake ownership from raw pointer
+}
+```
+
+Convert from strong to weak:
+
+```cpp
+auto w = str->weak();
+```
 
 ## String Class
 
@@ -185,6 +206,7 @@ Historically, I always do RC in a base class. But I wanted to try out `std::shar
 The most important implementation difference I noticed is that:
 
 - For std::shared_ptr, the control block(contains RC, weak_ptrs) is put outside of the object.
+  (Note: Later, I learned that there is a std::enabled_shared_from_this. I shall update the document when I have time.)
 - For most self-implemented RC, the control block is in the base object.
 
 At first, I think `std::shared_ptr` will have to make one additional malloc() for the control block.
