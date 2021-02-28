@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <string.h>
 #include <stdio.h>
+#include <new>
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -65,3 +66,22 @@ forceinline bool operator!=(const Range& l, const Range& r) { return l.location 
 //////////////////////////////////////////////////////////////////////////
 
 class NcString;
+
+//////////////////////////////////////////////////////////////////////////
+
+// Learned from https://rigtorp.se/spinlock/
+struct Spinlock {
+  std::atomic<bool> lock_ = {false};
+
+  void lock() {
+    for (;;) {
+      if (!lock_.exchange(true, std::memory_order_acquire)) {
+        break;
+      }
+      while (lock_.load(std::memory_order_relaxed)) {
+      }
+    }
+  }
+
+  void unlock() { lock_.store(false, std::memory_order_release); }
+};

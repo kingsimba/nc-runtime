@@ -2,6 +2,16 @@
 
 #include "basic_types.h"
 
+// An experimental implementation. It should be optimized in the future.
+class ControlBlock {
+public:
+  ControlBlock() : m_rc(1), m_wc(1) {}
+  int m_rc;
+  int m_wc;
+  Spinlock m_lock;
+  char m_unused[7]; // padding to 16 bytes
+};
+
 /**
  * Smart pointer of NcObject
  */
@@ -12,12 +22,12 @@ public:
   forceinline sp(T* p) { m_ptr = p; }
   forceinline sp(const sp<T>& p) {
     m_ptr = p.get();
-    m_ptr->_retain();
+    if (m_ptr) m_ptr->_retain();
   }
   template <typename Derived>
   forceinline sp(const sp<Derived>& p) {
     m_ptr = p.get();
-    m_ptr->_retain();
+    if (m_ptr) m_ptr->_retain();
   }
   forceinline sp(sp&& r) noexcept {
     m_ptr = r.m_ptr;
@@ -28,7 +38,7 @@ public:
   sp<T>& operator=(const sp<T>& p) {
     release(m_ptr);
     m_ptr = p.get();
-    m_ptr->_retain();
+    if (m_ptr) m_ptr->_retain();
     return *this;
   }
 
@@ -36,7 +46,7 @@ public:
   sp<T>& operator=(const sp<Derived>& p) {
     release(m_ptr);
     m_ptr = p.get();
-    m_ptr->_retain();
+    if (m_ptr) m_ptr->_retain();
     return *this;
   }
 
@@ -74,6 +84,21 @@ sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
   return sp<T1>(retain(derived));
 }
 
+template<typename T>
+class wp {
+public:
+  wp(sp<T>& r) {
+    m_ptr = r.get();
+    m_ptr->_retainWeak();
+  }
+  ~wp() { m_ptr->_releaseWeak(); }
+
+  sp<T> lock() { return m_ptr == NULL ? NULL : (T*) m_ptr->_lockStrong(); }
+
+private:
+  T* m_ptr;
+};
+
 /**
  * The base class of the foundation framework. It contains useful functions, such as toString() and isKindOf().
  */
@@ -84,7 +109,27 @@ public:
 public:
   static sp<NcObject> alloc() { return new NcObject(); }
 
-  forceinline int retainCount() { return m_rc; }
+  void* operator new(size_t size) {
+    void* buffer = malloc(size + sizeof(ControlBlock));
+    ControlBlock* ctrl = (ControlBlock*)buffer;
+    new (ctrl) ControlBlock();
+    return (u8*)(ctrl) + sizeof(ControlBlock);
+  }
+
+  void* operator new(size_t size, void* place) {
+    void* buffer = malloc(size + sizeof(ControlBlock));
+    ControlBlock* ctrl = (ControlBlock*)buffer;
+    new (ctrl) ControlBlock();
+    return (u8*)(ctrl) + sizeof(ControlBlock);
+  }
+
+  void operator delete(void* p) { p = p;
+  }
+
+  ControlBlock* _controlBlock() { return (ControlBlock*)((u8*)(this) - sizeof(ControlBlock)); }
+
+  forceinline int retainCount() { return _controlBlock()->m_rc; }
+  forceinline int weakCount() { return _controlBlock()->m_wc; }
 
   /**
    * Convert any object to string
@@ -100,31 +145,91 @@ public:
 
   // private:
   forceinline void _retain() {
-    if (this != NULL && m_rc != INT_MAX) {
-      m_rc.fetch_add(1);
+    ControlBlock* ctrl = _controlBlock();
+    if (ctrl->m_rc != INT_MAX) {
+      ctrl->m_lock.lock();
+      ctrl->m_rc++;
+      ctrl->m_lock.unlock();
     }
   }
   inline void _release() {
-    if (m_rc != INT_MAX && m_rc.fetch_sub(1) == 1) {
-      delete this;
+    ControlBlock* ctrl = _controlBlock();
+    if (ctrl->m_rc != INT_MAX) {
+      int rc;
+      bool shouldFree;
+      ctrl->m_lock.lock();
+      rc = ctrl->m_rc;
+      shouldFree = rc == 1 && ctrl->m_wc == 1;
+      if (rc == 1) ctrl->m_wc--;
+      ctrl->m_rc--;
+      ctrl->m_lock.unlock();
+      if (rc == 1) {
+        this->~NcObject();
+      }
+      if (shouldFree) {
+        free(_controlBlock());
+      }
     }
   }
+
+  forceinline void _retainWeak() {
+    ControlBlock* ctrl = _controlBlock();
+    if (ctrl->m_rc != INT_MAX) {
+      ctrl->m_lock.lock();
+      ctrl->m_wc++;
+      ctrl->m_lock.unlock();
+    }
+  }
+
+  forceinline void _releaseWeak() {
+    ControlBlock* ctrl = _controlBlock();
+    if (ctrl->m_rc != INT_MAX) {
+      bool shouldFree;
+      ctrl->m_lock.lock();
+      shouldFree = ctrl->m_wc == 1;
+      ctrl->m_wc--;
+      ctrl->m_lock.unlock();
+      if (shouldFree) {
+        free(ctrl);
+      }
+    }
+  }
+
+  forceinline NcObject* _lockStrong() {
+    ControlBlock* ctrl = _controlBlock();
+    NcObject* thiz = this;
+    if (ctrl->m_rc != INT_MAX) {
+      ctrl->m_lock.lock();
+      if (ctrl->m_rc != 0) {
+        ctrl->m_rc++;
+      } else {
+        thiz = NULL;
+      }
+      ctrl->m_lock.unlock();  
+    }
+    
+    return thiz;
+  }
+
   forceinline void _deleteThis() {
-    delete this;
+    this->~NcObject();
+    free(_controlBlock());
   }
 
 protected:
-  NcObject() : m_rc(1) {}
-  NcObject(bool /*isStatic*/) : m_rc(INT_MAX) {}
+  NcObject() {}
+  NcObject(bool /*isStatic*/) {
+    ControlBlock* ctrl = _controlBlock();
+    ctrl->m_lock.lock();
+    ctrl->m_rc = INT_MAX;
+    ctrl->m_lock.unlock();
+  }
   virtual ~NcObject() {}
-
-private:
-  std::atomic<int> m_rc;
 };
 
 template<typename T>
 forceinline T* retain(T* o) {
-  o->_retain();
+  if (o) o->_retain();
   return (T*)o;
 }
 

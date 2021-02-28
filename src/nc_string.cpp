@@ -31,7 +31,9 @@ public:
   ~GlobalStringManager() {
     auto iter = m_map.begin();
     while (iter != m_map.end()) {
-      iter->second->_deleteThis();
+      NcObject* obj = iter->second.get();
+      iter->second.reset();
+      obj->_deleteThis();
       iter++;
     }
   }
@@ -56,6 +58,12 @@ sp<NcString> NcString::allocWithBytes(const char* str, size_t len) {
 }
 
 sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut) {
+  NcString* o = new NcString();
+  o->m_length = (int)strLength;
+  o->m_shouldFree = true;
+  *strOut = (char*)malloc(strLength + 1);
+  o->m_str = *strOut;
+  /**
   size_t totalLen = sizeof(NcString) + strLength + 1;
   NcString* o = (NcString*)malloc(totalLen);
   new (o) NcString();
@@ -64,6 +72,7 @@ sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
   o->m_length = (int)strLength;
   o->m_shouldFree = false;
   *strOut = buffer;
+  */
   return o;
 }
 
