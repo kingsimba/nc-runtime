@@ -25,22 +25,31 @@ private:
 TEST(NcObject, weak) {
   auto box = MyBox::alloc();
   EXPECT_EQ(box->retainCount(), 1);
-  EXPECT_EQ(box->weakCount(), 1);
+  EXPECT_EQ(box->weakCount(), 0);
 
+  // test constructor
   wp<MyBox> w(box);
   EXPECT_EQ(box->retainCount(), 1);
-  EXPECT_EQ(box->weakCount(), 2);
+  EXPECT_EQ(box->weakCount(), 1);
 
+  // weak -> strong
   auto box2 = w.lock();
   EXPECT_EQ(box->retainCount(), 2);
-  EXPECT_EQ(box->weakCount(), 2);
+  EXPECT_EQ(box->weakCount(), 1);
 
+  // reset strong
   box.reset();
   EXPECT_EQ(box2->retainCount(), 1);
-  EXPECT_EQ(box2->weakCount(), 2);
+  EXPECT_EQ(box2->weakCount(), 1);
 
+  // test assign operator
+  w = box2;
+  w = box2.get();
+  EXPECT_EQ(box2->retainCount(), 1);
+  EXPECT_EQ(box2->weakCount(), 1);
+
+  // reset strong, weak will expire
   box2.reset();
-
   box = w.lock();
   EXPECT_TRUE(box == NULL);
 }
