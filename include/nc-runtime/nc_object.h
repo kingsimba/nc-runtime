@@ -5,11 +5,69 @@
 // An experimental implementation. It should be optimized in the future.
 class ControlBlock {
 public:
-  ControlBlock() : m_rc(1), m_wc(1) {}
+  ControlBlock() : m_rc(1), m_wc(0) {}
+
+  inline void retain() {
+    if (m_rc != INT_MAX) {
+      m_lock.lock();
+      m_rc++;
+      m_lock.unlock();
+    }
+  }
+
+  struct Action {
+    bool freeObject;
+    bool freeMemory;
+  };
+
+  inline Action release() {
+    Action rtn = {false, false};
+    if (m_rc != INT_MAX) {
+      m_lock.lock();
+      rtn.freeObject = m_rc == 1;
+      rtn.freeMemory = m_rc == 1 && m_wc == 0;
+      m_rc--;
+      m_lock.unlock();
+    }
+    return rtn;
+  }
+
+  forceinline void retainWeak() {
+    m_lock.lock();
+    m_wc++;
+    m_lock.unlock();
+  }
+
+  forceinline bool releaseWeak() {
+    bool shouldFree = false;
+    m_lock.lock();
+    shouldFree = m_rc == 0 && m_wc == 1;
+    m_wc--;
+    m_lock.unlock();
+    return shouldFree;
+  }
+
+  forceinline bool lockStrong() {
+    bool succ = true;
+    if (m_rc != INT_MAX) {
+      m_lock.lock();
+      if (m_rc != 0) {
+        m_rc++;
+      } else {
+        succ = false;
+      }
+      m_lock.unlock();
+    }
+
+    return succ;
+  }
+
   int m_rc;
   int m_wc;
+
+private:
   Spinlock m_lock;
-  char m_unused[7]; // padding to 16 bytes
+  char m_unused[7];  // padding to 16 bytes
 };
 
 /**
@@ -84,16 +142,44 @@ sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
   return sp<T1>(retain(derived));
 }
 
-template<typename T>
+/**
+ * Weak Pointer
+ */
+template <typename T>
 class wp {
 public:
+  wp() : m_ptr(NULL) {}
   wp(T* r) {
     m_ptr = r;
     m_ptr->_retainWeak();
   }
   ~wp() { m_ptr->_releaseWeak(); }
 
-  sp<T> lock() { return m_ptr == NULL ? NULL : (T*) m_ptr->_lockStrong(); }
+  template <typename Derived>
+  wp<T>& operator=(const sp<Derived>& r) {
+    if (m_ptr) m_ptr->_releaseWeak();
+    m_ptr = r.get();
+    m_ptr->_retainWeak();
+    return *this;
+  }
+
+  template <typename Derived>
+  wp<T>& operator=(Derived* r) {
+    if (m_ptr) m_ptr->_releaseWeak();
+    m_ptr = r;
+    m_ptr->_retainWeak();
+    return *this;
+  }
+
+  sp<T> lock() {
+    if (m_ptr == NULL) return NULL;
+
+    ControlBlock* ctrl = m_ptr->_controlBlock();
+    if (ctrl->lockStrong())
+      return sp<T>(m_ptr);
+    else
+      return NULL;
+  }
 
 private:
   T* m_ptr;
@@ -109,24 +195,30 @@ public:
 public:
   static sp<NcObject> alloc() { return new NcObject(); }
 
+  /**
+   * It malloc() a block of memory and initialize the control block.
+   * But the object is not constructed. The caller should call placement new later.
+   * For example:
+   *
+   * ```cpp
+   * size_t totalLen = sizeof(NcString) + strLength + 1;
+   * NcString* o = (GfString*)NcObject::allocRawObjectWithSize(totalLen, false);
+   * ::new (o) NcString();
+   * ```
+   */
+  static NcObject* allocRawObjectWithSize(size_t size, bool zero_memory);
+
   void* operator new(size_t size) {
     void* buffer = malloc(size + sizeof(ControlBlock));
     ControlBlock* ctrl = (ControlBlock*)buffer;
     new (ctrl) ControlBlock();
-    return (u8*)(ctrl) + sizeof(ControlBlock);
-  }
-
-  void* operator new(size_t size, void* place) {
-    void* buffer = malloc(size + sizeof(ControlBlock));
-    ControlBlock* ctrl = (ControlBlock*)buffer;
-    new (ctrl) ControlBlock();
-    return (u8*)(ctrl) + sizeof(ControlBlock);
+    return ctrl + 1;
   }
 
   void operator delete(void* p) { p = p;
   }
 
-  ControlBlock* _controlBlock() { return (ControlBlock*)((u8*)(this) - sizeof(ControlBlock)); }
+  forceinline ControlBlock* _controlBlock() { return (ControlBlock*)(this) - 1; }
 
   forceinline int retainCount() { return _controlBlock()->m_rc; }
   forceinline int weakCount() { return _controlBlock()->m_wc; }
@@ -145,70 +237,28 @@ public:
 
   // private:
   forceinline void _retain() {
-    ControlBlock* ctrl = _controlBlock();
-    if (ctrl->m_rc != INT_MAX) {
-      ctrl->m_lock.lock();
-      ctrl->m_rc++;
-      ctrl->m_lock.unlock();
-    }
+    _controlBlock()->retain();
   }
   inline void _release() {
-    ControlBlock* ctrl = _controlBlock();
-    if (ctrl->m_rc != INT_MAX) {
-      int rc;
-      bool shouldFree;
-      ctrl->m_lock.lock();
-      rc = ctrl->m_rc;
-      shouldFree = rc == 1 && ctrl->m_wc == 1;
-      if (rc == 1) ctrl->m_wc--;
-      ctrl->m_rc--;
-      ctrl->m_lock.unlock();
-      if (rc == 1) {
-        this->~NcObject();
-      }
-      if (shouldFree) {
-        free(_controlBlock());
-      }
-    }
-  }
-
-  forceinline void _retainWeak() {
-    ControlBlock* ctrl = _controlBlock();
-    if (ctrl->m_rc != INT_MAX) {
-      ctrl->m_lock.lock();
-      ctrl->m_wc++;
-      ctrl->m_lock.unlock();
-    }
-  }
-
-  forceinline void _releaseWeak() {
-    ControlBlock* ctrl = _controlBlock();
-    if (ctrl->m_rc != INT_MAX) {
-      bool shouldFree;
-      ctrl->m_lock.lock();
-      shouldFree = ctrl->m_wc == 1;
-      ctrl->m_wc--;
-      ctrl->m_lock.unlock();
-      if (shouldFree) {
+    auto ctrl = _controlBlock();
+    auto should = ctrl->release();
+    if (should.freeObject) {
+      this->~NcObject();
+      if (should.freeMemory) {
         free(ctrl);
       }
     }
   }
 
-  forceinline NcObject* _lockStrong() {
+  forceinline void _retainWeak() {
+    _controlBlock()->retainWeak();
+  }
+
+  forceinline void _releaseWeak() {
     ControlBlock* ctrl = _controlBlock();
-    NcObject* thiz = this;
-    if (ctrl->m_rc != INT_MAX) {
-      ctrl->m_lock.lock();
-      if (ctrl->m_rc != 0) {
-        ctrl->m_rc++;
-      } else {
-        thiz = NULL;
-      }
-      ctrl->m_lock.unlock();  
+    if (ctrl->releaseWeak()) {
+      free(ctrl);
     }
-    
-    return thiz;
   }
 
   forceinline void _deleteThis() {
@@ -220,9 +270,7 @@ protected:
   NcObject() {}
   NcObject(bool /*isStatic*/) {
     ControlBlock* ctrl = _controlBlock();
-    ctrl->m_lock.lock();
     ctrl->m_rc = INT_MAX;
-    ctrl->m_lock.unlock();
   }
   virtual ~NcObject() {}
 };
