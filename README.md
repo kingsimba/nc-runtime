@@ -6,6 +6,7 @@
 
 - [Contents](#contents)
   - [Smart Pointer](#smart-pointer)
+    - [Rules of using `sp`.](#rules-of-using-sp)
   - [String Class](#string-class)
   - [Foundation Classes: NcObject, NcArray, NcString, etc](#foundation-classes-ncobject-ncarray-ncstring-etc)
   - [StackOrHeapAllocator](#stackorheapallocator)
@@ -13,6 +14,11 @@
   - [Many more good stuffs](#many-more-good-stuffs)
 - [Design Notes](#design-notes)
   - [std::shared_ptr vs self-implemented smart pointer.](#stdshared_ptr-vs-self-implemented-smart-pointer)
+    - [The internal of shared_ptr](#the-internal-of-shared_ptr)
+    - [Try to use shared_ptr](#try-to-use-shared_ptr)
+    - [Things I like & dislike](#things-i-like--dislike)
+    - [Allow implicit conversion](#allow-implicit-conversion)
+    - [Makes all memory in one piece with `sp`](#makes-all-memory-in-one-piece-with-sp)
   - [`auto` keyword](#auto-keyword)
   - [String literals](#string-literals)
   - [Log System](#log-system)
@@ -40,6 +46,9 @@ The smart pointer `sp` and `wp` works in many ways like `std::shared_ptr` and `s
 sp<NcData> data = NcData::allocWithBytes(buffer, len);
 EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
 EXPECT_EQ(data.use_count(), 1);
+
+wp<NcString> w(str);	// strong/raw to weak
+auto s = w.lock(); 		// weak to strong
 ```
 
 But they also bear important differences. Such as: The raw pointer and smart pointer can be freely converted to each other.
@@ -50,13 +59,18 @@ NcString* raw = p1.get();  // sp -> raw
 sp<NcString> p2 = retain(raw);   // raw -> sp
 ```
 
-This enables calling functions with raw pointer parameters:
+It makes calling raw-pointer functions easier:
 
 ```cpp
 void myFunction(NcString* str) // raw pointer
 
 sp<NcString> s = NcString::allocWithCString("abc");
-myFunction(s); // implicit conversion to raw pointer. Not possible with std::shared_ptr.
+myFunction(s); // implicitly conversion to raw pointer
+
+auto arr = NcArray<NcString>::allocWithObjects("123"_str, "234"_str, NULL);
+for(int i = 0; i < arr->Length(); i++) {
+   NcString* str = arr[i]; // implicitly convert to raw pointer
+}
 ```
 
 And it allows to retake ownership from raw pointer.
@@ -67,11 +81,37 @@ void SomeObject::setName(NcString* name) {
 }
 ```
 
-Convert between strong/raw and weak:
+### Rules of using `sp`.
+
+- There are only two ways of using pointer: `Widget*` or `sp<Widget>`. There is not `const` variant.
+- Use raw pointer as much as possible(local variables, parameters etc), unless you want to take the ownership.
+- If you want to take ownership, make it explicit by calling `retain()`.
 
 ```cpp
-wp<NcString> w(str);	// strong/raw to weak
-auto s = w.lock(); // weak to strong
+class SomeClass
+{
+ public:
+   SomeClass() {
+      sp<NcString> name = NcString::allocWithCString("hello"); // object creation, use `sp`
+      m_name = sp;   // transfer ownership, use `sp`
+   }
+
+   void setName(NcString* name) { // function parameter: use raw pointer
+      m_name = retain(name);  // explicitly take ownership
+   }
+
+ private:
+   void processing() {
+      NcString* name = m_name; // local variable: use raw pointer
+      useName(name);
+   }
+
+   void useName(NcString* name) {   // function parameter: use raw pointer
+   }
+
+ private:
+   sp<NcString> m_name;
+}
 ```
 
 ## String Class
@@ -113,28 +153,28 @@ I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They e
 
 - Type identification
 
-   ```cpp
-   sp<NcObject> box = MyBox::alloc();
-   EXPECT_TRUE(box->isKindOf<MyBox>());
-   EXPECT_TRUE(box->isKindOf<NcObject>());
-   EXPECT_FALSE(box->isKindOf<NcString>());
-   ```
+  ```cpp
+  sp<NcObject> box = MyBox::alloc();
+  EXPECT_TRUE(box->isKindOf<MyBox>());
+  EXPECT_TRUE(box->isKindOf<NcObject>());
+  EXPECT_FALSE(box->isKindOf<NcString>());
+  ```
 
 - All objects can be converted in string.
 
-   ```cpp
-   auto str = o->toString();
-   ```
+  ```cpp
+  auto str = o->toString();
+  ```
 
 - C style format can be extended to support any NcObject.
 
-   ```cpp
-   auto arr = NcArray<NcString>::alloc();
-   arr->addObject("Earth"_str);
-   arr->addObject("Mars"_str);
-   arr[1] = "Jupiter"_str;
-   EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
-   ```
+  ```cpp
+  auto arr = NcArray<NcString>::alloc();
+  arr->addObject("Earth"_str);
+  arr->addObject("Mars"_str);
+  arr[1] = "Jupiter"_str;
+  EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
+  ```
 
 ## StackOrHeapAllocator
 
@@ -170,7 +210,7 @@ std::thread t([&] {
 });
 
 // must wait until reset
-TimeTick start = TimeTick::now(); 
+TimeTick start = TimeTick::now();
 e.wait();
 TimeTick duration = TimeTick::now() - start;
 EXPECT_GE(duration.ms(), 100);
@@ -178,7 +218,7 @@ EXPECT_GE(duration.ms(), 100);
 t.join();
 
 // not reset(). So wait on it will not block
-start = TimeTick::now(); 
+start = TimeTick::now();
 e.wait();
 duration = TimeTick::now() - start;
 EXPECT_LT(duration.ms(), 1);
@@ -202,13 +242,9 @@ To be honest, I fall behind in terms of modern C++. Because I held a biased and 
 
 ## std::shared_ptr vs self-implemented smart pointer.
 
-Historically, I always do RC in a base class. But I wanted to try out `std::shared_ptr` this time.
+### The internal of shared_ptr
 
-The most important implementation difference I noticed is that:
-
-- For std::shared_ptr, the control block(contains RC, weak_ptrs) is put outside of the object.
-  (Note: Later, I learned that there is a std::enabled_shared_from_this. I shall update the document when I have time.)
-- For most self-implemented RC, the control block is in the base object.
+Before discussing the pros-and-cons of both implementations, I dive into the internal of `std::shared_ptr`
 
 At first, I think `std::shared_ptr` will have to make one additional malloc() for the control block.
 Until I read from https://www.nextptr.com/tutorial/ta1358374985/shared_ptr-basics-and-internals-with-examples:
@@ -221,84 +257,96 @@ Until I read from https://www.nextptr.com/tutorial/ta1358374985/shared_ptr-basic
 > The std::make_shared is a preferred way to construct a shared_ptr because it builds the
 > managed object within the control block.
 
-So I think `std::shared_ptr` might be good. And write NcObject, NcString, NcArray out of it:
+Later, I also learned there is `std::enabled_shared_from_this`. It can put the control block into the base object.
+
+### Try to use shared_ptr
+
+So I think `std::shared_ptr` might be good enough for my need. And write something out of it:
 
 ```cpp
-class MyBox : public NcObject {
-public:
-  static sp<MyBox> alloc() { return std::make_shared<MyBox>(); }
-
-  MyBox(){};   // must be public. Because std::make_shared needs it.
+class NcObject : public std::enable_shared_from_this<NcObject> {
 };
 
-TEST(NcObject, cast) {
-  auto box = MyBox::alloc();
+class Time : public NcObject {
+public:
+  // I like allocWith() over constructors. Because it allows overloading
+  static shared_ptr<Time> allocWithSeconds(int sec) { return std::make_shared<Time>(sec * 1000); }
+  static shared_ptr<Time> allocWithMilliseconds(int ms) { return std::make_shared<Time>(ms); }
+
+  // Problem: Constructors must be public. Because std::make_shared needs it.
+  Time(int ms) : m_milliseconds(ms) {};
+
+  sp<Time> self() {
+     return static_pointer_case<Time>(shared_from_this());
+  }
+
+private:
+  int m_milliseconds;
+};
+
+TEST(NcObject, basic) {
+  auto t = Time::allocWithSeconds(10);
 
   // cast to base
-  sp<NcObject> base = box;
-  EXPECT_EQ(box.use_count(), 2);
+  shared_ptr<NcObject> base = t;
+  EXPECT_EQ(t.use_count(), 2);
 
   // cast to derived
-  auto box2 = std::static_pointer_cast<MyBox>(base);
-  EXPECT_EQ(box.use_count(), 3);
-  EXPECT_TRUE(box.get() == box2.get());
+  auto t2 = std::static_pointer_cast<Time>(base);
+  EXPECT_EQ(t.use_count(), 3);
+  EXPECT_TRUE(t.get() == t2.get()); // underlying the same object
+
+  auto t3 = t->self();
+  EXPECT_EQ(t.use_count(), 4);
 }
 ```
 
-So far so good. Until I try to write something like this:
+`Time::self()` makes an important point to implement something like
+`auto pieces = "hello-world"_str->split("-")`.
+Each piece contains a strong reference to the original string.
+
+### Things I like & dislike
+
+Like:
+
+1. Strong/weak. It makes delegate design pattern more robust.
+2. Can put control block along with the controlled object.
+
+Dislike:
+
+1. Constructors must be public. Some user may call delete or create the object on stack.
+2. Convert from raw pointer back to `shared_ptr` is inconvenient.
+3. Must call `.get()` to get raw pointer.
+
+I shall explain myself in the following sections.
+
+### Allow implicit conversion
+
+`std::shared_ptr` avoids implicit conversion, for a [good reason](https://www.informit.com/articles/article.aspx?p=31529&seqNum=7). You have to call `.get()` to get a raw pointer.
+
+But I think, for this reason(inconveniency to convert to raw pointer), it tends to be abused by unexperienced programmers.
+It pops up everywhere. And there are too many ways of using it:
 
 ```cpp
-TEST(NcString, split) {
-  vector<StringSlice> slices = NcString::allocWithCString("hello---world")->split("---");
-  auto s = NcString::allocByJoiningSlices(slices, " ");
-  EXPECT_STREQ(s->cstr(), "hello world");
-  EXPECT_EQ(s->length(), 11);
-}
+void f(widget* );
+void f(widget& );
+void f(shared_ptr<widget> );
+void f(const shared_ptr<widget>& );
 ```
 
-First, `NcString::allocWithCString()` creates `shared_ptr<NcString>`.
-Then `NcString::split()` split it into slices. Each slice should hold a RC to the original string.
-So in `split()` the RC must be increased.
-This is impossible with `std::shared_ptr`.
+About the correct rules for using `shared_ptr`, I agree with [Sutter’s Mill](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/) and [acel](https://stackoverflow.com/questions/3310737/should-we-pass-a-shared-ptr-by-reference-or-by-value)
 
-And there is another slight inconveniency:
+> - Guideline: Don’t pass a smart pointer as a function parameter unless you want to use or manipulate the smart pointer itself, such as to share or transfer ownership.
+> - Guideline: Express that a function will store and share ownership of a heap object using a by-value shared_ptr parameter.
+> - Guideline: Use a non-const shared_ptr& parameter only to modify the shared_ptr. Use a const shared_ptr& as a parameter only if you’re not sure whether or not you’ll take a copy and share ownership; otherwise use widget\* instead (or if not nullable, a widget&).
 
-```cpp
-static int _calculateStringLength(NcString* str) { return str->length(); }
+So I derived my [rules of using `sp`](#rules-of-using-sp). I think it's more error-proof.
 
-TEST(NcString, basic) {
-  sp<NcString> s = NcString::allocWithCString("hello");
-  // must call .get() to convert to ordinary pointer.
-  EXPECT_EQ(_calculateStringLength(s.get()), 5);
-}
-```
+### Makes all memory in one piece with `sp`
 
-You have to call `.get()` to get a raw pointer. There is no implicit conversion, though for a good reason https://www.informit.com/articles/article.aspx?p=31529&seqNum=7.
-
-Third, with self-implemented RC in NcObject. I can do some deep optimization, like appending the text directly after the NcString object.
+With self-implemented control-block in NcObject. I can do some deep optimization, like appending the text directly after the NcString object.
 Thus creating the string with a single allocation.
-
-```cpp
-class NcString
-{
-public:
-   static NcString* allocWithCString(const char* str) {
-      size_t len = strlen(str) + 1;
-      NcString* o = (NcString*)malloc(sizeof(NcString) + len);
-      new(o) NcString(); // call placement new
-      o->m_length = len - 1;
-      o->m_str = (char*)(o+1);
-      memcpy(o->m_str, str, len);
-      return o;
-   }
-}
-```
-
-For conclusion, after analysis, I still give self-implemented RC a go. Based on reasons:
-
-1. `std::shared_ptr` implements the control block outside of the object. So you can't convert a raw pointer back into a smart pointer.
-2. `std::shared_ptr` doesn't allow manual RC. I think it might be useful in some low-level classes.
-3. I want complete control over how the RC is implemented and can make in-depth optimization.
+See `allocWithCString::allocWithCString()`
 
 ## `auto` keyword
 
@@ -414,7 +462,7 @@ To support than:
 1. In order to detect element type, a `NcObject::ArrayElement` and `NcArray::ArrayElement` are added.
 
    NcObject::ArrayElement is unnecessary. There might be a better solution?
-   
+
    ```cpp
    class NcObject {
    public:
