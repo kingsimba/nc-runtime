@@ -2,7 +2,8 @@
 
 #include "basic_types.h"
 
-// An experimental implementation. It should be optimized in the future.
+// An experimental implementation. It might be optimized in the future.
+// Keep watching https://github.com/kingsimba/nc-runtime for updates
 class ControlBlock {
 public:
   ControlBlock() : m_rc(1), m_wc(0) {}
@@ -119,7 +120,7 @@ public:
 
   /**
    * Implicit conversion to T*.
-   * 
+   *
    * Usually, implicit conversion is not a good idea. https://www.informit.com/articles/article.aspx?p=31529&seqNum=7
    * But I still want it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
    */
@@ -128,9 +129,7 @@ public:
   /**
    * For accessing array element(If it's an array)
    */
-  forceinline sp<typename T::ArrayElement>& operator[](int index) {
-    return m_ptr->objectAtIndex(index);
-  }
+  forceinline sp<typename T::ArrayElement>& operator[](int index) { return m_ptr->objectAtIndex(index); }
 
 private:
   T* m_ptr;
@@ -187,6 +186,9 @@ private:
 
 /**
  * The base class of the foundation framework. It contains useful functions, such as toString() and isKindOf().
+ *
+ * Notes: This is an proof-of-concept implementation. It might be optimized in the future.
+ * Keep watching https://github.com/kingsimba/nc-runtime for updates
  */
 class NcObject {
 public:
@@ -215,8 +217,7 @@ public:
     return ctrl + 1;
   }
 
-  void operator delete(void* p) { p = p;
-  }
+  void operator delete(void* p) { p = p; }
 
   forceinline ControlBlock* _controlBlock() { return (ControlBlock*)(this) - 1; }
 
@@ -230,15 +231,13 @@ public:
 
   virtual bool equals(NcObject* r) { return this == r; }
 
-  template<typename ToType>
+  template <typename ToType>
   forceinline bool isKindOf() {
     return dynamic_cast<ToType*>(this) != NULL;
   }
 
   // private:
-  forceinline void _retain() {
-    _controlBlock()->retain();
-  }
+  forceinline void _retain() { _controlBlock()->retain(); }
   inline void _release() {
     auto ctrl = _controlBlock();
     auto should = ctrl->release();
@@ -250,9 +249,7 @@ public:
     }
   }
 
-  forceinline void _retainWeak() {
-    _controlBlock()->retainWeak();
-  }
+  forceinline void _retainWeak() { _controlBlock()->retainWeak(); }
 
   forceinline void _releaseWeak() {
     ControlBlock* ctrl = _controlBlock();
@@ -275,7 +272,7 @@ protected:
   virtual ~NcObject() {}
 };
 
-template<typename T>
+template <typename T>
 forceinline T* retain(T* o) {
   if (o) o->_retain();
   return (T*)o;
@@ -286,7 +283,7 @@ forceinline void release(NcObject* o) {
 }
 
 // to prevent error caused by releasing smart pointer through implicit conversion to T*
-template<typename T>
+template <typename T>
 forceinline void release(sp<T>& o) {
   o->ERROR_should_not_call_release_on_smart_pointer();
 }
