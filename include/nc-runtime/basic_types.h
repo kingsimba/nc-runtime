@@ -70,18 +70,20 @@ class NcString;
 //////////////////////////////////////////////////////////////////////////
 
 // Learned from https://rigtorp.se/spinlock/
-struct Spinlock {
-  std::atomic<bool> lock_ = {false};
-
+class Spinlock {
+public:
   void lock() {
     for (;;) {
-      if (!lock_.exchange(true, std::memory_order_acquire)) {
+      if (!m_lock.exchange(true, std::memory_order_acquire)) {
         break;
       }
-      while (lock_.load(std::memory_order_relaxed)) {
+      while (m_lock.load(std::memory_order_relaxed)) {
       }
     }
   }
 
-  void unlock() { lock_.store(false, std::memory_order_release); }
+  void unlock() { m_lock.store(false, std::memory_order_release); }
+
+private:
+  std::atomic<bool> m_lock{false};
 };
