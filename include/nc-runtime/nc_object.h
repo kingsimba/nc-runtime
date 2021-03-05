@@ -169,7 +169,9 @@ public:
     m_ptr = r.m_ptr;
     r.m_ptr = NULL;
   }
-  ~wp() { m_ptr->_releaseWeak(); }
+  ~wp() {
+    if (m_ptr) m_ptr->_releaseWeak();
+  }
 
   forceinline void reset() {
     m_ptr->_releaseWeak();
