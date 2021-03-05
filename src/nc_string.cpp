@@ -31,15 +31,14 @@ public:
   ~GlobalStringManager() {
     auto iter = m_map.begin();
     while (iter != m_map.end()) {
-      NcObject* obj = iter->second.get();
-      iter->second.reset();
+      NcObject* obj = iter->second;
       obj->_deleteThis();
       iter++;
     }
   }
 
 private:
-  unordered_map<size_t, sp<NcString>> m_map;
+  unordered_map<size_t, NcString*> m_map;
 };
 
 static GlobalStringManager g_stringManager;
