@@ -32,6 +32,15 @@ TEST(NcObject, weak) {
   EXPECT_EQ(box->retainCount(), 1);
   EXPECT_EQ(box->weakCount(), 1);
 
+  // copy weak
+  wp<MyBox> w2 = w;
+  EXPECT_EQ(box->retainCount(), 1);
+  EXPECT_EQ(box->weakCount(), 2);
+
+  // reset weak
+  w2.reset();
+  EXPECT_EQ(box->weakCount(), 1);
+
   // weak -> strong
   auto box2 = w.lock();
   EXPECT_EQ(box->retainCount(), 2);
@@ -58,7 +67,7 @@ TEST(NcObject, rcAndCast) {
   auto box = MyBox::alloc();
   EXPECT_EQ(box->retainCount(), 1);
 
-  sp<MyBox> box2(box); // copy constructor
+  sp<MyBox> box2(box);  // copy constructor
   EXPECT_EQ(box->retainCount(), 2);
 
   sp<MyBox> box3;
@@ -106,7 +115,7 @@ TEST(NcObject, retainReleaseSmartPointer) {
 
   EXPECT_TRUE(box != NULL);
 
-  // retain. This is unnecessary(should use box2 = box). 
+  // retain. This is unnecessary(should use box2 = box).
   // But still, we support it to prevent error.
   sp<MyBox> box2 = retain<MyBox>(box);
 

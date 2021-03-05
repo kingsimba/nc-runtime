@@ -1,5 +1,7 @@
 # Changelog
 
+- 2021-03-05 Fix bug in copying of wp.
+- 2021-03-05 Fix bug in global strings.
 - 2021-02-28 Add wp, equivalent of std::weak_ptr.
 - 2021-02-18 Add Thread::sleep(). Make TimeTick a class. 
 - 2021-02-18 Change the implementation of `sp<NcArray>`'s operator[].

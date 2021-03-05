@@ -147,12 +147,41 @@ sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
 template <typename T>
 class wp {
 public:
-  wp() : m_ptr(NULL) {}
+  wp() = default;
+
+  // raw pointer constructor
   wp(T* r) {
     m_ptr = r;
     m_ptr->_retainWeak();
   }
+  // strong pointer constructor
+  wp(const sp<T>& r) {
+    m_ptr = r.get();
+    m_ptr->_retainWeak();
+  }
+  // copy constructor
+  wp(const wp<T>& r) {
+    m_ptr = r.m_ptr;
+    m_ptr->_retainWeak();
+  }
+  // move constructor
+  wp(wp<T>&& r) {
+    m_ptr = r.m_ptr;
+    r.m_ptr = NULL;
+  }
   ~wp() { m_ptr->_releaseWeak(); }
+
+  forceinline void reset() {
+    m_ptr->_releaseWeak();
+    m_ptr = NULL;
+  }
+
+  // copy operator
+  wp<T>& operator=(const wp<T>& r) {
+    m_ptr = r.m_ptr;
+    m_ptr->_retainWeak();
+    return *this;
+  }
 
   template <typename Derived>
   wp<T>& operator=(const sp<Derived>& r) {
