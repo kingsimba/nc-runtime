@@ -1,0 +1,8 @@
+{
+    "testMate.cpp.test.advancedExecutables": [
+        {
+            "pattern": "lib/Debug/*-test.exe",
+            "cwd": "${absDirpath}"
+        }
+    ]
+}

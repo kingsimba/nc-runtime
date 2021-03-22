@@ -32,7 +32,7 @@ TEST(NcString, literal) {
 
   // s1 is exactly the same as s2, because of the literal string manager.
   EXPECT_EQ(s1.get(), s2.get());
-  
+
   // Calling retain() or release() has no effect
   EXPECT_EQ(s1->retainCount(), INT_MAX);
   EXPECT_EQ(retain<NcString>(s1)->retainCount(), INT_MAX);
@@ -53,7 +53,7 @@ TEST(NcString, join) {
 TEST(NcString, toSlice) {
   sp<NcString> s = NcString::allocWithCString("hello world");
   auto slice = s->toSlice();
-  EXPECT_EQ(s->retainCount(), 2); // slice holds a reference to the string
+  EXPECT_EQ(s->retainCount(), 2);  // slice holds a reference to the string
 }
 
 TEST(NcString, split) {
@@ -72,5 +72,6 @@ TEST(NcString, subslice) {
 
 TEST(NcString, format) {
   EXPECT_STREQ(NcString::format("%s shall come", "The Day")->cstr(), "The Day shall come");
-  EXPECT_STREQ(NcString::format("%zu is a large number", 12345678901234)->cstr(), "12345678901234 is a large number");
+  EXPECT_STREQ(NcString::format("%d is small but %lld is large", 123, 12345678901234ll)->cstr(),
+               "123 is small but 12345678901234 is large");
 }
