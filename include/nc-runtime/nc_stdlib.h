@@ -7,7 +7,7 @@ struct TimeTick {
   static TimeTick now();
 
   // return the time used to run some code
-  template<typename Func>
+  template <typename Func>
   static TimeTick measure(Func func);
 
   TimeTick() : __time(0) {}
@@ -22,7 +22,7 @@ forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r) { return Ti
 
 class Thread {
 public:
-  static void sleep(TimeTick tick); // sleep current thread for at least some time.
+  static void sleep(TimeTick tick);  // sleep current thread for at least some time.
 };
 
 u32 Math_hashString(const char* str);
@@ -32,10 +32,10 @@ size_t Math_hashSizeT(size_t o);
 
 /**
  * Allocate memory on the stack or heap.
- * 
+ *
  * Use stack if possible. But if stack is exhausted, use heap.
  * All allocated memory will be freed in destructor.
- * 
+ *
  * ```
  * StackOrHeapAllocator allocator(alloca(1024), 1024);
  * allocator.allocArray<char>(512); // from stack
@@ -107,7 +107,7 @@ private:
 };
 
 // clang-format off
-#define synchroized(o) for(__MutexGuard__ guard(o##Mutex); guard.next(); )
+#define synchronized(o) for(__MutexGuard__ guard(o##Mutex); guard.next(); )
 // clang-format on
 
 template <typename Func>
