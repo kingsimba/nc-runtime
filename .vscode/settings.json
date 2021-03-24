@@ -2,7 +2,20 @@
     "testMate.cpp.test.advancedExecutables": [
         {
             "pattern": "lib/Debug/*-test.exe",
-            "cwd": "${absDirpath}"
+            "cwd": "${workspaceFolder}"
         }
-    ]
+    ],
+    "files.associations": {
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "fstream": "cpp",
+        "iosfwd": "cpp",
+        "istream": "cpp",
+        "list": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "streambuf": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp"
+    }
 }

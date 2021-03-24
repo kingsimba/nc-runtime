@@ -235,7 +235,7 @@ public:
    *
    * ```cpp
    * size_t totalLen = sizeof(NcString) + strLength + 1;
-   * NcString* o = (GfString*)NcObject::allocRawObjectWithSize(totalLen, false);
+   * NcString* o = (NcString*)NcObject::allocRawObjectWithSize(totalLen, false);
    * ::new (o) NcString();
    * ```
    */

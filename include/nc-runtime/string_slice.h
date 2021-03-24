@@ -95,7 +95,6 @@ private:
   bool _isSep(char c);
 };
 
-
 /**
  * StringSlice uses UTF-8 encoding
  */
@@ -141,7 +140,9 @@ public:
   // iterate Unicode points
   forceinline StringCharIter iter() const { return StringCharIter(*this); }
   // iterate slices separated by a |sep| string
-  forceinline StringSubsliceIter iterForSplitting(const StringSlice& sep) const { return StringSubsliceIter(*this, sep); }
+  forceinline StringSubsliceIter iterForSplitting(const StringSlice& sep) const {
+    return StringSubsliceIter(*this, sep);
+  }
   // iterate slices separated by a groups of separators. Works like strtok()
   forceinline StringTokenIter iterForTokenizing(const StringSlice& seps) const { return StringTokenIter(*this, seps); }
 
@@ -156,7 +157,7 @@ public:
   // Conversions
 
   // copy to C string
-  forceinline void toCString(char* str, size_t max_len) {
+  forceinline void toCString(char* str, size_t max_len) const {
     if (max_len < (size_t)m_length + 1) {
       str[0] = 0;
       return;
@@ -203,26 +204,26 @@ public:
 
   /**
    * Split into pieces with a separator string
-   * 
+   *
    * split "hello--world" with "--" will produce ["hello", "world"]
    */
   std::vector<StringSlice> split(const StringSlice& sep);
 
   /**
-    * A fast on stack version. return the number of slices actually created
-    */
+   * A fast on stack version. return the number of slices actually created
+   */
   int splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum);
 
   /**
    * Split into tokens. With SliceTokenIterator.
-   * 
+   *
    * For "Whoa! Fireworks?", with |seps| = " ,.?!", the result is ["Whoa", "Fireworks"]
    */
   std::vector<StringSlice> tokenize(const StringSlice& seps);
 
   /**
    * Replace part of a string
-   * 
+   *
    * @rtn return the new string
    */
   sp<NcString> replaceInRange(Range range, const StringSlice& replacement);
