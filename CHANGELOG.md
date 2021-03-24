@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-03-24 Add `Some` and `noValue`.
 - 2021-03-24 Add NcFile & NcData.
 - 2021-03-05 Fix bug in copying of wp.
 - 2021-03-05 Fix bug in global strings.

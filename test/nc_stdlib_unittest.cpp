@@ -75,3 +75,25 @@ TEST(Stdlib, MutexGuard) {
   EXPECT_EQ(counter, REPEAT * 2);
   EXPECT_NE(counterUnprotected, REPEAT * 2);
 }
+
+TEST(Stdlib, someInt) {
+  auto v = Some<int>(5);
+  EXPECT_TRUE(v.hasValue());
+  EXPECT_EQ(v.value(), 5);
+  EXPECT_EQ(v.Or(10), 5);
+
+  v = noValue;
+  EXPECT_FALSE(v.hasValue());
+  EXPECT_EQ(v.Or(10), 10);
+}
+
+TEST(Stdlib, someString) {
+  auto s = Some<const char*>("hello");
+  EXPECT_TRUE(s.hasValue());
+  EXPECT_STREQ(s.value(), "hello");
+  EXPECT_STREQ(s.Or("simba"), "hello");
+
+  s = noValue;
+  EXPECT_FALSE(s.hasValue());
+  EXPECT_EQ(s.Or("simba"), "simba");
+}

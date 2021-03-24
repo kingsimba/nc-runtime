@@ -65,6 +65,43 @@ forceinline bool operator!=(const Range& l, const Range& r) { return l.location 
 
 //////////////////////////////////////////////////////////////////////////
 
+class NoValueType {};
+
+const static NoValueType noValue = {};
+
+/**
+ * Used for optional return value of function.
+ *
+ * ```
+ * Some<string> getName() {
+ *   if (hasError())
+ *     return noValue;
+ *   else {
+ *     return calculateName();
+ *   }
+ * }
+ *
+ * auto v = getName().Or("Unnamed User");
+ * ```
+ */
+template <typename T>
+class Some {
+public:
+  Some(const NoValueType& v) : m_hasValue(false) {}
+  Some(const T& v) : m_value(v), m_hasValue(true) {}
+
+  T& value() { return m_value; }
+  bool hasValue() { return m_hasValue; }
+
+  const T& Or(const T& r) { return m_hasValue ? m_value : r; }
+
+private:
+  bool m_hasValue;
+  T m_value;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 class NcString;
 
 //////////////////////////////////////////////////////////////////////////
