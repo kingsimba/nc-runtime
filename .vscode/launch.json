@@ -9,6 +9,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${fileDirname}/../lib/Debug/nc-runtime-test.exe",
+            "visualizerFile": "${workspaceFolder}/vs_visualizer/nc-runtime.natvis",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
