@@ -4,10 +4,10 @@
     <DisplayString>{{ {m_str,[m_length]s8}, length={m_length} }}</DisplayString>
   </Type>
   <Type Name="NcObject">
-    <DisplayString>{{ rc={m_rc} }}</DisplayString>
+    <DisplayString>{{ rc={((ControlBlock*)(this) - 1)->m_rc}, wc={((ControlBlock*)(this) - 1)->m_wc }}</DisplayString>
   </Type>
   <Type Name="NcString">
-    <DisplayString>{{ rc={m_rc}, {m_str,[m_length]s8}, length={m_length} }}</DisplayString>
+    <DisplayString>{{ rc={((ControlBlock*)(this) - 1)->m_rc}, {m_str,[m_length]s8}, length={m_length} }}</DisplayString>
 	<StringView>m_str,[m_length]s8</StringView>
   </Type>
   <Type Name="sp&lt;*&gt;">
@@ -17,7 +17,7 @@
     </Expand>
   </Type>
   <Type Name="NcArray&lt;*&gt;">
-    <DisplayString>NcArray {m_array}</DisplayString>
+    <DisplayString>NcArray rc={((ControlBlock*)(this) - 1)->m_rc}, {m_array}</DisplayString>
 	<Expand>
       <ExpandedItem>m_array</ExpandedItem>
     </Expand>
