@@ -89,6 +89,7 @@ class Some {
 public:
   Some(const NoValueType& v) : m_hasValue(false) {}
   Some(const T& v) : m_value(v), m_hasValue(true) {}
+  Some(const T&& v) : m_value(std::move(v)), m_hasValue(true) {}
 
   T& value() { return m_value; }
   bool hasValue() { return m_hasValue; }

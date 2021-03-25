@@ -97,3 +97,24 @@ TEST(Stdlib, someString) {
   EXPECT_FALSE(s.hasValue());
   EXPECT_EQ(s.Or("simba"), "simba");
 }
+
+class CopyCountObject {
+public:
+  CopyCountObject() : m_copyCount(0), m_moveCount(0) {}
+  CopyCountObject(const CopyCountObject& r) : m_copyCount(r.m_copyCount + 1), m_moveCount(r.m_moveCount) {}
+  CopyCountObject(const CopyCountObject&& r) : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1) {}
+
+  int m_copyCount;
+  int m_moveCount;
+};
+
+TEST(Stdlib, someCopyObject) {
+  auto getObject = []() -> Some<CopyCountObject> {
+    auto rtn = Some<CopyCountObject>(CopyCountObject());
+    return rtn;
+  };
+  auto s = getObject();
+  EXPECT_TRUE(s.hasValue());
+  EXPECT_EQ(s.value().m_copyCount, 0) << "There should be no copy. Only move.";
+  EXPECT_EQ(s.value().m_moveCount, 2);
+}

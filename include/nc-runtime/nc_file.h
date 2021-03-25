@@ -4,11 +4,24 @@
 
 #define NC_MAX_PATH 512
 
-enum class FileOpenFlag { none = 0, read = 1, write = 2, openExisting = 4, createAlways = 8 };
+enum class FileOpenFlag
+{
+  none = 0,
+  read = 1,
+  write = 2,
+  openExisting = 4,
+  createAlways = 8
+};
 
 forceinline bool operator&(FileOpenFlag l, FileOpenFlag r) { return ((int)l & (int)r) != 0; }
 
-enum class FileSeekOrigin { none = 0, current, begin, end };
+enum class FileSeekOrigin
+{
+  none = 0,
+  current,
+  begin,
+  end
+};
 
 class NcFile : public NcObject {
 public:

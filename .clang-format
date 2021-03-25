@@ -7,3 +7,4 @@ AccessModifierOffset: -2
 ColumnLimit: 120
 SortIncludes: false
 IndentPPDirectives: AfterHash
+AllowShortEnumsOnASingleLine: false
