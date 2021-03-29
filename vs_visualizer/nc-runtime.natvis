@@ -4,7 +4,7 @@
     <DisplayString>{{ {m_str,[m_length]s8}, length={m_length} }}</DisplayString>
   </Type>
   <Type Name="NcObject">
-    <DisplayString>{{ rc={((ControlBlock*)(this) - 1)->m_rc}, wc={((ControlBlock*)(this) - 1)->m_wc }}</DisplayString>
+    <DisplayString>{{ rc={((ControlBlock*)(this) - 1)->m_rc}, wc={((ControlBlock*)(this) - 1)->m_wc} }}</DisplayString>
   </Type>
   <Type Name="NcString">
     <DisplayString>{{ rc={((ControlBlock*)(this) - 1)->m_rc}, {m_str,[m_length]s8}, length={m_length} }}</DisplayString>

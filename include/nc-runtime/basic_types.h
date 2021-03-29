@@ -87,14 +87,14 @@ const static NoValueType noValue = {};
 template <typename T>
 class Some {
 public:
-  Some(const NoValueType& v) : m_hasValue(false) {}
-  Some(const T& v) : m_value(v), m_hasValue(true) {}
-  Some(const T&& v) : m_value(std::move(v)), m_hasValue(true) {}
+  forceinline Some(const NoValueType& v) : m_hasValue(false) {}
+  forceinline Some(const T& v) : m_value(v), m_hasValue(true) {}
+  forceinline Some(const T&& v) : m_value(std::move(v)), m_hasValue(true) {}
 
-  T& value() { return m_value; }
-  bool hasValue() { return m_hasValue; }
+  forceinline T& value() { return m_value; }
+  forceinline bool hasValue() { return m_hasValue; }
 
-  const T& Or(const T& r) { return m_hasValue ? m_value : r; }
+  forceinline const T& Or(const T& r) { return m_hasValue ? m_value : r; }
 
 private:
   bool m_hasValue;

@@ -100,9 +100,9 @@ TEST(Stdlib, someString) {
 
 class CopyCountObject {
 public:
-  CopyCountObject() : m_copyCount(0), m_moveCount(0) {}
-  CopyCountObject(const CopyCountObject& r) : m_copyCount(r.m_copyCount + 1), m_moveCount(r.m_moveCount) {}
-  CopyCountObject(const CopyCountObject&& r) : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1) {}
+  forceinline CopyCountObject() : m_copyCount(0), m_moveCount(0) {}
+  forceinline CopyCountObject(const CopyCountObject& r) : m_copyCount(r.m_copyCount + 1), m_moveCount(r.m_moveCount) {}
+  forceinline CopyCountObject(const CopyCountObject&& r) : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1) {}
 
   int m_copyCount;
   int m_moveCount;
