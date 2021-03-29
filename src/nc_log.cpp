@@ -25,11 +25,11 @@ void NcLog_write(LogLevel level, const char* file, int line, const char* func, c
   char* finalFormat = allocator.allocArray<char>(STR_MAX_LEN);
   char* message = allocator.allocArray<char>(STR_MAX_LEN);
 
-  size_t require = snprintf(finalFormat, STR_MAX_LEN, "%s(%d): %s: %s", file, line, LogLevel_toString(level), format);
+  size_t require = snprintf(finalFormat, STR_MAX_LEN, "%s(%d): %s: %s\n", file, line, LogLevel_toString(level), format);
   if (require >= STR_MAX_LEN) {
     // reallocate memory if it's not enough
     finalFormat = allocator.allocArray<char>(require + 1);
-    require = snprintf(finalFormat, require + 1, "%s(%d): %s: %s", file, line, LogLevel_toString(level), format);
+    require = snprintf(finalFormat, require + 1, "%s(%d): %s: %s\n", file, line, LogLevel_toString(level), format);
   }
 
   va_list va;

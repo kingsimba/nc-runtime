@@ -31,4 +31,10 @@ void Dal_writeLog(const char* str); // (DAL = device adaption layer) device depe
 #define NC_LOG_ERROR(...) __LOG_IMPLE(LogLevel::error, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #define NC_LOG_FATAL(...) __LOG_IMPLE(LogLevel::fatal, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 
+#if defined(NDEBUG)
+#	define NC_ASSERT(predicate)
+#else
+#	define NC_ASSERT(predicate) if (!(predicate)) { NcLog_write(LogLevel::fatal, __FILE__, __LINE__, __FUNCTION__, "error: %s", #predicate); *(int*)((void*)0) = 1; }
+#endif
+
 // clang-format on
