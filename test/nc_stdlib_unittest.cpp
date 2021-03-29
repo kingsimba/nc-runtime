@@ -116,5 +116,6 @@ TEST(Stdlib, someCopyObject) {
   auto s = getObject();
   EXPECT_TRUE(s.hasValue());
   EXPECT_EQ(s.value().m_copyCount, 0) << "There should be no copy. Only move.";
-  EXPECT_EQ(s.value().m_moveCount, 2);
+  EXPECT_LE(s.value().m_moveCount, 2);
+  EXPECT_GE(s.value().m_moveCount, 1);
 }
