@@ -54,7 +54,7 @@ TEST(Stdlib, ManualResetEvent) {
 TEST(Stdlib, MutexGuard) {
   int counter = 0;
   int counterUnprotected = 0;
-  const static int REPEAT = 1000000;
+  const static int REPEAT = 5000000;
   recursive_mutex arrMutex;
   thread t1([&] {
     for (int i = 0; i < REPEAT; i++) {
@@ -74,7 +74,7 @@ TEST(Stdlib, MutexGuard) {
   t2.join();
 
   EXPECT_EQ(counter, REPEAT * 2);
-  EXPECT_LE(counterUnprotected, REPEAT * 2);
+  EXPECT_LT(counterUnprotected, REPEAT * 2);
 }
 
 TEST(Stdlib, someInt) {
