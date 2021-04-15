@@ -6,7 +6,7 @@ sp<NcData> NcData::allocWithBytes(const void* bytes, size_t len) {
   size_t totalLen = sizeof(NcData) + len;
   NcData* o = (NcData*)NcObject::allocRawObjectWithSize(totalLen, false);
   ::new (o) NcData();
-  memcpy(o + 1, bytes, len);
+  memcpy((void*)(o + 1), bytes, len);
   o->m_bytes = o + 1;
   o->m_length = len;
 

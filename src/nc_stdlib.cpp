@@ -16,7 +16,7 @@ u32 Math_hashString(const char* str) {
   u32 hash = 5381;
   int c;
 
-  while (c = *(u8*)(str)++) hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  while ((c = *(u8*)(str)++) != 0) hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
   return hash;
 }
