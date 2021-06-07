@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>nc-runtime</name>
+  <version>1.0.0</version>
+  <description>
+    Runtime
+  </description>
+  <maintainer email="fengzl@autoxing.com">
+    FengZhaolin
+  </maintainer>
+
+  <license>private</license>
+
+  <author email="fengzl@autoxing.com">
+    FengZhaolin
+  </author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
