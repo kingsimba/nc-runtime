@@ -17,13 +17,5 @@
         "streambuf": "cpp",
         "xhash": "cpp",
         "xstring": "cpp"
-    },
-    "python.autoComplete.extraPaths": [
-        "/opt/ax-platform/lib/python2.7/dist-packages",
-        "/opt/ros/melodic/lib/python2.7/dist-packages"
-    ],
-    "python.analysis.extraPaths": [
-        "/opt/ax-platform/lib/python2.7/dist-packages",
-        "/opt/ros/melodic/lib/python2.7/dist-packages"
-    ]
+    }
 }
