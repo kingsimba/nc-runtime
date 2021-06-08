@@ -16,9 +16,10 @@ endif()
 
 ########################################################################################
 # nc-runtime.lib
-project(nc-runtime)
+project(nc_runtime)
 
 catkin_package(
+  INCLUDE_DIRS include
   CATKIN_DEPENDS
 )
 
@@ -43,7 +44,7 @@ install(
 
 ########################################################################################
 # nc-runtime-test
-project(nc-runtime-test)
+project(nc_runtime_test)
 
 file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h" "3rd-party/src/googletest-1.10.0/*.h" "3rd-party/src/googletest-1.10.0/src/gtest-all.cc")
 add_executable(${PROJECT_NAME} ${TEST_SRC})
