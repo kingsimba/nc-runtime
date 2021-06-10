@@ -15,7 +15,7 @@ else()
 endif()
 
 ########################################################################################
-# nc-runtime.lib
+# nc_runtime.lib
 project(nc_runtime)
 
 catkin_package(
@@ -48,7 +48,7 @@ project(nc_runtime_test)
 
 file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h" "3rd-party/src/googletest-1.10.0/*.h" "3rd-party/src/googletest-1.10.0/src/gtest-all.cc")
 add_executable(${PROJECT_NAME} ${TEST_SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE "nc-runtime")
+target_link_libraries(${PROJECT_NAME} PRIVATE "nc_runtime")
 
 if (NOT WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)	# google test needs pthread on Linux

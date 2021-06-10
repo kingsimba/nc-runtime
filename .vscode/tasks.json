@@ -5,7 +5,8 @@
             "args": [
                 "--directory",
                 "${workspaceFolder}/../..",
-                "nc-runtime"
+                "nc_runtime",
+                "nc_runtime_test"
             ],
             "problemMatcher": [
                 "$catkin-gcc"
