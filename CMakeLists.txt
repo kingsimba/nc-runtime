@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(GTest REQUIRED)
+
 if (WIN32)
 	SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /GF")	# enable string pool
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Ob1")	# inline only __inline
@@ -43,12 +45,12 @@ install(
   PATTERN ".svn" EXCLUDE)
 
 ########################################################################################
-# nc-runtime-test
+# nc_runtime_test
 project(nc_runtime_test)
 
-file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h" "3rd-party/src/googletest-1.10.0/*.h" "3rd-party/src/googletest-1.10.0/src/gtest-all.cc")
+file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h")
 add_executable(${PROJECT_NAME} ${TEST_SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE "nc_runtime")
+target_link_libraries(${PROJECT_NAME} PRIVATE "nc_runtime" GTest::gtest)
 
 if (NOT WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)	# google test needs pthread on Linux

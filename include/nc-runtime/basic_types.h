@@ -54,10 +54,15 @@ struct Range {
   int location;
   int length;
   forceinline int end() { return this->location + this->length; }
+  forceinline void invalidate() { this->location = -1; this->length = 0; }
   forceinline bool isValid() { return location >= 0; }
 };
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 static Range invalidRange{-1, 0};
+#pragma GCC diagnostic pop
+
 static forceinline Range Range_make(int location, int length) { return Range{location, length}; }
 
 forceinline bool operator==(const Range& l, const Range& r) { return l.location == r.location && l.length == r.length; }
