@@ -13,6 +13,7 @@ enum class FileOpenFlag
   createAlways = 8
 };
 
+forceinline FileOpenFlag operator|(FileOpenFlag l, FileOpenFlag r) { return FileOpenFlag((int)l | (int)r); }
 forceinline bool operator&(FileOpenFlag l, FileOpenFlag r) { return ((int)l & (int)r) != 0; }
 
 enum class FileSeekOrigin
