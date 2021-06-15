@@ -34,15 +34,6 @@ add_definitions(-D_CRTDBG_MAP_ALLOC)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "src/stdafx_nc_runtime.h")
 
-install(
-  TARGETS ${PROJECT_NAME})
-
-install(
-  DIRECTORY include
-  DESTINATION "."
-  FILES_MATCHING
-  PATTERN "*.h"
-  PATTERN ".svn" EXCLUDE)
 
 ########################################################################################
 # nc_runtime_test
