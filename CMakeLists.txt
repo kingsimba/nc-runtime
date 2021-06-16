@@ -23,6 +23,7 @@ endif()
 
 catkin_package(
   INCLUDE_DIRS include
+  LIBRARIES nc_runtime
   CATKIN_DEPENDS
 )
 
