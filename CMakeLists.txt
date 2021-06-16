@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
+project(nc_runtime C CXX)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(GTest REQUIRED)
+find_package(catkin REQUIRED)
 
 if (WIN32)
 	SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /GF")	# enable string pool
@@ -18,7 +20,6 @@ endif()
 
 ########################################################################################
 # nc_runtime.lib
-project(nc_runtime)
 
 catkin_package(
   INCLUDE_DIRS include
