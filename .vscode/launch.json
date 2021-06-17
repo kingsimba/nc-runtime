@@ -5,17 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
-            "type": "cppvsdbg",
+            "name": "Run Tests",
+            "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/../lib/Debug/nc-runtime-test.exe",
-            "visualizerFile": "${workspaceFolder}/vs_visualizer/nc-runtime.natvis",
+            "program": "${workspaceFolder}/../../devel/lib/nc_runtime/nc_runtime_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "externalTerminal",
-            //"preLaunchTask": "build"
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

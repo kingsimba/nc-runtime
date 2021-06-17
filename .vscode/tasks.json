@@ -1,12 +1,12 @@
 {
     "tasks": [
         {
-            "type": "catkin_make_isolated",
+            "type": "catkin_make",
             "args": [
                 "--directory",
                 "${workspaceFolder}/../..",
-                "--pkg",
-                "nc_runtime"
+                "nc_runtime",
+                "nc_runtime_test"
             ],
             "problemMatcher": [
                 "$catkin-gcc"
