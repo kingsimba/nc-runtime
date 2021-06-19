@@ -50,11 +50,77 @@ typedef size_t Handle;
 #define invalidHandle 0
 #define countof(o) (sizeof(o) / sizeof((o)[0]))
 
+//////////////////////////////////////////
+// Size
+
+struct Size {
+  int width;
+  int height;
+};
+
+inline Size Size_make(int w, int h) { return Size{w, h}; }
+
+inline bool operator==(Size l, Size r) { return l.width == r.width && l.height == r.height; }
+
+inline bool operator!=(Size l, Size r) { return l.width != r.width || l.height != r.height; }
+
+//////////////////////////////////////////
+// Rect
+
+struct Rect {
+  int left;
+  int top;
+  int right;
+  int bottom;
+
+  void expand(int radius) { this->left -= radius, this->top -= radius, this->right += radius, this->bottom += radius; }
+
+  void intersectWith(Rect r) {
+    this->left = std::max(r.left, this->left);
+    this->top = std::max(r.top, this->top);
+    this->right = std::min(r.right, this->right);
+    this->bottom = std::min(r.bottom, this->bottom);
+  }
+};
+
+inline Rect Rect_make(int l, int t, int r, int b) { return Rect{l, t, r, b}; }
+
+inline bool operator==(Rect l, Rect r) {
+  return l.left == r.left && l.top == r.top && l.right == r.right && l.bottom == r.bottom;
+}
+
+inline bool operator!=(Rect l, Rect r) {
+  return l.left != r.left || l.top != r.top || l.right != r.right || l.bottom != r.bottom;
+}
+
+/////////////////////////////////////////////////
+// Rgba8
+struct Rgba8 {
+  union {
+    struct {
+      u8 r, g, b, a;
+    };
+    u32 value;
+  };
+};
+
+inline Rgba8 Rgba8_make(u8 r, u8 g, u8 b, u8 a) { return Rgba8{r, g, b, a}; }
+
+inline bool operator==(Rgba8 l, Rgba8 r) { return l.value == r.value; }
+
+inline bool operator!=(Rgba8 l, Rgba8 r) { return l.value != r.value; }
+
+////////////////////////////////////////////////////////////////////////////
+// Range
+
 struct Range {
   int location;
   int length;
   forceinline int end() { return this->location + this->length; }
-  forceinline void invalidate() { this->location = -1; this->length = 0; }
+  forceinline void invalidate() {
+    this->location = -1;
+    this->length = 0;
+  }
   forceinline bool isValid() { return location >= 0; }
 };
 

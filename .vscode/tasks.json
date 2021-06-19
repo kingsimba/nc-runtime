@@ -11,7 +11,10 @@
             "problemMatcher": [
                 "$catkin-gcc"
             ],
-            "group": "build",
+            "group": {
+                "isDefault": true,
+                "kind": "build"
+            },
             "label": "catkin_make: build"
         }
     ]

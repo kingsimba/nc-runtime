@@ -1,6 +1,6 @@
 #pragma once
 
-#include "basic_types.h"
+#include "nc_types.h"
 
 // in milliseconds
 struct TimeTick {

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "basic_types.h"
+#include "nc_types.h"
 #include "string_slice.h"
 
 class NcString : public NcObject, public StringSlice {
 public:
-
   /**
    * Create a string by C string. |str| must ends with \0.
    */
@@ -18,10 +17,10 @@ public:
 
   /**
    * Create a string by taking the ownership of the memory.
-   * 
+   *
    * @param str
-   *   |str| must be a valid C string(ends with \0) and created with malloc()/realloc()/calloc() 
-   *   and can be freed with free(). 
+   *   |str| must be a valid C string(ends with \0) and created with malloc()/realloc()/calloc()
+   *   and can be freed with free().
    * @param len
    *   length of the string |str|.
    */
@@ -34,13 +33,11 @@ public:
   /**
    * Create a string from a slice. Same as StringSlice::toString().
    */
-  static sp<NcString> allocWithSlice(const StringSlice& str) {
-    return allocWithBytes(str.bytes(), str.length());
-  }
+  static sp<NcString> allocWithSlice(const StringSlice& str) { return allocWithBytes(str.bytes(), str.length()); }
 
   /**
    * Return a partially created String.
-   * 
+   *
    * @remarks
    *   This is an optimization. The string object and the text buffer are created with a single malloc().
    *   The user should fill the content right after, including \0.
@@ -109,7 +106,7 @@ private:
     m_length = (int)len;
     m_shouldFree = true;
   }
-  
+
   void initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep);
 
 private:

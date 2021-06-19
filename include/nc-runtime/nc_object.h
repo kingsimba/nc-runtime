@@ -1,6 +1,6 @@
 #pragma once
 
-#include "basic_types.h"
+#include "nc_types.h"
 
 // An experimental implementation. It might be optimized in the future.
 // Keep watching https://github.com/kingsimba/nc-runtime for updates

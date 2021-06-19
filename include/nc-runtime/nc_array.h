@@ -1,6 +1,6 @@
 #pragma once
 
-#include "basic_types.h"
+#include "nc_types.h"
 #include "nc_string.h"
 
 template <typename T>
@@ -26,10 +26,10 @@ public:
 
   /**
    * Find an object
-   * 
+   *
    * @return
    *  return NULL if not found.
-   * 
+   *
    * @remarks
    * ```
    * auto v = NcArray<NcString>::alloc();
@@ -54,16 +54,15 @@ public:
   int indexOfObject(T* r) {
     return indexOfObjectWithCondition([=](T* obj) { return obj == r || obj->equals(r); });
   }
-  
-  template<typename Func>
+
+  template <typename Func>
   int indexOfObjectWithCondition(Func func) {
     int len = (int)m_array.size();
     for (int i = 0; i < len; i++)
-      if (func(m_array[i].get()))
-        return i;
+      if (func(m_array[i].get())) return i;
     return -1;
   }
 
 private:
-  std::vector< sp<T> > m_array;
+  std::vector<sp<T>> m_array;
 };

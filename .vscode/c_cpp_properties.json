@@ -6,6 +6,7 @@
         "limitSymbolsToIncludedHeaders": true
       },
       "includePath": [
+        "${workspaceFolder}/include/nc-runtime",
         "/opt/ros/melodic/include/**",
         "/opt/ax-platform/include/**",
         "/usr/include/**"
