@@ -1,6 +1,8 @@
 #pragma once
 
 #include "nc_types.h"
+#include "nc_object.h"
+#include "nc_log.h"
 
 // in milliseconds
 struct TimeTick {

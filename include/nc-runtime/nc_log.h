@@ -1,6 +1,7 @@
 #pragma once
 
-enum class LogLevel {
+enum class LogLevel
+{
   none,
   trivial,
   info,
@@ -18,8 +19,7 @@ typedef void (*NcLogCallback)(const char* str, void* userdata);
 void NcLog_setCallback(NcLogCallback callback, void* userdata);
 void NcLog_write(LogLevel level, const char* file, int line, const char* func, const char* format, ...);
 
-void Dal_writeLog(const char* str); // (DAL = device adaption layer) device dependent implementation
-
+void Dal_writeLog(const char* str);  // (DAL = device adaption layer) device dependent implementation
 }
 
 // clang-format off
@@ -34,7 +34,7 @@ void Dal_writeLog(const char* str); // (DAL = device adaption layer) device depe
 #if defined(NDEBUG)
 #	define NC_ASSERT(predicate)
 #else
-#	define NC_ASSERT(predicate) if (!(predicate)) { NcLog_write(LogLevel::fatal, __FILE__, __LINE__, __FUNCTION__, "error: %s", #predicate); *(int*)((void*)0) = 1; }
+#	define NC_ASSERT(predicate) if (!(predicate)) { NcLog_write(LogLevel::fatal, __FILE__, __LINE__, __FUNCTION__, "error: %s", #predicate); __builtin_trap(); }
 #endif
 
 // clang-format on
