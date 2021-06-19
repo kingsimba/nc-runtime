@@ -266,4 +266,4 @@ inline int StringSlice::findFrom(int start, char c) {
   return -1;
 }
 
-inline StringSlice operator""_s(const char* literalStr, size_t len) { return StringSlice(literalStr, len); }
+inline StringSlice operator""_s(const char* literalStr, size_t len) { return StringSlice(literalStr, (int)len); }

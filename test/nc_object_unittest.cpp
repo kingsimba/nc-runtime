@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_object.h"
+#include "nc_runtime/nc_object.h"
 
 class MyBox : public NcObject {
 public:

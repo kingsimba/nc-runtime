@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_stdlib.h"
+#include "nc_runtime/nc_stdlib.h"
 #include <chrono>
 #include <mutex>
 #include <condition_variable>

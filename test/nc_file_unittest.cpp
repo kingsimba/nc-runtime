@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_file.h"
+#include "nc_runtime/nc_file.h"
 
 TEST(NcFile, read) {
   auto o = NcFile::alloc("test_data/hello.txt"_s, FileOpenFlag::read);

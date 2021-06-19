@@ -4,3 +4,5 @@
 /lib
 /3rd-party/*.zip
 
+/out
+/.vs

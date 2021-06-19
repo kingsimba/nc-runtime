@@ -1,7 +1,8 @@
 #include "stdafx_nc_runtime.h"
-#include "string_slice.h"
+#include "nc_runtime/nc_types.h"
+#include "nc_runtime/string_slice.h"
 #include "jansson/utf.h"
-#include "nc_string.h"
+#include "nc_runtime/nc_string.h"
 
 bool StringCharIter::next(wchar32* cOut, int* consumedBytesOut) {
   int32_t c;
@@ -154,7 +155,7 @@ int StringSlice::countSlice(const StringSlice& target) {
   /* Brutal force Searching */
   // TODO: replace with a better algorithm at http://www-igm.univ-mlv.fr/~lecroq/string/
   int count = 0;
-  for (const char* yb = s; s <= yEnd; s++) {
+  for (; s <= yEnd; s++) {
     if (memcmp(t, s, tLength) == 0) {
       count++;
     }

@@ -1,11 +1,11 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_log.h"
-#include "nc_stdlib.h"
+#include "nc_runtime/nc_log.h"
+#include "nc_runtime/nc_stdlib.h"
 #include <stdarg.h>
 
 const char* LogLevel_toString(LogLevel l) {
   static const char* strs[] = {"none", "trivial", "info", "warning", "error", "fatal"};
-  if ((int)l >= countof(strs) || (int)l <= 0) l = LogLevel::fatal;
+  if ((size_t)l >= countof(strs) || (int)l <= 0) l = LogLevel::fatal;
   return strs[(int)l];
 }
 

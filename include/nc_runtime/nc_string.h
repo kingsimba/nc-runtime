@@ -63,7 +63,7 @@ public:
   static sp<NcString> allocWithLiteralCString(const char* str, size_t len) {
     auto o = new NcString(true);
     o->m_str = (char*)str;
-    o->m_length = len;
+    o->m_length = (int)len;
     o->m_shouldFree = false;
     return o;
   }

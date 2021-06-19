@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_data.h"
+#include "nc_runtime/nc_data.h"
 
 TEST(NcData, basic) {
   auto o = NcData::allocWithContentsOfFile("test_data/hello.txt"_s);

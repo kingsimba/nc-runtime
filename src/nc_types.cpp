@@ -1,4 +1,4 @@
-#include "nc_types.h"
+#include "nc_runtime/nc_types.h"
 #include <iostream>
 
 std::ostream& operator<<(std::ostream& os, const Size& c) {

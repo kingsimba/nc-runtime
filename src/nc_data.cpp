@@ -1,6 +1,6 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_data.h"
-#include "nc_file.h"
+#include "nc_runtime/nc_data.h"
+#include "nc_runtime/nc_file.h"
 
 sp<NcData> NcData::allocWithBytes(const void* bytes, size_t len) {
   size_t totalLen = sizeof(NcData) + len;
@@ -29,7 +29,9 @@ sp<NcData> NcData::allocWithContentsOfFile(const StringSlice& fileName) {
 
   i64 len = file->length();
   void* buffer = malloc(len);
-  if (file->read(buffer, len) != len) {
+  // TODO: The file must not be larger than 2G bytes
+  NC_ASSERT(len <= INT_MAX);
+  if (file->read(buffer, (int)len) != len) {
     free(buffer);
     return nullptr;
   }

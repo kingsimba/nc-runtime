@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_string.h"
+#include "nc_runtime/nc_string.h"
 
 static int _calculateStringLength(NcString* str) { return str->length(); }
 

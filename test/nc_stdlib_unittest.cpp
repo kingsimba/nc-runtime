@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_stdlib.h"
+#include "nc_runtime/nc_stdlib.h"
 
 TEST(Stdlib, hash) {
   EXPECT_TRUE(Math_hashSizeT(1) != Math_hashSizeT(2));

@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_file.h"
+#include "nc_runtime/nc_file.h"
 
 sp<NcFile> NcFile::alloc(const StringSlice& fileName, FileOpenFlag flags) {
   char mode[5];
@@ -65,12 +65,12 @@ bool NcFile::seek(FileSeekOrigin origin, i64 offset) {
 
 int NcFile::read(void* bufferOut, int bytesToRead) {
   if (m_fp == NULL) return 0;
-  int rtn = fread(bufferOut, 1, bytesToRead, m_fp);
+  int rtn = (int)fread(bufferOut, 1, bytesToRead, m_fp);
   return rtn;
 }
 
 int NcFile::write(const void* buffer, int bytesToWrite) {
   if (m_fp == NULL) return 0;
-  int rtn = fwrite(buffer, 1, bytesToWrite, m_fp);
+  int rtn = (int)fwrite(buffer, 1, bytesToWrite, m_fp);
   return rtn;
 }

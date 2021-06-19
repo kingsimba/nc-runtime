@@ -126,10 +126,14 @@ struct Range {
   forceinline bool isValid() { return location >= 0; }
 };
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
+#ifdef NC_OS_UNIX
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 static Range invalidRange{-1, 0};
-#pragma GCC diagnostic pop
+#ifdef NC_OS_UNIX
+#   pragma GCC diagnostic pop
+#endif
 
 static forceinline Range Range_make(int location, int length) { return Range{location, length}; }
 

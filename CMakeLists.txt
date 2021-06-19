@@ -33,7 +33,7 @@ file(GLOB_RECURSE SRC "src/*.c" "src/*.cpp" "src/*.h" "include/*.h")
 file(GLOB_RECURSE JANSSON "3rd-party/src/jansson/*.cpp" "3rd-party/include/jansson/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${SRC} ${JANSSON})
-target_include_directories(${PROJECT_NAME} PRIVATE "src" "include/nc-runtime" "3rd-party/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include")
 add_definitions(-D_CRTDBG_MAP_ALLOC)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "src/stdafx_nc_runtime.h")
@@ -51,5 +51,5 @@ if (NOT WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)	# google test needs pthread on Linux
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE "src" "include/nc-runtime" "3rd-party/include" "3rd-party/src/googletest-1.10.0")
+target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include" "3rd-party/src/googletest-1.10.0")
 target_precompile_headers(${PROJECT_NAME} PRIVATE "test/stdafx_nc_runtime_test.h")

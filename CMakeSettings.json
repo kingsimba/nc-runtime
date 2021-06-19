@@ -1,0 +1,34 @@
+﻿{
+  "environments": [
+    {
+      "CMAKE_PREFIX_PATH": "/opt/ros/melodic",
+      "LD_LIBRARY_PATH":  "/opt/ros/melodic/lib",
+      "PYTHONPATH": "/opt/ros/melodic/lib/python2.7/dist-packages",
+      "ROSLISP_PACKAGE_DIRECTORIES": "",
+      "ROS_DISTRO": "melodic",
+      "ROS_ETC_DIR": "/opt/ros/melodic/etc/ros",
+      "ROS_MASTER_URI": "http://localhost:11311",
+      "ROS_PACKAGE_PATH": "/opt/ros/melodic/share",
+      "ROS_PYTHON_VERSION": "2",
+      "ROS_ROOT": "/opt/ros/melodic/share/ros",
+      "ROS_VERSION": "1"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "WSL-GCC-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux_x64" ],
+      "wslPath": "${defaultWSLPath}",
+      "variables": [
+      ]
+    }
+  ]
+}

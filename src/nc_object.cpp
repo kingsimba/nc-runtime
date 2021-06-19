@@ -1,6 +1,6 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_object.h"
-#include "nc_string.h"
+#include "nc_runtime/nc_object.h"
+#include "nc_runtime/nc_string.h"
 
 NcObject* NcObject::allocRawObjectWithSize(size_t size, bool zero_memory) {
   void* buffer;

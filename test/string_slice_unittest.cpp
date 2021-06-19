@@ -1,6 +1,6 @@
 ﻿#include "stdafx_nc_runtime_test.h"
-#include "string_slice.h"
-#include "nc_string.h"
+#include "nc_runtime/string_slice.h"
+#include "nc_runtime/nc_string.h"
 
 TEST(StringSlice, iter) {
   auto iter = "To err is human, to forgive divine."_s.iterForSplitting(" ");

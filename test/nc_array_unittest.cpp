@@ -1,6 +1,6 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_array.h"
-#include "nc_string.h"
+#include "nc_runtime/nc_array.h"
+#include "nc_runtime/nc_string.h"
 
 using namespace std;
 

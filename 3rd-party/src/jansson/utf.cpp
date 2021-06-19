@@ -5,8 +5,8 @@
  * it under the terms of the MIT license. See LICENSE for details.
  */
 
-#include "jansson/utf.h"
 #include <string.h>
+#include "jansson/utf.h"
 
 int utf8_encode(int32_t codepoint, char *buffer, size_t *size) {
     if (codepoint < 0)
