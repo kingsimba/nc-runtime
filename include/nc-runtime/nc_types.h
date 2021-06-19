@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <new>
 
+#define UNUSED_VAR(o) ((o) = (o))
+
 //////////////////////////////////////////////////////////////////////////
 
 #ifdef _MSC_VER

@@ -98,7 +98,7 @@ public:
 
 private:
   NcString() : m_shouldFree(false) {}
-  NcString(bool isStatic) : NcObject(true), m_shouldFree(false) {}
+  NcString(bool isStatic) : NcObject(true), m_shouldFree(false) { UNUSED_VAR(isStatic); }
   ~NcString();
 
   void initByTakingBytes(char* str, size_t len) {

@@ -5,6 +5,8 @@ project(nc_runtime C CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+add_compile_options(-Wunused-variable -Wunused-parameter)
+
 find_package(GTest REQUIRED)
 find_package(catkin REQUIRED)
 
