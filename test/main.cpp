@@ -3,8 +3,9 @@
 //#  include <vld.h>
 #endif
 
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  int rtn = RUN_ALL_TESTS();
-  return rtn;
+int main(int argc, char** argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    int rtn = RUN_ALL_TESTS();
+    return rtn;
 }

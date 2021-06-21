@@ -1,10 +1,10 @@
-BasedOnStyle: Google
+BasedOnStyle: Microsoft
 # Force pointers to the type for C++.
 DerivePointerAlignment: false
 PointerAlignment: Left
+AllowShortFunctionsOnASingleLine: InlineOnly
 #
-AccessModifierOffset: -2
+#AccessModifierOffset: -8
 ColumnLimit: 120
 SortIncludes: false
 IndentPPDirectives: AfterHash
-AllowShortEnumsOnASingleLine: false
