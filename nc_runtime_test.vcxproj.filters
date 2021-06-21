@@ -1,45 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\main.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_array_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_array_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_data_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_data_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_file_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_file_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_log_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_log_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_object_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_object_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_stdlib_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_stdlib_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_string_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\nc_string_unittest.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\string_slice_unittest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="test\string_slice_unittest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="test\stdafx_nc_runtime_test.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\stdafx_nc_runtime_test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{FF9B530A-B11B-38B7-909A-3B4DEFF00FD5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files">
+    <Filter Include="src">
       <UniqueIdentifier>{76439CFA-169B-383E-88F4-C21FC25377F8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{FF9B530A-B11B-38B7-909A-3B4DEFF00FD5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test\stdafx_nc_runtime_test.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

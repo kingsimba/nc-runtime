@@ -32,7 +32,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\build\int\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -60,10 +60,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRTDBG_MAP_ALLOC;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\kingsimba\Documents\ax\nc-runtime\src;C:\Users\kingsimba\Documents\ax\nc-runtime\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;include;3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\kingsimba\Documents\ax\nc-runtime\src;C:\Users\kingsimba\Documents\ax\nc-runtime\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;include;3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -75,41 +75,35 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_array.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_data.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_file.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_gtest_extension.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_log.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_object.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_stdlib.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_string.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\nc_types.h" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\include\nc_runtime\string_slice.h" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_array.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_data.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_file.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_log.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_object.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_stdlib.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_string.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\nc_types.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\stdafx_nc_runtime.cpp">
+    <ClInclude Include="include\nc_runtime\nc_array.h" />
+    <ClInclude Include="include\nc_runtime\nc_data.h" />
+    <ClInclude Include="include\nc_runtime\nc_file.h" />
+    <ClInclude Include="include\nc_runtime\nc_gtest_extension.h" />
+    <ClInclude Include="include\nc_runtime\nc_log.h" />
+    <ClInclude Include="include\nc_runtime\nc_object.h" />
+    <ClInclude Include="include\nc_runtime\nc_stdlib.h" />
+    <ClInclude Include="include\nc_runtime\nc_string.h" />
+    <ClInclude Include="include\nc_runtime\nc_types.h" />
+    <ClInclude Include="include\nc_runtime\string_slice.h" />
+    <ClCompile Include="src\nc_array.cpp" />
+    <ClCompile Include="src\nc_data.cpp" />
+    <ClCompile Include="src\nc_file.cpp" />
+    <ClCompile Include="src\nc_log.cpp" />
+    <ClCompile Include="src\nc_object.cpp" />
+    <ClCompile Include="src\nc_stdlib.cpp" />
+    <ClCompile Include="src\nc_string.cpp" />
+    <ClCompile Include="src\nc_types.cpp" />
+    <ClCompile Include="src\stdafx_nc_runtime.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\stdafx_nc_runtime.h" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\src\string_slice.cpp" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\include\jansson\utf.h" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\src\jansson\utf.cpp">
+    <ClInclude Include="src\stdafx_nc_runtime.h" />
+    <ClCompile Include="src\string_slice.cpp" />
+    <ClInclude Include="3rd-party\include\jansson\utf.h" />
+    <ClCompile Include="3rd-party\src\jansson\utf.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\kingsimba\Documents\ax\nc-runtime\ZERO_CHECK.vcxproj">
-      <Project>{233C9ACF-02D3-339A-BCD5-2356BF45BDF8}</Project>
-      <Name>ZERO_CHECK</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

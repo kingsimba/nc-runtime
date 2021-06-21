@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include "stdafx_nc_runtime_test.h"
 #if defined(NC_OS_WIN)
 //#  include <vld.h>
 #endif

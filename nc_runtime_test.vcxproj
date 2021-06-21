@@ -38,18 +38,18 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\build\lib\</OutDir>
-    <IntDir>$(SolutionDir)\build\int\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>src;include;..\3rd-party\include;3rd-party\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\src\googletest-1.10.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;include;..\3rd-party\include;3rd-party\include;3rd-party\src\googletest-1.10.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <StringPooling>true</StringPooling>
@@ -58,13 +58,14 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <PrecompiledHeaderFile>stdafx_nc_runtime_test.h</PrecompiledHeaderFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRTDBG_MAP_ALLOC;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\kingsimba\Documents\ax\nc-runtime\src;C:\Users\kingsimba\Documents\ax\nc-runtime\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\src\googletest-1.10.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;include;3rd-party\include;3rd-party\src\googletest-1.10.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\kingsimba\Documents\ax\nc-runtime\src;C:\Users\kingsimba\Documents\ax\nc-runtime\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\include;C:\Users\kingsimba\Documents\ax\nc-runtime\3rd-party\src\googletest-1.10.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;include;3rd-party\include;3rd-party\src\googletest-1.10.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -86,22 +87,19 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\main.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_array_unittest.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_data_unittest.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_file_unittest.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_log_unittest.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_object_unittest.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_stdlib_unittest.cpp" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\nc_string_unittest.cpp" />
-    <ClInclude Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\stdafx_nc_runtime_test.h" />
-    <ClCompile Include="C:\Users\kingsimba\Documents\ax\nc-runtime\test\string_slice_unittest.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="C:\Users\kingsimba\Documents\ax\nc-runtime\nc_runtime.vcxproj">
-      <Project>{DF67BA05-9814-3262-9C5D-4108EA6B6A97}</Project>
-      <Name>nc_runtime</Name>
-    </ProjectReference>
+    <ClCompile Include="test\main.cpp" />
+    <ClCompile Include="test\nc_array_unittest.cpp" />
+    <ClCompile Include="test\nc_data_unittest.cpp" />
+    <ClCompile Include="test\nc_file_unittest.cpp" />
+    <ClCompile Include="test\nc_log_unittest.cpp" />
+    <ClCompile Include="test\nc_object_unittest.cpp" />
+    <ClCompile Include="test\nc_stdlib_unittest.cpp" />
+    <ClCompile Include="test\nc_string_unittest.cpp" />
+    <ClInclude Include="test\stdafx_nc_runtime_test.h" />
+    <ClCompile Include="test\stdafx_nc_runtime_test.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="test\string_slice_unittest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
