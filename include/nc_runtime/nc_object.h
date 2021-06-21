@@ -7,6 +7,7 @@
 class ControlBlock
 {
   public:
+    #pragma warning(suppress : 26495)
     ControlBlock() : m_rc(1), m_wc(0) {}
 
     inline void retain()
@@ -277,8 +278,9 @@ class NcObject
 
     void* operator new(size_t size)
     {
-        void* buffer = malloc(size + sizeof(ControlBlock));
+        void* buffer = malloc(sizeof(ControlBlock) + size);
         ControlBlock* ctrl = (ControlBlock*)buffer;
+        #pragma warning(suppress : 6386)
         new (ctrl) ControlBlock();
         return ctrl + 1;
     }

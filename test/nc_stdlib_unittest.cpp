@@ -116,7 +116,7 @@ class CopyCountObject
     forceinline CopyCountObject(const CopyCountObject& r) : m_copyCount(r.m_copyCount + 1), m_moveCount(r.m_moveCount)
     {
     }
-    forceinline CopyCountObject(const CopyCountObject&& r) : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1)
+    forceinline CopyCountObject(const CopyCountObject&& r) noexcept : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1)
     {
     }
 
