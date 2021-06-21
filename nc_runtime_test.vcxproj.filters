@@ -36,9 +36,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{76439CFA-169B-383E-88F4-C21FC25377F8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="inc">
-      <UniqueIdentifier>{FF9B530A-B11B-38B7-909A-3B4DEFF00FD5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\stdafx_nc_runtime_test.h">
