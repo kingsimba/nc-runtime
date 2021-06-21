@@ -1,3 +1,4 @@
+#include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_types.h"
 #include <iostream>
 

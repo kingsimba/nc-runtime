@@ -1,0 +1,1 @@
+#include "stdafx_nc_runtime.h"

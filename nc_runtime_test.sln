@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nc_runtime", "nc_runtime.vcxproj", "{DF67BA05-9814-3262-9C5D-4108EA6B6A97}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nc_runtime_test", "nc_runtime_test.vcxproj", "{1C5EE921-CFE9-31BD-8A9B-4DA5FABE0CB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF67BA05-9814-3262-9C5D-4108EA6B6A97} = {DF67BA05-9814-3262-9C5D-4108EA6B6A97}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF67BA05-9814-3262-9C5D-4108EA6B6A97}.Release|x64.ActiveCfg = Release|x64
+		{DF67BA05-9814-3262-9C5D-4108EA6B6A97}.Release|x64.Build.0 = Release|x64
+		{1C5EE921-CFE9-31BD-8A9B-4DA5FABE0CB0}.Release|x64.ActiveCfg = Release|x64
+		{1C5EE921-CFE9-31BD-8A9B-4DA5FABE0CB0}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {609AB2E1-9F76-31C1-B66E-D508E3277D52}
+	EndGlobalSection
+EndGlobal
