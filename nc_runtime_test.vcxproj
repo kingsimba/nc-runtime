@@ -72,7 +72,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\3rd-party\lib\x64\Release\gtest.lib;build\lib\nc_runtime.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\3rd-party\lib\x64\Release\gtest.lib;..\3rd-party\lib\x64\Release\stb.lib;build\lib\nc_runtime.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -91,6 +91,7 @@
     <ClCompile Include="test\nc_array_unittest.cpp" />
     <ClCompile Include="test\nc_data_unittest.cpp" />
     <ClCompile Include="test\nc_file_unittest.cpp" />
+    <ClCompile Include="test\nc_image_unittest.cpp" />
     <ClCompile Include="test\nc_log_unittest.cpp" />
     <ClCompile Include="test\nc_object_unittest.cpp" />
     <ClCompile Include="test\nc_stdlib_unittest.cpp" />
