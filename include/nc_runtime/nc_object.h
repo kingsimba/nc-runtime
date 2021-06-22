@@ -7,8 +7,14 @@
 class ControlBlock
 {
   public:
-    #pragma warning(suppress : 26495)
+#ifdef NC_PLATFORM_WIN
+#    pragma warning(push)
+#    pragma warning(suppress : 26495)
+#endif
     ControlBlock() : m_rc(1), m_wc(0) {}
+#ifdef NC_PLATFORM_WIN
+#    pragma warning(pop)
+#endif
 
     inline void retain()
     {
@@ -276,14 +282,21 @@ class NcObject
      */
     static NcObject* allocRawObjectWithSize(size_t size, bool zero_memory);
 
+#ifdef NC_PLATFORM_WIN
+#    pragma warning(push)
+#    pragma warning(suppress : 6386)
+#endif
     void* operator new(size_t size)
     {
         void* buffer = malloc(sizeof(ControlBlock) + size);
         ControlBlock* ctrl = (ControlBlock*)buffer;
-        #pragma warning(suppress : 6386)
+
         new (ctrl) ControlBlock();
         return ctrl + 1;
     }
+#ifdef NC_PLATFORM_WIN
+#    pragma warning(pop)
+#endif
 
     void operator delete(void* p) { p = p; }
 

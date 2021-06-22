@@ -18,6 +18,7 @@
 
 #ifdef _MSC_VER
 #    define NC_OS_WIN
+#    define NC_PLATFORM_WIN
 #else
 #    define NC_OS_UNIX
 #endif
