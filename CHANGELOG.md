@@ -1,5 +1,7 @@
 # Changelog
 
+- 2021-06-22 Add NcImage, NcImageU8 and CostmapInflator.
+- 2021-06-22 Add `StandardFreer`, `nc_copyArray()`.
 - 2021-03-29 Add NC_ASSERT()
 - 2021-03-24 Add `Some` and `noValue`.
 - 2021-03-24 Add NcFile & NcData.

@@ -34,6 +34,12 @@
     <ClCompile Include="3rd-party\src\jansson\utf.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\nc_image.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\costmap_inflator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -71,6 +77,15 @@
     </ClInclude>
     <ClInclude Include="src\stdafx_nc_runtime.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\nc_vector.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\nc_image.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\costmap_inflator.h">
+      <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
