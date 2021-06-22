@@ -5,6 +5,7 @@
             "args": [
                 "--directory",
                 "${workspaceFolder}/../..",
+                "-DCMAKE_BUILD_TYPE=Debug",
                 "nc_runtime",
                 "nc_runtime_test"
             ],
