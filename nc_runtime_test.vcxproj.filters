@@ -34,6 +34,9 @@
     <ClCompile Include="test\nc_image_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="test\costmap_inflator_unittest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

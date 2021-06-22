@@ -83,6 +83,28 @@ class StackOrHeapAllocator
     std::vector<void*>* m_moreHeapPointers;
 };
 
+class StandardFreer
+{
+  public:
+    StandardFreer(void* p) { m_p = p; }
+    ~StandardFreer() { free(m_p); }
+
+    void release() { m_p = NULL; }
+
+  private:
+    void* m_p;
+};
+
+template <typename T> inline T* nc_copyArray(const T* arr, size_t count)
+{
+    size_t totalSize = sizeof(T) * count;
+    T* copy = (T*)malloc(totalSize);
+    memcpy(copy, arr, totalSize);
+    return copy;
+}
+
+/////////////////////////////////////////////////
+
 class ManualResetEventImple;
 
 class ManualResetEvent

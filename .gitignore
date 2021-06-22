@@ -3,7 +3,7 @@
 /build
 /lib
 /3rd-party/*.zip
-
+/test_data/output
 /out
 /.vs
 *.user

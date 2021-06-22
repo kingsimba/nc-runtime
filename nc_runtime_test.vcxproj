@@ -87,6 +87,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="test\costmap_inflator_unittest.cpp" />
     <ClCompile Include="test\main.cpp" />
     <ClCompile Include="test\nc_array_unittest.cpp" />
     <ClCompile Include="test\nc_data_unittest.cpp" />
