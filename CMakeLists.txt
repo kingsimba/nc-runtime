@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (NOT WIN32)
-	add_compile_options(-Wunused-variable -Wunused-parameter)
+	add_compile_options(-Wunused-variable -Wunused-parameter -fPIC)
 endif()
 
 include_directories("../3rd-party/include")
