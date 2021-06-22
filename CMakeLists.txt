@@ -1,13 +1,19 @@
 cmake_minimum_required(VERSION 3.16)
 project(nc_runtime C CXX)
 
+include(platform_detect.cmake)
+
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_compile_options(-Wunused-variable -Wunused-parameter)
+if (NOT WIN32)
+	add_compile_options(-Wunused-variable -Wunused-parameter)
+endif()
 
-find_package(GTest REQUIRED)
+include_directories("../3rd-party/include")
+link_directories("../3rd-party/lib/${NC_PLATFORM}/Release")
+
 find_package(catkin REQUIRED)
 
 if (WIN32)
@@ -45,11 +51,11 @@ project(nc_runtime_test)
 
 file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h")
 add_executable(${PROJECT_NAME} ${TEST_SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE "nc_runtime" GTest::gtest)
+target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb GTest::gtest)
 
 if (NOT WIN32)
-	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)	# google test needs pthread on Linux
+	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include" "3rd-party/src/googletest-1.10.0")
+target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include")
 target_precompile_headers(${PROJECT_NAME} PRIVATE "test/stdafx_nc_runtime_test.h")
