@@ -1,6 +1,7 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/costmap_inflator.h"
 #include <map>
+#include <math.h>
 
 #define ARRAY_AT(arr, x, y) arr[m_cacheLineWidth * (y) + (x)]
 

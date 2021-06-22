@@ -6,7 +6,6 @@ using namespace std;
 
 TEST(ArrayTest, basic)
 {
-
     sp<NcString> perm;
 
     {
@@ -25,8 +24,8 @@ TEST(ArrayTest, basic)
             v->addObject(NcString::allocWithSlice(s));
         }
 
-        EXPECT_EQ(v->firstObject(), str);
-        EXPECT_EQ(v->lastObject(), v->objectAtIndex(v->size() - 1));
+        EXPECT_EQ(v->firstObject().get(), str.get());
+        EXPECT_EQ(v->lastObject().get(), v->objectAtIndex(v->size() - 1).get());
 
         EXPECT_STREQ(v[0]->cstr(), "hello world");
         EXPECT_STREQ(v[1]->cstr(), "hello world");
