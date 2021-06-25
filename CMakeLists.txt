@@ -39,6 +39,7 @@ file(GLOB_RECURSE SRC "src/*.c" "src/*.cpp" "src/*.h" "include/*.h")
 file(GLOB_RECURSE JANSSON "3rd-party/src/jansson/*.cpp" "3rd-party/include/jansson/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${SRC} ${JANSSON})
+target_compile_options(${PROJECT_NAME} PRIVATE "-O2")
 target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include")
 add_definitions(-D_CRTDBG_MAP_ALLOC)
 

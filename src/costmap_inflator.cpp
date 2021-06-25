@@ -47,13 +47,14 @@ sp<NcImageU8> CostmapInflator::inflate(NcImageU8* inputImg, Rect region)
     // Start with lethal obstacles: by definition distance is 0.0
     std::map<float, std::vector<CellData>> inflationCells;
     auto& obsBin = inflationCells[0.0];
+    auto pixels = outputImg->pixels();
     for (int y = region.top; y < region.bottom; y++)
     {
         for (int x = region.left; x < region.right; x++)
         {
-            if (outputImg->pixelAt(x, y) == (u8)CostValue::obstacle)
+            if (pixels[y * size.width + x] == (u8)CostValue::obstacle)
             {
-                obsBin.push_back(CellData{y * size.width + x, x, y, x, y});
+                obsBin.emplace_back(CellData{y * size.width + x, x, y, x, y});
             }
         }
     }
@@ -75,7 +76,7 @@ sp<NcImageU8> CostmapInflator::inflate(NcImageU8* inputImg, Rect region)
         {
             return;
         }
-        inflationCells[distance].push_back(cell);
+        inflationCells[distance].emplace_back(cell);
     };
 
     u8* outputPixels = outputImg->mutablePixels();
