@@ -87,7 +87,7 @@
     <ClInclude Include="include\nc_runtime\nc_types.h" />
     <ClInclude Include="include\nc_runtime\nc_vector.h" />
     <ClInclude Include="include\nc_runtime\string_slice.h" />
-    <ClCompile Include="src\costmap_inflator.cpp" />
+    <ClCompile Include="src\costmap_inflator_imple.cpp" />
     <ClCompile Include="src\nc_array.cpp" />
     <ClCompile Include="src\nc_data.cpp" />
     <ClCompile Include="src\nc_file.cpp" />
@@ -100,6 +100,7 @@
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="src\costmap_inflator_imple.h" />
     <ClInclude Include="src\stdafx_nc_runtime.h" />
     <ClCompile Include="src\string_slice.cpp" />
     <ClInclude Include="3rd-party\include\jansson\utf.h" />
