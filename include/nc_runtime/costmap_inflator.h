@@ -20,6 +20,8 @@ struct CostmapInflatorParams
     float costScalingFactor = 2;
 };
 
+class CostmapInflatorImple;
+
 class CostmapInflator
 {
   public:
@@ -29,15 +31,5 @@ class CostmapInflator
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
 
   private:
-    void init();
-    CostValue computeCost(float distance);
-
-    CostmapInflatorParams m_params;
-    int m_cellInflationRadius;
-    int m_cachedInflationRadius;
-
-    size_t m_cacheLineWidth;
-    const static size_t MAX_CACHE_SIZE = 32 * 32;
-    CostValue m_cachedCosts[MAX_CACHE_SIZE]; // m_cacheLineWidth * m_cacheLineWidth 2D array
-    float m_cachedDistances[MAX_CACHE_SIZE]; // m_cacheLineWidth * m_cacheLineWidth 2D array
+    CostmapInflatorImple* m_imple;
 };

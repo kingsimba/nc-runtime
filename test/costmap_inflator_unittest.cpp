@@ -34,6 +34,8 @@ TEST(CostmapInflator, basic)
 
 TEST(CostmapInflator, officeArea)
 {
+    const size_t REPEAT = 800;
+
     // real image of office area
     auto image = NcImageU8::allocWithFileName("test_data/costmap_original.png");
     ASSERT_TRUE(image != NULL);
@@ -45,6 +47,10 @@ TEST(CostmapInflator, officeArea)
     params.inscribedRadius = 0.462f / 2.0f; // the inscribed radius of the robot
     CostmapInflator inflator(params);
     Rect region = image->area();
-    auto d = inflator.inflate(image.get(), region);
+
+    sp<NcImageU8> d;
+    for (int i = 0; i < REPEAT; i++)
+        d = inflator.inflate(image.get(), region);
+
     EXPECT_TRUE(d->saveAs("test_data/output/test_inflate_office.png"_str));
 }

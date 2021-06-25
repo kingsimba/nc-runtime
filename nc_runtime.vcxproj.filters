@@ -37,7 +37,7 @@
     <ClCompile Include="src\nc_image.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\costmap_inflator.cpp">
+    <ClCompile Include="src\costmap_inflator_imple.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="include\nc_runtime\costmap_inflator.h">
       <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\costmap_inflator_imple.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
