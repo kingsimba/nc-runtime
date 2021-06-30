@@ -1,5 +1,8 @@
 # Changelog
 
+- 2021-06-30 Add `nc_isnan()`.
+- 2021-06-30 Add `nc_radianToDegree()` and `nc_degreeToRadian()`.
+- 2021-06-30 Add single & double precision PI. NC_PI, NC_PI_2, NC_PI_D, NC_PI_2_D etc.
 - 2021-06-22 Add NcImage, NcImageU8 and CostmapInflator.
 - 2021-06-22 Add `StandardFreer`, `nc_copyArray()`.
 - 2021-03-29 Add NC_ASSERT()

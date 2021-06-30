@@ -143,3 +143,9 @@ TEST(Stdlib, radianToDegree)
     EXPECT_NEAR(nc_radianToDegree(3.1415926f), 180, 0.0001f);
     EXPECT_NEAR(nc_degreeToRadian(-360), -3.1415926f * 2, 0.0001f);
 }
+
+TEST(Stdlib, isnan)
+{
+    EXPECT_TRUE(nc_isnan(NAN));
+    EXPECT_FALSE(nc_isnan(3));
+}

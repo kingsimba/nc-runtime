@@ -59,6 +59,11 @@ static forceinline float nc_degreeToRadian(float degree)
     return degree * (NC_PI / 180.0f);
 }
 
+static forceinline bool nc_isnan(float n)
+{
+    return n != n;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 typedef unsigned char u8;

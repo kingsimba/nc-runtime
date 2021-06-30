@@ -101,5 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include="CHANGELOG.md" />
   </ItemGroup>
 </Project>
