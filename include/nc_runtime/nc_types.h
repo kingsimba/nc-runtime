@@ -35,6 +35,30 @@
 #    define NC_ENVIRONMENT_32 1
 #endif
 
+// single precision
+#define NC_PI 3.14159265f    // pi
+#define NC_PI_2 1.57079633f  // pi/2
+#define NC_PI_4 0.785398163f // pi/4
+#define NC_1_PI 0.318309886f // 1/pi
+#define NC_2_PI 0.636619772f // 2/pi
+
+// double precision
+#define NC_PI_D 3.14159265358979323846    // pi
+#define NC_PI_2_D 1.57079632679489661923  // pi/2
+#define NC_PI_4_D 0.785398163397448309616 // pi/4
+#define NC_1_PI_D 0.318309886183790671538 // 1/pi
+#define NC_2_PI_D 0.636619772367581343076 // 2/pi
+
+static forceinline float nc_radianToDegree(float radian)
+{
+    return radian * (180.0f / NC_PI);
+}
+
+static forceinline float nc_degreeToRadian(float degree)
+{
+    return degree * (NC_PI / 180.0f);
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 typedef unsigned char u8;

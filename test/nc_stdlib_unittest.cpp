@@ -116,7 +116,8 @@ class CopyCountObject
     forceinline CopyCountObject(const CopyCountObject& r) : m_copyCount(r.m_copyCount + 1), m_moveCount(r.m_moveCount)
     {
     }
-    forceinline CopyCountObject(const CopyCountObject&& r) noexcept : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1)
+    forceinline CopyCountObject(const CopyCountObject&& r) noexcept
+        : m_copyCount(r.m_copyCount), m_moveCount(r.m_moveCount + 1)
     {
     }
 
@@ -135,4 +136,10 @@ TEST(Stdlib, someCopyObject)
     EXPECT_EQ(s.value().m_copyCount, 0) << "There should be no copy. Only move.";
     EXPECT_LE(s.value().m_moveCount, 2);
     EXPECT_GE(s.value().m_moveCount, 1);
+}
+
+TEST(Stdlib, radianToDegree)
+{
+    EXPECT_NEAR(nc_radianToDegree(3.1415926f), 180, 0.0001f);
+    EXPECT_NEAR(nc_degreeToRadian(-360), -3.1415926f * 2, 0.0001f);
 }
