@@ -4,7 +4,7 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 AllowShortFunctionsOnASingleLine: InlineOnly
 #
-#AccessModifierOffset: -8
+#AccessModifierOffset: -4
 ColumnLimit: 120
 SortIncludes: false
 IndentPPDirectives: AfterHash

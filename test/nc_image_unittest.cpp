@@ -71,3 +71,13 @@ TEST_F(NcImageTest, u8Copy)
     EXPECT_EQ(pixels[0], 0);
     EXPECT_EQ(pixels[1], 1);
 }
+
+TEST_F(NcImageTest, u8NoCopy)
+{
+    u8 bytes[] = {1, 2, 3, 4, 5, 6};
+    auto o = NcImageU8::allocWithBytesNoCopy(bytes, Size_make(2, 3));
+    EXPECT_EQ(o->size(), Size_make(2, 3));
+    const u8* pixels = o->pixels();
+    EXPECT_EQ(pixels[0], 1);
+    EXPECT_EQ(pixels[1], 2);
+}

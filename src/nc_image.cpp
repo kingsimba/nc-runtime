@@ -4,51 +4,61 @@
 #include <stb/stb_image_write.h>
 #include "nc_runtime/nc_string.h"
 
-class NcImageImple : public NcImage
+bool NcImage::initWithSize(Size size)
 {
-  public:
-    bool initWithSize(Size size)
+    m_size = size;
+    m_shouldFreePixels = true;
+    m_pixels = (Rgba8*)malloc((size_t)size.width * size.height * sizeof(Rgba8));
+    return true;
+}
+
+bool NcImage::initWithFileName(const char* fileName)
+{
+    int w, h, channelsInFile;
+    Rgba8* buffer = (Rgba8*)stbi_load(fileName, &w, &h, &channelsInFile, 4);
+    if (buffer != NULL)
     {
-        m_size = size;
-        m_pixels = (Rgba8*)malloc((size_t)size.width * size.height * sizeof(Rgba8));
+        m_shouldFreePixels = true;
+        m_pixels = buffer;
+        m_size = Size_make(w, h);
         return true;
     }
 
-    bool initWithFileName(const char* fileName)
-    {
-        int w, h, channelsInFile;
-        Rgba8* buffer = (Rgba8*)stbi_load(fileName, &w, &h, &channelsInFile, 4);
-        if (buffer != NULL)
-        {
-            m_pixels = buffer;
-            m_size = Size_make(w, h);
-            return true;
-        }
+    return false;
+}
 
-        return false;
-    }
+NcImage::~NcImage()
+{
+    if (m_shouldFreePixels)
+        free(m_pixels);
+}
 
-    ~NcImageImple() { free(m_pixels); }
-
-    bool saveAs(NcString* fileName) override
-    {
-        int bytesWritten =
-            stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 4, m_pixels, sizeof(Rgba8) * m_size.width);
-        return bytesWritten != 0;
-    }
-};
+bool NcImage::saveAs(NcString* fileName)
+{
+    int bytesWritten =
+        stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 4, m_pixels, sizeof(Rgba8) * m_size.width);
+    return bytesWritten != 0;
+}
 
 sp<NcImage> NcImage::allocWithSize(Size size)
 {
-    sp<NcImageImple> o = new NcImageImple();
+    sp<NcImage> o = new NcImage();
     if (!o->initWithSize(size))
         o = NULL;
     return o;
 }
 
+sp<NcImage> NcImage::allocWithBytesNoCopy(Rgba8* bytes, Size size)
+{
+    sp<NcImage> o = new NcImage();
+    o->m_size = size;
+    o->m_pixels = bytes;
+    return o;
+}
+
 sp<NcImage> NcImage::allocWithFileName(const char* fileName)
 {
-    sp<NcImageImple> o = new NcImageImple();
+    sp<NcImage> o = new NcImage();
     if (!o->initWithFileName(fileName))
         o = NULL;
     return o;
@@ -71,51 +81,63 @@ void NcImage::clear(Rgba8 color)
     }
 }
 
-class AxImageU8Imple : public NcImageU8
+//////////////////////////////////////////////////////////////////////////
+
+bool NcImageU8::initWithSize(Size size)
 {
-  public:
-    bool initWithSize(Size size)
+    m_size = size;
+    m_shouldFreePixels = true;
+    m_pixels = (u8*)malloc((size_t)size.width * size.height * sizeof(u8));
+    return true;
+}
+
+bool NcImageU8::initWithFileName(const char* fileName)
+{
+    int w, h, channelsInFile;
+    u8* buffer = (u8*)stbi_load(fileName, &w, &h, &channelsInFile, 1);
+    if (buffer != NULL)
     {
-        m_size = size;
-        m_pixels = (u8*)malloc((size_t)size.width * size.height * sizeof(u8));
+        m_shouldFreePixels = true;
+        m_pixels = buffer;
+        m_size = Size_make(w, h);
         return true;
     }
 
-    bool initWithFileName(const char* fileName)
-    {
-        int w, h, channelsInFile;
-        u8* buffer = (u8*)stbi_load(fileName, &w, &h, &channelsInFile, 1);
-        if (buffer != NULL)
-        {
-            m_pixels = buffer;
-            m_size = Size_make(w, h);
-            return true;
-        }
+    return false;
+}
 
-        return false;
-    }
+NcImageU8::~NcImageU8()
+{
+    if (m_shouldFreePixels)
+        free(m_pixels);
+}
 
-    ~AxImageU8Imple() { free(m_pixels); }
-
-    bool saveAs(NcString* fileName) override
-    {
-        int bytesWritten =
-            stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 1, m_pixels, sizeof(u8) * m_size.width);
-        return bytesWritten != 0;
-    }
-};
+bool NcImageU8::saveAs(NcString* fileName)
+{
+    int bytesWritten =
+        stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 1, m_pixels, sizeof(u8) * m_size.width);
+    return bytesWritten != 0;
+}
 
 sp<NcImageU8> NcImageU8::allocWithSize(Size size)
 {
-    sp<AxImageU8Imple> o = new AxImageU8Imple();
+    sp<NcImageU8> o = new NcImageU8();
     if (!o->initWithSize(size))
         o.reset();
     return o;
 }
 
+sp<NcImageU8> NcImageU8::allocWithBytesNoCopy(u8* bytes, Size size)
+{
+    sp<NcImageU8> o = new NcImageU8();
+    o->m_size = size;
+    o->m_pixels = bytes;
+    return o;
+}
+
 sp<NcImageU8> NcImageU8::allocWithFileName(const char* fileName)
 {
-    sp<AxImageU8Imple> o = new AxImageU8Imple();
+    sp<NcImageU8> o = new NcImageU8();
     if (!o->initWithFileName(fileName))
         o.reset();
     return o;

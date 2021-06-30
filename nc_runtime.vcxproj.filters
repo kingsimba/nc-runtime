@@ -99,4 +99,7 @@
       <UniqueIdentifier>{FF9B530A-B11B-38B7-909A-3B4DEFF00FD5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
+  </ItemGroup>
 </Project>

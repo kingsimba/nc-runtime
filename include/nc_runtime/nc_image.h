@@ -18,18 +18,20 @@ class NcImageBase : public NcObject
     virtual bool saveAs(NcString* fileName) = 0;
 
   protected:
-    NcImageBase() {}
-    ~NcImageBase() {}
+    NcImageBase() = default;
+    ~NcImageBase() = default;
 
   protected:
     Size m_size = {0, 0};
     NcVector2 m_origin = {0, 0};
 };
 
+// RGBA8 image
 class NcImage : public NcImageBase
 {
   public:
     static sp<NcImage> allocWithSize(Size size);
+    static sp<NcImage> allocWithBytesNoCopy(Rgba8* bytes, Size size);
     static sp<NcImage> allocWithFileName(const char* fileName);
 
     Rgba8* mutablePixels() { return m_pixels; }
@@ -37,15 +39,29 @@ class NcImage : public NcImageBase
 
     void clear(Rgba8 color);
 
+    bool saveAs(NcString* fileName) override;
+
   protected:
-    Rgba8* m_pixels;
+    NcImage() = default;
+    ~NcImage();
+
+    bool initWithSize(Size size);
+    bool initWithFileName(const char* fileName);
+
+  protected:
+    bool m_shouldFreePixels = false;
+    Rgba8* m_pixels = NULL;
 };
 
+// Grayscale image
 class NcImageU8 : public NcImageBase
 {
   public:
     static sp<NcImageU8> allocWithSize(Size size);
     static sp<NcImageU8> allocWithFileName(const char* fileName);
+
+    // The image doesn't own the memory. The user must keep it valid.
+    static sp<NcImageU8> allocWithBytesNoCopy(u8* bytes, Size size);
     static sp<NcImageU8> allocByCoping(NcImageU8* r);
 
     inline u8* mutablePixels() { return m_pixels; }
@@ -54,6 +70,16 @@ class NcImageU8 : public NcImageBase
 
     void clear(u8 color);
 
+    bool saveAs(NcString* fileName) override;
+
   protected:
-    u8* m_pixels;
+    NcImageU8() = default;
+    ~NcImageU8();
+
+    bool initWithSize(Size size);
+    bool initWithFileName(const char* fileName);
+
+  protected:
+    bool m_shouldFreePixels = false;
+    u8* m_pixels = NULL;
 };
