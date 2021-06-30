@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 #include <new>
 
 #define UNUSED_VAR(o) ((o) = (o))
