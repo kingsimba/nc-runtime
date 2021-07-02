@@ -122,10 +122,10 @@ private:
     ManualResetEventImple* m_imple;
 };
 
-class __MutexGuard__
+class __NcMutexGuard__
 {
 public:
-    __MutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
+    __NcMutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
 
     bool next()
     {
@@ -141,7 +141,7 @@ private:
 };
 
 // clang-format off
-#define synchronized(o) for(__MutexGuard__ guard(o##Mutex); guard.next(); )
+#define synchronized(o) for(__NcMutexGuard__ guard(o##Mutex); guard.next(); )
 // clang-format on
 
 template <typename Func> TimeTick TimeTick::measure(Func func)
