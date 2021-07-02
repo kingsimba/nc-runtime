@@ -40,6 +40,12 @@
     <ClCompile Include="src\costmap_inflator_imple.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\quaternion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\quaternion_d.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -89,6 +95,12 @@
     </ClInclude>
     <ClInclude Include="src\costmap_inflator_imple.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\quaternion_d.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\quaternion.h">
+      <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

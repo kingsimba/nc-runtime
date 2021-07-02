@@ -52,10 +52,11 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <StringPooling>true</StringPooling>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRTDBG_MAP_ALLOC;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;_CRTDBG_MAP_ALLOC;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PrecompiledHeaderFile>stdafx_nc_runtime.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRTDBG_MAP_ALLOC;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -82,6 +83,8 @@
     <ClInclude Include="include\nc_runtime\nc_image.h" />
     <ClInclude Include="include\nc_runtime\nc_log.h" />
     <ClInclude Include="include\nc_runtime\nc_object.h" />
+    <ClInclude Include="include\nc_runtime\quaternion.h" />
+    <ClInclude Include="include\nc_runtime\quaternion_d.h" />
     <ClInclude Include="include\nc_runtime\nc_stdlib.h" />
     <ClInclude Include="include\nc_runtime\nc_string.h" />
     <ClInclude Include="include\nc_runtime\nc_types.h" />
@@ -97,6 +100,8 @@
     <ClCompile Include="src\nc_stdlib.cpp" />
     <ClCompile Include="src\nc_string.cpp" />
     <ClCompile Include="src\nc_types.cpp" />
+    <ClCompile Include="src\quaternion.cpp" />
+    <ClCompile Include="src\quaternion_d.cpp" />
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>

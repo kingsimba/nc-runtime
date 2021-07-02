@@ -114,11 +114,11 @@ void CostmapInflatorImple::init()
     m_cacheLineWidth = m_cellInflationRadius + 2;
     NC_ASSERT(m_cacheLineWidth * m_cacheLineWidth <= MAX_CACHE_SIZE);
 
-    for (unsigned int y = 0; y <= m_cellInflationRadius + 1; ++y)
+    for (int y = 0; y <= m_cellInflationRadius + 1; ++y)
     {
-        for (unsigned int x = 0; x <= m_cellInflationRadius + 1; ++x)
+        for (int x = 0; x <= m_cellInflationRadius + 1; ++x)
         {
-            float distance = hypot(x, y);
+            float distance = hypotf((float)x, (float)y);
             ARRAY_AT(m_cachedDistances, x, y) = distance;
             ARRAY_AT(m_cachedCosts, x, y) = computeCost(distance);
         }
@@ -136,7 +136,7 @@ CostValue CostmapInflatorImple::computeCost(float distance)
     {
         // make sure cost falls off by Euclidean distance
         float euclideanDistance = distance * m_params.resolution;
-        float factor = exp(-1.0 * m_params.costScalingFactor * (euclideanDistance - m_params.inscribedRadius));
+        float factor = expf(-1.0f * m_params.costScalingFactor * (euclideanDistance - m_params.inscribedRadius));
         cost = (CostValue)(((u8)CostValue::inflatedObstacle - 1) * factor);
     }
     return cost;
