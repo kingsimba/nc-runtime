@@ -28,19 +28,19 @@ EulerAngles Quaternion::ToEulerAngles()
     // roll (x-axis rotation)
     float sinr_cosp = 2 * (this->w * this->x + this->y * this->z);
     float cosr_cosp = 1 - 2 * (this->x * this->x + this->y * this->y);
-    angles.roll = std::atan2f(sinr_cosp, cosr_cosp);
+    angles.roll = atan2f(sinr_cosp, cosr_cosp);
 
     // pitch (y-axis rotation)
     float sinp = 2 * (this->w * this->y - this->z * this->x);
-    if (std::abs(sinp) >= 1)
-        angles.pitch = std::copysign(NC_PI_2, sinp); // use 90 degrees if out of range
+    if (nc_abs(sinp) >= 1)
+        angles.pitch = copysignf(NC_PI_2, sinp); // use 90 degrees if out of range
     else
-        angles.pitch = std::asin(sinp);
+        angles.pitch = asinf(sinp);
 
     // yaw (z-axis rotation)
     float siny_cosp = 2 * (this->w * this->z + this->x * this->y);
     float cosy_cosp = 1 - 2 * (this->y * this->y + this->z * this->z);
-    angles.yaw = std::atan2f(siny_cosp, cosy_cosp);
+    angles.yaw = atan2f(siny_cosp, cosy_cosp);
 
     return angles;
 }

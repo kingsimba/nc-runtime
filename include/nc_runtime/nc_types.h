@@ -66,6 +66,11 @@ static forceinline bool nc_isnan(float n)
     return n != n;
 }
 
+template <typename T> forceinline T nc_abs(T o)
+{
+    return o > 0 ? o : -o;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 typedef unsigned char u8;
