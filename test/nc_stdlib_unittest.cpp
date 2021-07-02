@@ -149,3 +149,16 @@ TEST(Stdlib, isnan)
     EXPECT_TRUE(nc_isnan(NAN));
     EXPECT_FALSE(nc_isnan(3));
 }
+
+TEST(Stdlib, absMinMaxClamp)
+{
+    EXPECT_TRUE(nc_abs(-3.2) == 3.2);
+    EXPECT_TRUE(nc_abs(3) == 3);
+
+    EXPECT_TRUE(nc_min(3, 4) == 3);
+    EXPECT_TRUE(nc_max(3, 4) == 4);
+    EXPECT_TRUE(nc_clamp(1, 3, 5) == 3);
+    EXPECT_TRUE(nc_clamp(4, 3, 5) == 4);
+    EXPECT_TRUE(nc_clamp(5, 3, 5) == 5);
+    EXPECT_TRUE(nc_clamp(6, 3, 5) == 5);
+}

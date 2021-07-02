@@ -51,25 +51,17 @@
 #define NC_1_PI_D 0.318309886183790671538 // 1/pi
 #define NC_2_PI_D 0.636619772367581343076 // 2/pi
 
-static forceinline float nc_radianToDegree(float radian)
-{
-    return radian * (180.0f / NC_PI);
-}
+// clang-format off
+static forceinline float nc_radianToDegree(float radian) { return radian * (180.0f / NC_PI); }
 
-static forceinline float nc_degreeToRadian(float degree)
-{
-    return degree * (NC_PI / 180.0f);
-}
+static forceinline float nc_degreeToRadian(float degree) { return degree * (NC_PI / 180.0f); }
 
-static forceinline bool nc_isnan(float n)
-{
-    return n != n;
-}
+static forceinline bool nc_isnan(float n) { return n != n; }
 
-template <typename T> forceinline T nc_abs(T o)
-{
-    return o > 0 ? o : -o;
-}
+template <typename T> forceinline T nc_abs(T o) { return o > 0 ? o : -o; }
+template <typename T> forceinline T nc_min(T l, T r) { return l < r ? l : r; }
+template <typename T> forceinline T nc_max(T l, T r) { return l > r ? l : r; }
+template <typename T> forceinline T nc_clamp(T o, T lower, T upper) { return o < lower ? lower : (o > upper ? upper : o); } // clang-format on
 
 //////////////////////////////////////////////////////////////////////////
 
