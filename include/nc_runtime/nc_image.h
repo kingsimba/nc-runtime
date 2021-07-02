@@ -6,14 +6,16 @@
 class NcImageBase : public NcObject
 {
 public:
+    typedef nc::Vector2 Vector2;
+
     inline Size size() { return m_size; }
     inline int width() { return m_size.width; }
     inline int height() { return m_size.height; }
     inline Rect area() { return Rect{0, 0, m_size.width, m_size.height}; }
     inline int pixelCount() { return m_size.width * m_size.height; }
 
-    inline NcVector2 origin() { return m_origin; }
-    inline void setOrigin(NcVector2 origin) { m_origin = origin; }
+    inline Vector2 origin() { return m_origin; }
+    inline void setOrigin(Vector2 origin) { m_origin = origin; }
 
     virtual bool saveAs(NcString* fileName) = 0;
 
@@ -23,7 +25,7 @@ protected:
 
 protected:
     Size m_size = {0, 0};
-    NcVector2 m_origin = {0, 0};
+    Vector2 m_origin = {0, 0};
 };
 
 // RGBA8 image

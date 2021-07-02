@@ -2,12 +2,18 @@
 
 #include "nc_runtime/nc_types.h"
 
-struct NcVector2
+namespace nc
 {
+
+class Vector2
+{
+public:
     float x, y;
 };
 
-static forceinline NcVector2 vec2(float x, float y)
+static forceinline Vector2 vec2(float x, float y)
 {
-    return NcVector2{x, y};
+    return Vector2{x, y};
 }
+
+} // namespace nc

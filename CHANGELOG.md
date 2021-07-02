@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-07-02 Add Quaternion.
 - 2021-06-30 Add `nc_isnan()`.
 - 2021-06-30 Add `nc_radianToDegree()` and `nc_degreeToRadian()`.
 - 2021-06-30 Add single & double precision PI. NC_PI, NC_PI_2, NC_PI_D, NC_PI_2_D etc.

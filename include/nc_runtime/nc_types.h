@@ -26,6 +26,7 @@
 
 #ifdef NC_OS_WIN
 #    define forceinline __forceinline
+#    pragma warning(disable : 4201)
 #else
 #    define forceinline inline
 #endif

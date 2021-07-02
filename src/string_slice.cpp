@@ -55,7 +55,7 @@ static const char* _strstr(const char* s1, const char* s1End, const char* s2, si
     const char* p = s1;
     for (; (p = _strchr(p, s1End, *s2)) != NULL; p++)
     {
-        if (s1End - p < s2len)
+        if ((size_t)(s1End - p) < s2len)
         {
             return s1End;
         }

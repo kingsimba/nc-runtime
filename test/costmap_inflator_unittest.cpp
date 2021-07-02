@@ -21,10 +21,10 @@ TEST(CostmapInflator, basic)
     pixels[100 * 10 + 40] = (u8)(254);
 
     CostmapInflatorParams params;
-    params.costScalingFactor = 20;
-    params.resolution = 0.05;
-    params.inflationRadius = 0.6;
-    params.inscribedRadius = 0.2;
+    params.costScalingFactor = 20.0f;
+    params.resolution = 0.05f;
+    params.inflationRadius = 0.6f;
+    params.inscribedRadius = 0.2f;
     CostmapInflator inflator(params);
     Rect region = Rect_make(20, 20, 80, 80);
     auto d = inflator.inflate(o.get(), region);
