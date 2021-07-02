@@ -5,7 +5,7 @@
 
 class NcData : public NcObject
 {
-  public:
+public:
     static sp<NcData> allocWithBytes(const void* bytes, size_t len);
     static sp<NcData> allocByTakingBytes(void* bytes, size_t len);
     static sp<NcData> allocWithContentsOfFile(NcString* fileName)
@@ -17,7 +17,7 @@ class NcData : public NcObject
     size_t length() { return m_length; }
     void* bytes() { return m_bytes; }
 
-  private:
+private:
     size_t m_length;
     void* m_bytes;
     bool m_shouldFree = false;

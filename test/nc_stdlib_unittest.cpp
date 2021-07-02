@@ -111,7 +111,7 @@ TEST(Stdlib, someString)
 
 class CopyCountObject
 {
-  public:
+public:
     forceinline CopyCountObject() : m_copyCount(0), m_moveCount(0) {}
     forceinline CopyCountObject(const CopyCountObject& r) : m_copyCount(r.m_copyCount + 1), m_moveCount(r.m_moveCount)
     {

@@ -5,10 +5,10 @@
 
 template <typename T> class NcArray : public NcObject
 {
-  public:
+public:
     using ArrayElement = T;
 
-  public:
+public:
     static sp<NcArray<T>> alloc() { return new NcArray(); }
 
     forceinline int capacity() { return (int)m_array.capacity(); }
@@ -67,6 +67,6 @@ template <typename T> class NcArray : public NcObject
         return -1;
     }
 
-  private:
+private:
     std::vector<sp<T>> m_array;
 };

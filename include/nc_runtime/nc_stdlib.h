@@ -30,7 +30,7 @@ forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r)
 
 class Thread
 {
-  public:
+public:
     static void sleep(TimeTick tick); // sleep current thread for at least some time.
 };
 
@@ -54,7 +54,7 @@ size_t Math_hashSizeT(size_t o);
  */
 class StackOrHeapAllocator
 {
-  public:
+public:
     StackOrHeapAllocator(void* stackBuffer, size_t stackSize)
     {
         m_stackBuffer = (u8*)stackBuffer;
@@ -74,7 +74,7 @@ class StackOrHeapAllocator
     // for testing
     size_t _moreHeapPointerCount() { return m_moreHeapPointers == NULL ? 0 : m_moreHeapPointers->size(); }
 
-  private:
+private:
     u8* m_stackBuffer;
     size_t m_stackSize;
     size_t m_usedStackSize;
@@ -85,13 +85,13 @@ class StackOrHeapAllocator
 
 class StandardFreer
 {
-  public:
+public:
     StandardFreer(void* p) { m_p = p; }
     ~StandardFreer() { free(m_p); }
 
     void release() { m_p = NULL; }
 
-  private:
+private:
     void* m_p;
 };
 
@@ -109,7 +109,7 @@ class ManualResetEventImple;
 
 class ManualResetEvent
 {
-  public:
+public:
     ManualResetEvent(bool signaled = false);
     ~ManualResetEvent();
 
@@ -118,13 +118,13 @@ class ManualResetEvent
     void wait();
     bool waitWithTimeout(const TimeTick& t);
 
-  private:
+private:
     ManualResetEventImple* m_imple;
 };
 
 class __MutexGuard__
 {
-  public:
+public:
     __MutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
 
     bool next()
@@ -135,7 +135,7 @@ class __MutexGuard__
         return true;
     }
 
-  private:
+private:
     std::lock_guard<std::recursive_mutex> m_guard;
     bool m_firstTime;
 };

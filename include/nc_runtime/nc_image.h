@@ -5,7 +5,7 @@
 
 class NcImageBase : public NcObject
 {
-  public:
+public:
     inline Size size() { return m_size; }
     inline int width() { return m_size.width; }
     inline int height() { return m_size.height; }
@@ -17,11 +17,11 @@ class NcImageBase : public NcObject
 
     virtual bool saveAs(NcString* fileName) = 0;
 
-  protected:
+protected:
     NcImageBase() = default;
     ~NcImageBase() = default;
 
-  protected:
+protected:
     Size m_size = {0, 0};
     NcVector2 m_origin = {0, 0};
 };
@@ -29,7 +29,7 @@ class NcImageBase : public NcObject
 // RGBA8 image
 class NcImage : public NcImageBase
 {
-  public:
+public:
     static sp<NcImage> allocWithSize(Size size);
     static sp<NcImage> allocWithBytesNoCopy(Rgba8* bytes, Size size);
     static sp<NcImage> allocWithFileName(const char* fileName);
@@ -41,14 +41,14 @@ class NcImage : public NcImageBase
 
     bool saveAs(NcString* fileName) override;
 
-  protected:
+protected:
     NcImage() = default;
     ~NcImage();
 
     bool initWithSize(Size size);
     bool initWithFileName(const char* fileName);
 
-  protected:
+protected:
     bool m_shouldFreePixels = false;
     Rgba8* m_pixels = NULL;
 };
@@ -56,7 +56,7 @@ class NcImage : public NcImageBase
 // Grayscale image
 class NcImageU8 : public NcImageBase
 {
-  public:
+public:
     static sp<NcImageU8> allocWithSize(Size size);
     static sp<NcImageU8> allocWithFileName(const char* fileName);
 
@@ -72,14 +72,14 @@ class NcImageU8 : public NcImageBase
 
     bool saveAs(NcString* fileName) override;
 
-  protected:
+protected:
     NcImageU8() = default;
     ~NcImageU8();
 
     bool initWithSize(Size size);
     bool initWithFileName(const char* fileName);
 
-  protected:
+protected:
     bool m_shouldFreePixels = false;
     u8* m_pixels = NULL;
 };

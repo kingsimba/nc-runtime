@@ -238,7 +238,7 @@ const static NoValueType noValue = {};
  */
 template <typename T> class Some
 {
-  public:
+public:
     forceinline Some(const NoValueType& v) : m_hasValue(false) {}
     forceinline Some(const T& v) : m_value(v), m_hasValue(true) {}
     forceinline Some(const T&& v) : m_value(std::move(v)), m_hasValue(true) {}
@@ -248,7 +248,7 @@ template <typename T> class Some
 
     forceinline const T& Or(const T& r) { return m_hasValue ? m_value : r; }
 
-  private:
+private:
     bool m_hasValue;
     T m_value;
 };
@@ -262,7 +262,7 @@ class NcString;
 // Learned from https://rigtorp.se/spinlock/
 class Spinlock
 {
-  public:
+public:
     void lock()
     {
         for (;;)
@@ -279,6 +279,6 @@ class Spinlock
 
     void unlock() { m_lock.store(false, std::memory_order_release); }
 
-  private:
+private:
     std::atomic<bool> m_lock{false};
 };

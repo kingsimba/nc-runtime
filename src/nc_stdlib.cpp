@@ -97,7 +97,7 @@ StackOrHeapAllocator::~StackOrHeapAllocator()
 
 class ManualResetEventImple
 {
-  public:
+public:
     ManualResetEventImple(bool signaled) : m_signaled(signaled) {}
 
     void set()
@@ -143,7 +143,7 @@ class ManualResetEventImple
         return true;
     }
 
-  private:
+private:
     std::mutex m_mutex;
     std::condition_variable m_cv;
     bool m_signaled;

@@ -32,7 +32,7 @@ enum class FileSeekOrigin
 
 class NcFile : public NcObject
 {
-  public:
+public:
     forceinline static sp<NcFile> alloc(NcString* fileName, FileOpenFlag flags)
     {
         return alloc(fileName->toSlice(), flags);
@@ -48,10 +48,10 @@ class NcFile : public NcObject
     int read(void* bufferOut, int bytesToRead);      // return number of bytes read
     int write(const void* buffer, int bytesToWrite); // return number of bytes written
 
-  private:
+private:
     NcFile() {}
     ~NcFile() { close(); }
 
-  private:
+private:
     FILE* m_fp = NULL;
 };

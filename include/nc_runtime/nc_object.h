@@ -6,7 +6,7 @@
 // Keep watching https://github.com/kingsimba/nc-runtime for updates
 class ControlBlock
 {
-  public:
+public:
 #ifdef NC_PLATFORM_WIN
 #    pragma warning(push)
 #    pragma warning(suppress : 26495)
@@ -86,7 +86,7 @@ class ControlBlock
     int m_rc;
     int m_wc;
 
-  private:
+private:
     Spinlock m_lock;
     char m_unused[7]; // padding to 16 bytes
 };
@@ -96,7 +96,7 @@ class ControlBlock
  */
 template <typename T> class sp
 {
-  public:
+public:
     forceinline sp() { m_ptr = NULL; }
     forceinline sp(T* p) { m_ptr = p; }
     forceinline sp(const sp<T>& p)
@@ -159,7 +159,7 @@ template <typename T> class sp
      */
     forceinline sp<typename T::ArrayElement>& operator[](int index) { return m_ptr->objectAtIndex(index); }
 
-  private:
+private:
     T* m_ptr;
 };
 
@@ -174,7 +174,7 @@ template <class T1, class T2> sp<T1> static_pointer_cast(const sp<T2>& r) noexce
  */
 template <typename T> class wp
 {
-  public:
+public:
     wp() = default;
 
     // raw pointer constructor
@@ -251,7 +251,7 @@ template <typename T> class wp
             return NULL;
     }
 
-  private:
+private:
     T* m_ptr;
 };
 
@@ -263,10 +263,10 @@ template <typename T> class wp
  */
 class NcObject
 {
-  public:
+public:
     using ArrayElement = NcObject;
 
-  public:
+public:
     static sp<NcObject> alloc() { return new NcObject(); }
 
     /**
@@ -347,7 +347,7 @@ class NcObject
         free(_controlBlock());
     }
 
-  protected:
+protected:
     NcObject() {}
     NcObject(bool /*isStatic*/)
     {

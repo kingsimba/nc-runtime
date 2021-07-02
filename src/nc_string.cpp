@@ -10,7 +10,7 @@ using namespace std;
 // create one NcString object for each literal string
 class GlobalStringManager
 {
-  public:
+public:
     sp<NcString> addString(const char* cstr, size_t len)
     {
         static mutex s_mutex;
@@ -44,7 +44,7 @@ class GlobalStringManager
         }
     }
 
-  private:
+private:
     unordered_map<size_t, NcString*> m_map;
 };
 

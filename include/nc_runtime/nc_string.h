@@ -5,7 +5,7 @@
 
 class NcString : public NcObject, public StringSlice
 {
-  public:
+public:
     /**
      * Create a string by C string. |str| must ends with \0.
      */
@@ -102,7 +102,7 @@ class NcString : public NcObject, public StringSlice
     virtual sp<NcString> toString() override { return sp<NcString>(this); }
     virtual bool equals(NcObject* r) override;
 
-  private:
+private:
     NcString() : m_shouldFree(false) {}
     NcString(bool isStatic) : NcObject(true), m_shouldFree(false) { UNUSED_VAR(isStatic); }
     ~NcString();
@@ -116,7 +116,7 @@ class NcString : public NcObject, public StringSlice
 
     void initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep);
 
-  private:
+private:
     bool m_shouldFree;
 };
 

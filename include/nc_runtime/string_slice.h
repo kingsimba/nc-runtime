@@ -18,13 +18,13 @@ class StringSlice;
  */
 class StringCharIter
 {
-  public:
+public:
     StringCharIter(const StringSlice& slice);
 
     bool next(wchar32* cOut) { return next(cOut, NULL); }
     bool next(wchar32* cOut, int* consumedBytesOut);
 
-  private:
+private:
     const char* m_str;
     int m_length;
 };
@@ -44,7 +44,7 @@ class StringCharIter
  */
 class StringSubsliceIter
 {
-  public:
+public:
     StringSubsliceIter(const StringSlice& slice, const StringSlice& sep);
     StringSubsliceIter(StringSubsliceIter&& r) noexcept
     {
@@ -62,7 +62,7 @@ class StringSubsliceIter
     forceinline bool next(StringSlice* sliceOut) { return next(sliceOut, NULL); }
     bool next(StringSlice* sliceOut, Range* rangeOut);
 
-  protected:
+protected:
     const char* m_strBegin;
     const char* m_strEnd;
     const char* m_str;
@@ -88,14 +88,14 @@ class StringSubsliceIter
  */
 class StringTokenIter : private StringSubsliceIter
 {
-  public:
+public:
     StringTokenIter(const StringSlice& slice, const StringSlice& sep) : StringSubsliceIter(slice, sep) {}
     StringTokenIter(StringTokenIter&& r) noexcept : StringSubsliceIter(std::move(r)) {}
 
     forceinline bool next(StringSlice* sliceOut) { return next(sliceOut, NULL); }
     bool next(StringSlice* sliceOut, Range* rangeOut);
 
-  private:
+private:
     bool _isSep(char c);
 };
 
@@ -104,7 +104,7 @@ class StringTokenIter : private StringSubsliceIter
  */
 class StringSlice
 {
-  public:
+public:
     forceinline StringSlice()
     {
         m_str = NULL;
@@ -271,7 +271,7 @@ class StringSlice
         return *this;
     }
 
-  protected:
+protected:
     const char* m_str;
     int m_length;
     NcString* m_ncstring;

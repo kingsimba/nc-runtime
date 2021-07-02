@@ -3,7 +3,7 @@
 
 class NcImageTest : public ::testing::Test
 {
-  public:
+public:
     static void SetUpTestCase()
     {
         // prepare RGBA image
@@ -27,7 +27,7 @@ class NcImageTest : public ::testing::Test
         }
     }
 
-  protected:
+protected:
     static sp<NcImage> m_image;
     static sp<NcImageU8> m_image8;
 };

@@ -3,23 +3,23 @@
 
 class MyBox : public NcObject
 {
-  public:
+public:
     static sp<MyBox> alloc() { return new MyBox(); }
 
-  private:
+private:
     MyBox() { m_data = 3; };
     ~MyBox(){};
 
-  private:
+private:
     int m_data;
 };
 
 class MyString : public NcObject
 {
-  public:
+public:
     static sp<MyString> alloc() { return new MyString(); }
 
-  private:
+private:
     MyString(){};
     ~MyString(){};
 };

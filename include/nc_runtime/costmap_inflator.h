@@ -24,12 +24,12 @@ class CostmapInflatorImple;
 
 class CostmapInflator
 {
-  public:
+public:
     CostmapInflator(const CostmapInflatorParams& params);
     ~CostmapInflator();
 
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
 
-  private:
+private:
     CostmapInflatorImple* m_imple;
 };
