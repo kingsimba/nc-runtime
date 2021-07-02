@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nc_vector.h"
+#include "vector2.h"
 #include "nc_object.h"
 
 class NcImageBase : public NcObject

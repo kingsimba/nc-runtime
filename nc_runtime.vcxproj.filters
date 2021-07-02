@@ -84,7 +84,7 @@
     <ClInclude Include="src\stdafx_nc_runtime.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="include\nc_runtime\nc_vector.h">
+    <ClInclude Include="include\nc_runtime\vector2.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\nc_image.h">
