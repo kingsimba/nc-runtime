@@ -48,15 +48,17 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "src/stdafx_nc_runtime.h")
 
 ########################################################################################
 # nc_runtime_test
-project(nc_runtime_test)
+if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
+	project(nc_runtime_test)
 
-file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h")
-add_executable(${PROJECT_NAME} ${TEST_SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb GTest::gtest)
+	file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h")
+	add_executable(${PROJECT_NAME} ${TEST_SRC})
+	target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb GTest::gtest)
 
-if (NOT WIN32)
-	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+	if (NOT WIN32)
+		target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+	endif()
+
+	target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include")
+	target_precompile_headers(${PROJECT_NAME} PRIVATE "test/stdafx_nc_runtime_test.h")
 endif()
-
-target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include")
-target_precompile_headers(${PROJECT_NAME} PRIVATE "test/stdafx_nc_runtime_test.h")
