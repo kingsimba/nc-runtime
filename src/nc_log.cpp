@@ -23,6 +23,7 @@ void NcLog_setCallback(NcLogCallback callback, void* userdata)
 
 void NcLog_write(LogLevel level, const char* file, int line, const char* func, const char* format, ...)
 {
+    UNUSED_VAR(func);
     const static size_t STR_MAX_LEN = 2048;
     StackOrHeapAllocator allocator(alloca(STR_MAX_LEN * 2), STR_MAX_LEN * 2);
 

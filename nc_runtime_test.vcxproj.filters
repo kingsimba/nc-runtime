@@ -40,6 +40,9 @@
     <ClCompile Include="test\quaternion_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="test\nc_math_unittest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

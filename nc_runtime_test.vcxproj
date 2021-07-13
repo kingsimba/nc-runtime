@@ -46,9 +46,9 @@
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp14</LanguageStandard>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -95,6 +95,7 @@
     <ClCompile Include="test\nc_file_unittest.cpp" />
     <ClCompile Include="test\nc_image_unittest.cpp" />
     <ClCompile Include="test\nc_log_unittest.cpp" />
+    <ClCompile Include="test\nc_math_unittest.cpp" />
     <ClCompile Include="test\nc_object_unittest.cpp" />
     <ClCompile Include="test\nc_stdlib_unittest.cpp" />
     <ClCompile Include="test\nc_string_unittest.cpp" />

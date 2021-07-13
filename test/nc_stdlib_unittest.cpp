@@ -90,6 +90,7 @@ TEST(Stdlib, someInt)
     auto v = Some<int>(5);
     EXPECT_TRUE(v.hasValue());
     EXPECT_EQ(v.value(), 5);
+    EXPECT_EQ(v.value(), 5);
     EXPECT_EQ(v.Or(10), 5);
 
     v = noValue;

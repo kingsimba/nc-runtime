@@ -44,9 +44,9 @@
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp14</LanguageStandard>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -82,6 +82,7 @@
     <ClInclude Include="include\nc_runtime\nc_gtest_extension.h" />
     <ClInclude Include="include\nc_runtime\nc_image.h" />
     <ClInclude Include="include\nc_runtime\nc_log.h" />
+    <ClInclude Include="include\nc_runtime\nc_math.h" />
     <ClInclude Include="include\nc_runtime\nc_object.h" />
     <ClInclude Include="include\nc_runtime\quaternion.h" />
     <ClInclude Include="include\nc_runtime\quaternion_d.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="src\nc_file.cpp" />
     <ClCompile Include="src\nc_image.cpp" />
     <ClCompile Include="src\nc_log.cpp" />
+    <ClCompile Include="src\nc_math.cpp" />
     <ClCompile Include="src\nc_object.cpp" />
     <ClCompile Include="src\nc_stdlib.cpp" />
     <ClCompile Include="src\nc_string.cpp" />

@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-07-13 Add `Math_turnAngle()`, `Math_wrapTwoPi()`
 - 2021-07-02 Add `nc_abs()`, `nc_min()`, `nc_max()`, `nc_clamp()`
 - 2021-07-02 Add `Quaternion` and `QuaterionD`.
 - 2021-06-30 Add `nc_isnan()`.
