@@ -49,6 +49,9 @@
     <ClCompile Include="src\nc_math.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\nc_argparse.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -106,6 +109,9 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\nc_math.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\nc_argparse.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>

@@ -76,6 +76,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\costmap_inflator.h" />
+    <ClInclude Include="include\nc_runtime\nc_argparse.h" />
     <ClInclude Include="include\nc_runtime\nc_array.h" />
     <ClInclude Include="include\nc_runtime\nc_data.h" />
     <ClInclude Include="include\nc_runtime\nc_file.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="include\nc_runtime\vector2.h" />
     <ClInclude Include="include\nc_runtime\string_slice.h" />
     <ClCompile Include="src\costmap_inflator_imple.cpp" />
+    <ClCompile Include="src\nc_argparse.cpp" />
     <ClCompile Include="src\nc_array.cpp" />
     <ClCompile Include="src\nc_data.cpp" />
     <ClCompile Include="src\nc_file.cpp" />
