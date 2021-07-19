@@ -259,6 +259,10 @@ public:
     {
         return m_length == r->m_length && memcmp(m_str, r->m_str, m_length) == 0;
     }
+    forceinline bool equals(const StringSlice& r)
+    {
+        return m_length == r.m_length && memcmp(m_str, r.m_str, m_length) == 0;
+    }
     forceinline bool equals(const char* r) { return m_length == (int)strlen(r) && memcmp(m_str, r, m_length) == 0; }
 
     //////////////////////////////////////////////////////////////////////////

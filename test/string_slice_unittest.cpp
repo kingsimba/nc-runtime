@@ -2,6 +2,12 @@
 #include "nc_runtime/string_slice.h"
 #include "nc_runtime/nc_string.h"
 
+TEST(StringSlice, basic)
+{
+    EXPECT_TRUE("blood"_s.equals("blood"));
+    EXPECT_TRUE("blood"_s.equals("blood"_s));
+}
+
 TEST(StringSlice, iter)
 {
     auto iter = "To err is human, to forgive divine."_s.iterForSplitting(" ");
