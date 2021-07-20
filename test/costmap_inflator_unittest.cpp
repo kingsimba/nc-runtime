@@ -49,7 +49,7 @@ TEST(CostmapInflator, officeArea)
     Rect region = image->area();
 
     sp<NcImageU8> d;
-    for (int i = 0; i < REPEAT; i++)
+    for (size_t i = 0; i < REPEAT; i++)
         d = inflator.inflate(image.get(), region);
 
     EXPECT_TRUE(d->saveAs("test_data/output/test_inflate_office.png"_str));
