@@ -89,12 +89,12 @@ public:
 private:
     Spinlock m_lock;
 
-#if defined(NC_OS_UNIX)
+#if defined(NC_OS_UNIX) && defined(__clang__)
 #    pragma clang diagnostic push
 #    pragma clang diagnostic ignored "-Wunused-private-field"
 #endif
     char m_unused[7]; // padding to 16 bytes
-#if defined(NC_OS_UNIX)
+#if defined(NC_OS_UNIX) && defined(__clang__)
 #    pragma clang diagnostic pop
 #endif
 };
