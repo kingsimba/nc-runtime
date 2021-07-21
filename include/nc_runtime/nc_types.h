@@ -13,7 +13,11 @@
 #include <math.h>
 #include <new>
 
-#define UNUSED_VAR(o) ((o) = (o))
+#ifdef NC_OS_WIN
+#    define UNUSED_VAR(o) ((o) = (o))
+#else
+#    define UNUSED_VAR(x) (void)(x)
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 
