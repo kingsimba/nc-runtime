@@ -165,7 +165,9 @@ struct Rgba8
 
 inline Rgba8 Rgba8_make(u8 r, u8 g, u8 b, u8 a)
 {
-    return Rgba8{r, g, b, a};
+    Rgba8 o;
+    o.r = r, o.b = b, o.g = g, o.a = a;
+    return o;
 }
 
 inline bool operator==(Rgba8 l, Rgba8 r)
@@ -243,7 +245,7 @@ const static NoValueType noValue = {};
 template <typename T> class Some
 {
 public:
-    forceinline Some(const NoValueType& v) : m_hasValue(false) {}
+    forceinline Some(const NoValueType& v) : m_hasValue(false) { UNUSED_VAR(v); }
     forceinline Some(const T& v) : m_value(v), m_hasValue(true) {}
     forceinline Some(const T&& v) : m_value(std::move(v)), m_hasValue(true) {}
 

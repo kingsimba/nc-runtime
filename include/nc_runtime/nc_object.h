@@ -88,7 +88,15 @@ public:
 
 private:
     Spinlock m_lock;
+
+#if defined(NC_OS_UNIX)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wunused-private-field"
+#endif
     char m_unused[7]; // padding to 16 bytes
+#if defined(NC_OS_UNIX)
+#    pragma clang diagnostic pop
+#endif
 };
 
 /**
@@ -298,7 +306,7 @@ public:
 #    pragma warning(pop)
 #endif
 
-    void operator delete(void* p) { p = p; }
+    void operator delete(void* p) { UNUSED_VAR(p); }
 
     forceinline ControlBlock* _controlBlock() { return (ControlBlock*)(this) - 1; }
 
