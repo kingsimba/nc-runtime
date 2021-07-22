@@ -52,7 +52,7 @@ project(nc_runtime_test)
 
 file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h")
 add_executable(${PROJECT_NAME} ${TEST_SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb GTest::gtest)
+target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb jansson GTest::gtest)
 
 if (NOT WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
