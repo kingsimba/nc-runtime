@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-07-14 Add `JsonSettingLoader`
 - 2021-07-14 Add "nc_argparse.h"
 - 2021-07-13 Add `Math_turnAngle()`, `Math_wrapTwoPi()`
 - 2021-07-02 Add `nc_abs()`, `nc_min()`, `nc_max()`, `nc_clamp()`

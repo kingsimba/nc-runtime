@@ -4,6 +4,12 @@
 #include "nc_object.h"
 #include "nc_log.h"
 
+// see GNU strtok_r()
+char* nc_strtok(char* s, const char* delim, char** savePtr);
+
+/////////////////////////////////////////////////////////////////
+// TimeTick
+
 // in milliseconds
 struct TimeTick
 {
@@ -28,16 +34,14 @@ forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r)
     return TimeTick{l.__time + r.__time};
 }
 
+/////////////////////////////////////////////////////////////////
+// Thread
+
 class Thread
 {
 public:
     static void sleep(TimeTick tick); // sleep current thread for at least some time.
 };
-
-u32 Math_hashString(const char* str);
-u32 Math_hashU32(u32 o);
-u64 Math_hashU64(u64 o);
-size_t Math_hashSizeT(size_t o);
 
 /**
  * Allocate memory on the stack or heap.

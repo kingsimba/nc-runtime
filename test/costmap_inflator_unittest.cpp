@@ -34,7 +34,7 @@ TEST(CostmapInflator, basic)
 
 TEST(CostmapInflator, officeArea)
 {
-    const size_t REPEAT = 800;
+    const size_t REPEAT = 8;
 
     // real image of office area
     auto image = NcImageU8::allocWithFileName("test_data/costmap_original.png");

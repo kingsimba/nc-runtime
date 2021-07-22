@@ -52,6 +52,9 @@
     <ClCompile Include="src\nc_argparse.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\json_setting_loader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -112,6 +115,9 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\nc_argparse.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\json_setting_loader.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
