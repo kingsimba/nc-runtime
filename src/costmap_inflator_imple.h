@@ -19,13 +19,13 @@ class CostmapInflatorImple
         int srcY;
     };
 
-  public:
+public:
     CostmapInflatorImple(const CostmapInflatorParams& params);
     ~CostmapInflatorImple();
 
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
 
-  private:
+private:
     void init();
     CostValue computeCost(float distance);
 
@@ -36,7 +36,7 @@ class CostmapInflatorImple
     int m_cachedInflationRadius;
 
     size_t m_cacheLineWidth;
-    const static size_t MAX_CACHE_SIZE = 32 * 32;
+    const static size_t MAX_CACHE_SIZE = 64 * 64;
     CostValue m_cachedCosts[MAX_CACHE_SIZE]; // m_cacheLineWidth * m_cacheLineWidth 2D array
     float m_cachedDistances[MAX_CACHE_SIZE]; // m_cacheLineWidth * m_cacheLineWidth 2D array
 };
