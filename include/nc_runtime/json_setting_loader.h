@@ -3,26 +3,34 @@
 #include "jansson/jansson.h"
 #include "nc_runtime/nc_types.h"
 
-class JsonSettingNode
+class JsonNode
 {
 public:
-    JsonSettingNode() {}
-    JsonSettingNode(json_t* root) : m_root(json_incref(root)) {}
-    JsonSettingNode(const JsonSettingNode& r) { m_root = json_incref(r.m_root); }
-    ~JsonSettingNode() { json_decref(m_root); }
+    JsonNode() {}
+    JsonNode(json_t* root) : m_root(json_incref(root)) {}
+    JsonNode(const JsonNode& r) { m_root = json_incref(r.m_root); }
+    ~JsonNode() { json_decref(m_root); }
 
-    Some<JsonSettingNode> nodeForKey(const char* key);
+    Some<JsonNode> nodeForKey(const char* key);
+    Some<JsonNode> operator[](const char* key);
+    Some<JsonNode> operator[](int index);
 
-    Some<int> intValueForKey(const char* key);
-    Some<i64> int64ValueForKey(const char* key);
-    Some<const char*> stringValueForKey(const char* key);
-    Some<u32> u32ValueForKey(const char* key);
-    Some<float> floatValueForKey(const char* key);
+    Some<int> asInt();
+    Some<i64> asInt64();
+    Some<u32> asU32();
+    Some<const char*> asString();
+    Some<float> asFloat();
 
-    int arraySize() { return (int)json_array_size(m_root); }
-    JsonSettingNode arrayElementAtIndex(int i) { return JsonSettingNode(json_array_get(m_root, i)); }
+    Some<JsonNode> asArray();
+    int arraySize();
 
-    void operator=(const JsonSettingNode& r)
+    /**
+     * Returns the JSON representation of json as a string, or NULL on error.
+     * The return value must be freed by the caller using free().
+     */
+    Some<char*> dumpsJson(size_t flags = 0);
+
+    void operator=(const JsonNode& r)
     {
         json_decref(m_root);
         m_root = json_incref(r.m_root);
@@ -51,9 +59,10 @@ public:
     ~JsonSettingLoader();
 
     bool loadFile(const char* file);
+    bool loadFromBuffer(const char* buffer);
 
-    JsonSettingNode& root() { return m_root; }
+    JsonNode& root() { return m_root; }
 
 private:
-    JsonSettingNode m_root;
+    JsonNode m_root;
 };

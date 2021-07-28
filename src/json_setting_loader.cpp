@@ -15,26 +15,42 @@ bool JsonSettingLoader::loadFile(const char* file)
     json_t* root = json_load_file(file, 0, &err);
     if (root == nullptr)
     {
-        NC_LOG_ERROR("Failed to load JsonConfig %s", file);
+        NC_LOG_ERROR("Failed to load JsonConfig %s.", file);
         return false;
     }
 
-    m_root = JsonSettingNode(root);
+    m_root = JsonNode(root);
     json_decref(root);
 
     return true;
 }
 
-Some<JsonSettingNode> JsonSettingNode::nodeForKey(const char* key)
+bool JsonSettingLoader::loadFromBuffer(const char* buffer)
+{
+    json_error_t err;
+    json_t* root = json_loads(buffer, 0, &err);
+    if (root == nullptr)
+    {
+        NC_LOG_ERROR("Failed to load JsonConfig from buffer.");
+        return false;
+    }
+
+    m_root = JsonNode(root);
+    json_decref(root);
+
+    return true;
+}
+
+Some<JsonNode> JsonNode::nodeForKey(const char* key)
 {
     auto node = _nodeForKey(key);
     if (node == nullptr)
-        return noValue;
+        return JsonNode();
 
-    return JsonSettingNode(node);
+    return JsonNode(node);
 }
 
-json_t* JsonSettingNode::_nodeForKey(const char* key)
+json_t* JsonNode::_nodeForKey(const char* key)
 {
     char keyCopy[512];
     strcpy(keyCopy, key);
@@ -48,47 +64,76 @@ json_t* JsonSettingNode::_nodeForKey(const char* key)
     return node;
 }
 
-Some<int> JsonSettingNode::intValueForKey(const char* key)
+Some<JsonNode> JsonNode::operator[](const char* key)
 {
-    auto node = _nodeForKey(key);
-    if (!json_is_integer(node))
-        return noValue;
-
-    return (int)json_integer_value(node);
+    return nodeForKey(key);
 }
 
-Some<i64> JsonSettingNode::int64ValueForKey(const char* key)
+Some<JsonNode> JsonNode::operator[](int index)
 {
-    auto node = _nodeForKey(key);
-    if (!json_is_integer(node))
-        return noValue;
+    if (json_is_array(m_root))
+        return JsonNode(json_array_get(m_root, index));
 
-    return json_integer_value(node);
+    return JsonNode();
 }
 
-Some<const char*> JsonSettingNode::stringValueForKey(const char* key)
+Some<int> JsonNode::asInt()
 {
-    auto node = _nodeForKey(key);
-    if (!json_is_string(node))
+    if (json_is_integer(m_root))
+        return (int)json_integer_value(m_root);
+    else
         return noValue;
-
-    return json_string_value(node);
 }
 
-Some<u32> JsonSettingNode::u32ValueForKey(const char* key)
+Some<i64> JsonNode::asInt64()
 {
-    auto node = _nodeForKey(key);
-    if (!json_is_integer(node))
+    if (json_is_integer(m_root))
+        return json_integer_value(m_root);
+    else
         return noValue;
-
-    return (u32)json_integer_value(node);
 }
 
-Some<float> JsonSettingNode::floatValueForKey(const char* key)
+Some<u32> JsonNode::asU32()
 {
-    auto node = _nodeForKey(key);
-    if (!json_is_real(node))
+    if (json_is_integer(m_root))
+        return (u32)json_integer_value(m_root);
+    else
         return noValue;
+}
 
-    return (float)json_real_value(node);
+Some<const char*> JsonNode::asString()
+{
+    if (json_is_string(m_root))
+        return json_string_value(m_root);
+    else
+        return noValue;
+}
+
+Some<float> JsonNode::asFloat()
+{
+    if (json_is_real(m_root))
+        return (float)json_real_value(m_root);
+    else
+        return noValue;
+}
+
+Some<JsonNode> JsonNode::asArray()
+{
+    if (json_is_array(m_root))
+        return JsonNode(m_root);
+    else
+        return noValue;
+}
+
+int JsonNode::arraySize()
+{
+    if (json_is_array(m_root))
+        return (int)json_array_size(m_root);
+
+    return 0;
+}
+
+Some<char*> JsonNode::dumpsJson(size_t flags /*= 0*/)
+{
+    return json_dumps(m_root, flags);
 }
