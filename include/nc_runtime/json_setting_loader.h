@@ -24,6 +24,8 @@ public:
     Some<JsonNode> asArray();
     int arraySize();
 
+    json_t* rawNode() { return m_root; }
+
     /**
      * Returns the JSON representation of json as a string, or NULL on error.
      * The return value must be freed by the caller using free().
