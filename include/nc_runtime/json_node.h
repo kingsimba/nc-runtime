@@ -1,6 +1,7 @@
 #pragma once
 
 #include "jansson/jansson.h"
+#include "nc_runtime/nc_string.h"
 #include "nc_runtime/nc_types.h"
 
 /**
