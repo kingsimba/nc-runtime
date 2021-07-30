@@ -1,5 +1,7 @@
 {
   "user": {
-    "name": "Alexander the Great"
+    "name": "Alexander the Great",
+    "titles": ["King of Macedon", "Hegemon of Hellenic League", "Pharaoh of Egypt", "King of Persia", "Lord of Asia"],
+    "age": 32
   }
 }
