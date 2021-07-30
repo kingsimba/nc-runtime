@@ -56,3 +56,24 @@ private:
 private:
     json_t* m_root = nullptr;
 };
+
+template <> class Some<JsonNode>
+{
+public:
+    forceinline Some(const NoValueType& v) : m_hasValue(false) { UNUSED_VAR(v); }
+    forceinline Some(const JsonNode& v) : m_value(v), m_hasValue(true) {}
+    forceinline Some(const JsonNode&& v) : m_value(std::move(v)), m_hasValue(true) {}
+
+    forceinline bool hasValue() { return m_hasValue; }
+
+    forceinline const JsonNode& Or(const JsonNode& r) { return m_hasValue ? m_value : r; }
+
+    JsonNode* operator->() { return &m_value; }
+
+    Some<JsonNode> operator[](const char* key) { return m_value[key]; }
+    Some<JsonNode> operator[](int index) { return m_value[index]; }
+
+protected:
+    bool m_hasValue;
+    JsonNode m_value;
+};

@@ -3,39 +3,35 @@
 
 TEST(JsonSettingLoaderTest, basic)
 {
-    auto someRoot = JsonNode::instanceWithContentsOfFile("test_data/config.json");
-    ASSERT_TRUE(someRoot.hasValue());
+    auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
+    ASSERT_TRUE(root.hasValue());
 
-    auto root = someRoot.value();
-
-    auto name = root["user.name"].value().asString();
+    auto name = root["user.name"]->asString();
     ASSERT_TRUE(name.hasValue());
     EXPECT_STREQ(name.value(), "Alexander the Great");
 
-    auto userNode = root.nodeForKey("user");
-    auto age = userNode.value()["age"].value().asInt();
+    auto userNode = root->nodeForKey("user");
+    auto age = userNode["age"]->asInt();
     ASSERT_TRUE(age.hasValue());
     EXPECT_EQ(age.value(), 32);
-
-    auto wrongType = userNode.value().asFloat();
+    auto wrongType = userNode->asFloat();
     EXPECT_FALSE(wrongType.hasValue());
 
-    auto titles = root["user.titles"].value().asArray();
+    auto titles = root["user.titles"]->asArray();
     ASSERT_TRUE(titles.hasValue());
-    EXPECT_EQ(titles.value().arraySize(), 5);
-    EXPECT_STREQ(titles.value()[0].value().asString().value(), "King of Macedon");
+    EXPECT_EQ(titles->arraySize(), 5);
+    EXPECT_STREQ(titles[0]->asString().value(), "King of Macedon");
 
-    EXPECT_FALSE(root["nonexist"].value().asString().hasValue());
-    EXPECT_FALSE(root["user.nonexist"].value().asString().hasValue());
-    EXPECT_STREQ(root["user.nonexist"].value().asString().Or("simba"), "simba");
+    EXPECT_FALSE(root["nonexist"]->asString().hasValue());
+    EXPECT_FALSE(root["user.nonexist"]->asString().hasValue());
+    EXPECT_STREQ(root["user.nonexist"]->asString().Or("simba"), "simba");
 }
 
 TEST(JsonSettingLoaderTest, nonexistFile)
 {
-    auto someRoot = JsonNode::instanceWithContentsOfFile("non-exist.json");
-    EXPECT_FALSE(someRoot.hasValue());
-    auto root = someRoot.value();
-    auto v = root["lua.main"].value().asString();
+    auto root = JsonNode::instanceWithContentsOfFile("non-exist.json");
+    EXPECT_FALSE(root.hasValue());
+    auto v = root["lua.main"]->asString();
     ASSERT_FALSE(v.hasValue());
 }
 
@@ -45,10 +41,9 @@ static const char s_configJson[] =
 
 TEST(JsonSettingLoaderTest, dumps)
 {
-    auto someRoot = JsonNode::instanceWithContentsOfFile("test_data/config.json");
-    ASSERT_TRUE(someRoot.hasValue());
-    auto root = someRoot.value();
+    auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
+    ASSERT_TRUE(root.hasValue());
 
-    auto json = root.dumpsJson(JSON_COMPACT);
+    auto json = root->dumpsJson(JSON_COMPACT);
     EXPECT_STREQ(json.value(), s_configJson);
 }
