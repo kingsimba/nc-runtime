@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_runtime/json_setting_loader.h"
+#include "nc_runtime/json_node.h"
 
 Some<JsonNode> JsonNode::instanceWithContentsOfFile(const char* file)
 {

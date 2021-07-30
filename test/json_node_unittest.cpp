@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_runtime/json_setting_loader.h"
+#include "nc_runtime/json_node.h"
 
 TEST(JsonSettingLoaderTest, basic)
 {
