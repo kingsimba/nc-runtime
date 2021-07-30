@@ -44,6 +44,6 @@ TEST(JsonSettingLoaderTest, dumps)
     auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root.hasValue());
 
-    auto json = root->dumpsJson(JSON_COMPACT);
-    EXPECT_STREQ(json.value(), s_configJson);
+    sp<NcString> json = root->dumpAsString(JSON_COMPACT);
+    EXPECT_STREQ(json->cstr(), s_configJson);
 }

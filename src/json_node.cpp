@@ -1,5 +1,6 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/json_node.h"
+#include "nc_runtime/nc_string.h"
 
 Some<JsonNode> JsonNode::instanceWithContentsOfFile(const char* file)
 {
@@ -125,7 +126,10 @@ int JsonNode::arraySize()
     return 0;
 }
 
-Some<char*> JsonNode::dumpsJson(size_t flags /*= 0*/)
+sp<NcString> JsonNode::dumpAsString(size_t flags /*= 0*/)
 {
-    return json_dumps(m_root, flags);
+    char* buffer = json_dumps(m_root, flags);
+    auto str = NcString::allocWithCString(buffer);
+    free(buffer);
+    return str;
 }
