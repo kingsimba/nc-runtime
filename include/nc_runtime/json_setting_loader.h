@@ -3,9 +3,21 @@
 #include "jansson/jansson.h"
 #include "nc_runtime/nc_types.h"
 
+/**
+ * JsonSettingLoader o;
+ * o.loadFile("test_data/config.json");
+ * auto root = o.root();
+ * auto v = root.stringValueForKey("user.name");
+ * ASSERT_TRUE(v.hasValue());
+ * EXPECT_STREQ(v.value(), "Alaxender The Great");
+ * EXPECT_STREQ(root.stringValueForKey("user.nonexist").Or("Tony"), "Tony");
+ */
 class JsonNode
 {
 public:
+    static Some<JsonNode> instanceWithContentsOfFile(const char* file);
+    static Some<JsonNode> instanceWithCString(const char* buffer);
+
     JsonNode() {}
     JsonNode(json_t* root) : m_root(json_incref(root)) {}
     JsonNode(const JsonNode& r) { m_root = json_incref(r.m_root); }
@@ -43,28 +55,4 @@ private:
 
 private:
     json_t* m_root = nullptr;
-};
-
-/**
- * JsonSettingLoader o;
- * o.loadFile("test_data/config.json");
- * auto root = o.root();
- * auto v = root.stringValueForKey("user.name");
- * ASSERT_TRUE(v.hasValue());
- * EXPECT_STREQ(v.value(), "Alaxender The Great");
- * EXPECT_STREQ(root.stringValueForKey("user.nonexist").Or("Tony"), "Tony");
- */
-class JsonSettingLoader
-{
-public:
-    JsonSettingLoader();
-    ~JsonSettingLoader();
-
-    bool loadFile(const char* file);
-    bool loadFromBuffer(const char* buffer);
-
-    JsonNode& root() { return m_root; }
-
-private:
-    JsonNode m_root;
 };

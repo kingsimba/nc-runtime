@@ -1,44 +1,36 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/json_setting_loader.h"
 
-JsonSettingLoader::JsonSettingLoader()
-{
-}
-
-JsonSettingLoader::~JsonSettingLoader()
-{
-}
-
-bool JsonSettingLoader::loadFile(const char* file)
+Some<JsonNode> JsonNode::instanceWithContentsOfFile(const char* file)
 {
     json_error_t err;
     json_t* root = json_load_file(file, 0, &err);
     if (root == nullptr)
     {
         NC_LOG_ERROR("Failed to load JsonConfig %s.", file);
-        return false;
+        return noValue;
     }
 
-    m_root = JsonNode(root);
+    auto node = JsonNode(root);
     json_decref(root);
 
-    return true;
+    return node;
 }
 
-bool JsonSettingLoader::loadFromBuffer(const char* buffer)
+Some<JsonNode> JsonNode::instanceWithCString(const char* buffer)
 {
     json_error_t err;
     json_t* root = json_loads(buffer, 0, &err);
     if (root == nullptr)
     {
         NC_LOG_ERROR("Failed to load JsonConfig from buffer.");
-        return false;
+        return noValue;
     }
 
-    m_root = JsonNode(root);
+    auto node = JsonNode(root);
     json_decref(root);
 
-    return true;
+    return node;
 }
 
 Some<JsonNode> JsonNode::nodeForKey(const char* key)

@@ -3,9 +3,10 @@
 
 TEST(JsonSettingLoaderTest, basic)
 {
-    JsonSettingLoader o;
-    ASSERT_TRUE(o.loadFile("test_data/config.json"));
-    auto root = o.root();
+    auto someRoot = JsonNode::instanceWithContentsOfFile("test_data/config.json");
+    ASSERT_TRUE(someRoot.hasValue());
+
+    auto root = someRoot.value();
 
     auto name = root["user.name"].value().asString();
     ASSERT_TRUE(name.hasValue());
@@ -31,20 +32,22 @@ TEST(JsonSettingLoaderTest, basic)
 
 TEST(JsonSettingLoaderTest, nonexistFile)
 {
-    JsonSettingLoader o;
-    EXPECT_FALSE(o.loadFile("non-exist.json"));
-    auto root = o.root();
+    auto someRoot = JsonNode::instanceWithContentsOfFile("non-exist.json");
+    EXPECT_FALSE(someRoot.hasValue());
+    auto root = someRoot.value();
     auto v = root["lua.main"].value().asString();
     ASSERT_FALSE(v.hasValue());
 }
 
-static const char s_configJson[] = "{\"user\":{\"name\":\"Alexander the Great\",\"titles\":[\"King of Macedon\",\"Hegemon of Hellenic League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32}}";
+static const char s_configJson[] =
+    "{\"user\":{\"name\":\"Alexander the Great\",\"titles\":[\"King of Macedon\",\"Hegemon of Hellenic "
+    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32}}";
 
 TEST(JsonSettingLoaderTest, dumps)
 {
-    JsonSettingLoader o;
-    ASSERT_TRUE(o.loadFile("test_data/config.json"));
-    auto root = o.root();
+    auto someRoot = JsonNode::instanceWithContentsOfFile("test_data/config.json");
+    ASSERT_TRUE(someRoot.hasValue());
+    auto root = someRoot.value();
 
     auto json = root.dumpsJson(JSON_COMPACT);
     EXPECT_STREQ(json.value(), s_configJson);
