@@ -100,6 +100,7 @@
     <ClCompile Include="test\nc_object_unittest.cpp" />
     <ClCompile Include="test\nc_stdlib_unittest.cpp" />
     <ClCompile Include="test\nc_string_unittest.cpp" />
+    <ClCompile Include="test\vector3_unittest.cpp" />
     <ClInclude Include="test\stdafx_nc_runtime_test.h" />
     <ClCompile Include="test\quaternion_unittest.cpp" />
     <ClCompile Include="test\stdafx_nc_runtime_test.cpp">

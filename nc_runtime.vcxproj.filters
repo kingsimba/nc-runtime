@@ -120,6 +120,9 @@
     <ClInclude Include="include\nc_runtime\json_node.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="include\nc_runtime\vector3.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

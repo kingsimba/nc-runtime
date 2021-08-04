@@ -46,6 +46,9 @@
     <ClCompile Include="test\json_node_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="test\vector3_unittest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

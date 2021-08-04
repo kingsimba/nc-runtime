@@ -27,6 +27,7 @@
 #ifdef NC_OS_WIN
 #    define forceinline __forceinline
 #    pragma warning(disable : 4201)
+#    pragma warning(disable : 4714) // warning C4714: function marked as __forceinline not inlined
 #else
 #    define forceinline inline
 #endif
