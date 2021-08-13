@@ -109,13 +109,13 @@ template <typename T> inline T* nc_copyArray(const T* arr, size_t count)
 
 /////////////////////////////////////////////////
 
-class ManualResetEventImple;
+class ResetableEventImple;
 
-class ManualResetEvent
+class ResetableEvent
 {
 public:
-    ManualResetEvent(bool signaled = false);
-    ~ManualResetEvent();
+    ResetableEvent(bool signaled = false, bool autoReset = false);
+    ~ResetableEvent();
 
     void set();
     void reset();
@@ -123,7 +123,7 @@ public:
     bool waitWithTimeout(const TimeTick& t);
 
 private:
-    ManualResetEventImple* m_imple;
+    ResetableEventImple* m_imple;
 };
 
 class __NcMutexGuard__

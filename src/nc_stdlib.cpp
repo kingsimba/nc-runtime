@@ -89,10 +89,10 @@ StackOrHeapAllocator::~StackOrHeapAllocator()
     }
 }
 
-class ManualResetEventImple
+class ResetableEventImple
 {
 public:
-    ManualResetEventImple(bool signaled) : m_signaled(signaled) {}
+    ResetableEventImple(bool signaled) : m_signaled(signaled) {}
 
     void set()
     {
@@ -143,27 +143,28 @@ private:
     bool m_signaled;
 };
 
-ManualResetEvent::ManualResetEvent(bool signaled /*= false*/)
+ResetableEvent::ResetableEvent(bool signaled /*= false*/, bool autoReset)
 {
-    m_imple = new ManualResetEventImple(signaled);
+    UNUSED_VAR(autoReset);
+    m_imple = new ResetableEventImple(signaled);
 }
-ManualResetEvent::~ManualResetEvent()
+ResetableEvent::~ResetableEvent()
 {
     delete m_imple;
 }
-void ManualResetEvent::set()
+void ResetableEvent::set()
 {
     m_imple->set();
 }
-void ManualResetEvent::reset()
+void ResetableEvent::reset()
 {
     m_imple->unset();
 }
-void ManualResetEvent::wait()
+void ResetableEvent::wait()
 {
     m_imple->wait();
 }
-bool ManualResetEvent::waitWithTimeout(const TimeTick& t)
+bool ResetableEvent::waitWithTimeout(const TimeTick& t)
 {
     return m_imple->waitWithTimeout(t);
 }

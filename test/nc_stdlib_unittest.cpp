@@ -25,9 +25,9 @@ TEST(Stdlib, TimeTick)
     EXPECT_GE(duration.ms(), 10);
 }
 
-TEST(Stdlib, ManualResetEvent)
+TEST(Stdlib, ResetableEvent)
 {
-    ManualResetEvent e;
+    ResetableEvent e;
 
     std::thread t([&] {
         Thread::sleep(100);
