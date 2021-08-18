@@ -7,6 +7,18 @@
 // see GNU strtok_r()
 char* nc_strtok(char* s, const char* delim, char** savePtr);
 
+forceinline u16 nc_ntohs(u16 val)
+{
+    val = (val << 8) | (val >> 8);
+    return val;
+}
+
+forceinline u32 nc_ntohl(u32 val)
+{
+    val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+    return (val << 16) | (val >> 16);
+}
+
 /////////////////////////////////////////////////////////////////
 // TimeTick
 

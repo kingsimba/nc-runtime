@@ -120,7 +120,7 @@ TEST(Stdlib, isnan)
     EXPECT_FALSE(nc_isnan(3));
 }
 
-TEST(Stdlib, absMinMaxClamp)
+TEST(Stdlib, absMinMaxClampSwap)
 {
     EXPECT_TRUE(nc_abs(-3.2) == 3.2);
     EXPECT_TRUE(nc_abs(3) == 3);
@@ -131,4 +131,7 @@ TEST(Stdlib, absMinMaxClamp)
     EXPECT_TRUE(nc_clamp(4, 3, 5) == 4);
     EXPECT_TRUE(nc_clamp(5, 3, 5) == 5);
     EXPECT_TRUE(nc_clamp(6, 3, 5) == 5);
+
+    EXPECT_EQ(nc_ntohl(0x01020304), 0x04030201u);
+    EXPECT_EQ(nc_ntohs(0x0102), 0x0201u);
 }
