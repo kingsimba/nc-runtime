@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-08-18 `ResetableEvent` supports auto-reset.
 - 2021-08-04 Add `Vector3` and some common operations.
 - 2021-07-14 Add `JsonSettingLoader`
 - 2021-07-14 Add "nc_argparse.h"

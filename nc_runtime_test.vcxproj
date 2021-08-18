@@ -93,6 +93,7 @@
     <ClCompile Include="test\main.cpp" />
     <ClCompile Include="test\nc_array_unittest.cpp" />
     <ClCompile Include="test\nc_data_unittest.cpp" />
+    <ClCompile Include="test\nc_event_unittest.cpp" />
     <ClCompile Include="test\nc_file_unittest.cpp" />
     <ClCompile Include="test\nc_image_unittest.cpp" />
     <ClCompile Include="test\nc_log_unittest.cpp" />

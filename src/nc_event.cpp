@@ -1,5 +1,5 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_runtime/nc_stdlib.h"
+#include "nc_runtime/nc_event.h"
 #include <chrono>
 #include <mutex>
 #include <condition_variable>
@@ -7,7 +7,11 @@
 class ResetableEventImple
 {
 public:
-    ResetableEventImple(bool signaled) : m_signaled(signaled) {}
+    ResetableEventImple(bool signaled, bool autoReset)
+    {
+        m_signaled = signaled;
+        m_autoReset = autoReset;
+    }
 
     void set()
     {
@@ -21,7 +25,7 @@ public:
         m_cv.notify_all();
     }
 
-    void unset()
+    void reset()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_signaled = false;
@@ -34,6 +38,8 @@ public:
         {
             m_cv.wait(lock);
         }
+        if (m_autoReset)
+            m_signaled = false;
     }
 
     bool waitWithTimeout(const TimeTick& t)
@@ -49,6 +55,9 @@ public:
             }
         }
 
+        if (m_autoReset)
+            m_signaled = false;
+
         return true;
     }
 
@@ -56,12 +65,13 @@ private:
     std::mutex m_mutex;
     std::condition_variable m_cv;
     bool m_signaled;
+    bool m_autoReset;
 };
 
-ResetableEvent::ResetableEvent(bool signaled /*= false*/, bool autoReset)
+ResetableEvent::ResetableEvent(bool signaled, bool autoReset)
 {
     UNUSED_VAR(autoReset);
-    m_imple = new ResetableEventImple(signaled);
+    m_imple = new ResetableEventImple(signaled, autoReset);
 }
 ResetableEvent::~ResetableEvent()
 {
@@ -73,7 +83,7 @@ void ResetableEvent::set()
 }
 void ResetableEvent::reset()
 {
-    m_imple->unset();
+    m_imple->reset();
 }
 void ResetableEvent::wait()
 {
