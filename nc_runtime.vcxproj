@@ -91,6 +91,7 @@
     <ClInclude Include="include\nc_runtime\nc_stdlib.h" />
     <ClInclude Include="include\nc_runtime\nc_string.h" />
     <ClInclude Include="include\nc_runtime\nc_types.h" />
+    <ClInclude Include="include\nc_runtime\nc_event.h" />
     <ClInclude Include="include\nc_runtime\vector2.h" />
     <ClInclude Include="include\nc_runtime\string_slice.h" />
     <ClCompile Include="src\costmap_inflator_imple.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="src\nc_types.cpp" />
     <ClCompile Include="src\quaternion.cpp" />
     <ClCompile Include="src\quaternion_d.cpp" />
+    <ClCompile Include="src\nc_event.cpp" />
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>

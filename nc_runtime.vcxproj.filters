@@ -55,6 +55,9 @@
     <ClCompile Include="src\json_node.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\nc_event.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -121,6 +124,9 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\vector3.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\nc_event.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
