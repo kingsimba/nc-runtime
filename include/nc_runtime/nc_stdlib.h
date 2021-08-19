@@ -19,6 +19,17 @@ forceinline u32 nc_ntohl(u32 val)
     return (val << 16) | (val >> 16);
 }
 
+forceinline void nc_flipU16(u16& val)
+{
+    val = (val << 8) | (val >> 8);
+}
+
+forceinline void nc_flipU32(u32& val)
+{
+    val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+    val = (val << 16) | (val >> 16);
+}
+
 /////////////////////////////////////////////////////////////////
 // TimeTick
 

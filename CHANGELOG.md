@@ -1,6 +1,6 @@
 # Changelog
 
-- 2021-08-18 Add nc_ntohl() nc_ntohs() for endian swapping.
+- 2021-08-18 Add nc_ntohl() nc_ntohs(), nc_flipU16(), nc_flipU32() for endian swapping.
 - 2021-08-18 `ResetableEvent` supports auto-reset.
 - 2021-08-04 Add `Vector3` and some common operations.
 - 2021-07-14 Add `JsonSettingLoader`
