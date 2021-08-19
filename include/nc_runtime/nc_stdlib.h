@@ -142,31 +142,6 @@ private:
 // clang-format off
 #define synchronized(o) for(__NcMutexGuard__ guard(o##Mutex); guard.next(); )
 
-#if defined(__clang__)
-#    define NC_THREAD_ANNOTATION_ATTRIBUTE__(x) __attribute__((x))
-#else
-#    define NC_THREAD_ANNOTATION_ATTRIBUTE__(x) // no-op
-#endif
-
-// NC_GUARDED_BY()
-//
-// Documents if a shared field or global variable needs to be protected by a
-// mutex. NC_GUARDED_BY() allows the user to specify a particular mutex that
-// should be held when accessing the annotated variable.
-//
-// Although this annotation (and PT_GUARDED_BY, below) cannot be applied to
-// local variables, a local variable and its associated mutex can often be
-// combined into a small class or struct, thereby allowing the annotation.
-//
-// Example:
-//
-//   class Foo {
-//     std::mutex mu_;
-//     int p1_ GUARDED_BY(mu_);
-//     ...
-//   };
-#define NC_GUARDED_BY(x) NC_THREAD_ANNOTATION_ATTRIBUTE__(guarded_by(x))
-
 // clang-format on
 
 template <typename Func> TimeTick TimeTick::measure(Func func)
