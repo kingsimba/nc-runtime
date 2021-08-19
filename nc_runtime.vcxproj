@@ -114,6 +114,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="include\nc_runtime\vector3.h" />
+    <ClInclude Include="include\nc_runtime\vector3i.h" />
     <ClInclude Include="src\costmap_inflator_imple.h" />
     <ClInclude Include="src\stdafx_nc_runtime.h" />
     <ClCompile Include="src\string_slice.cpp" />

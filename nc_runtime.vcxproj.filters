@@ -129,6 +129,9 @@
     <ClInclude Include="include\nc_runtime\nc_event.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="include\nc_runtime\vector3i.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
