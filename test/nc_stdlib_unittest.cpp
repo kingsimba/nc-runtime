@@ -27,10 +27,11 @@ TEST(Stdlib, TimeTick)
 
 TEST(Stdlib, MutexGuard)
 {
-    int counter = 0;
-    int counterUnprotected = 0;
     const static int REPEAT = 5000000;
     recursive_mutex arrMutex;
+    int counter NC_GUARDED_BY(arrMutex) = 0;
+    int counterUnprotected = 0;
+
     thread t1([&] {
         for (int i = 0; i < REPEAT; i++)
         {

@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-08-19 Add NC_GUARDED_BY().
 - 2021-08-18 Add nc_ntohl() nc_ntohs() for endian swapping.
 - 2021-08-18 `ResetableEvent` supports auto-reset.
 - 2021-08-04 Add `Vector3` and some common operations.
