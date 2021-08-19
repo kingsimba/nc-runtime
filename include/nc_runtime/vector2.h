@@ -10,6 +10,7 @@ class Vector2
 public:
     float x, y;
 
+    void setZero() { x = y = 0; }
     float length() const { return sqrtf(x * x + y * y); }
     float lengthSquared() const { return x * x + y * y; }
 };

@@ -10,6 +10,7 @@ class Vector3
 public:
     float x, y, z;
 
+    void setZero() { x = y = z = 0; }
     float length() const { return sqrtf(x * x + y * y + z * z); }
     float lengthSquared() const { return x * x + y * y + z * z; }
 };
