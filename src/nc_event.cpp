@@ -42,7 +42,7 @@ public:
             m_signaled = false;
     }
 
-    bool waitWithTimeout(const TimeTick& t)
+    EventWaitResult waitWithTimeout(const TimeTick& t)
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         while (!m_signaled)
@@ -51,14 +51,14 @@ public:
                 std::chrono::system_clock::now() + std::chrono::milliseconds(t.ms());
             if (m_cv.wait_until(lock, until) == cv_status::timeout)
             {
-                return false;
+                return EventWaitResult::timeout;
             }
         }
 
         if (m_autoReset)
             m_signaled = false;
 
-        return true;
+        return EventWaitResult::succ;
     }
 
 private:
@@ -89,7 +89,8 @@ void ResetableEvent::wait()
 {
     m_imple->wait();
 }
-bool ResetableEvent::waitWithTimeout(const TimeTick& t)
+
+EventWaitResult ResetableEvent::waitWithTimeout(const TimeTick& t)
 {
     return m_imple->waitWithTimeout(t);
 }

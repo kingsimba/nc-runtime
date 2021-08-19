@@ -19,7 +19,7 @@ TEST(EventTest, manualReset)
 
     // reset() again. Wait will block
     e.reset();
-    EXPECT_GE(TimeTick::measure([&] { EXPECT_FALSE(e.waitWithTimeout(10)); }).ms(), 10);
+    EXPECT_GE(TimeTick::measure([&] { EXPECT_EQ(e.waitWithTimeout(10), EventWaitResult::timeout); }).ms(), 10);
 }
 
 TEST(EventTest, autoReset)

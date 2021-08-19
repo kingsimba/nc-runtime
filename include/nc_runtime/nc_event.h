@@ -4,6 +4,12 @@
 
 class ResetableEventImple;
 
+enum class EventWaitResult
+{
+    succ = 0,
+    timeout = 1
+};
+
 class ResetableEvent
 {
 public:
@@ -13,7 +19,7 @@ public:
     void set();
     void reset();
     void wait();
-    bool waitWithTimeout(const TimeTick& t);
+    EventWaitResult waitWithTimeout(const TimeTick& t);
 
 private:
     ResetableEventImple* m_imple;
