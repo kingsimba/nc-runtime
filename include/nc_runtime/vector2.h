@@ -13,6 +13,18 @@ public:
     void setZero() { x = y = 0; }
     float length() const { return sqrtf(x * x + y * y); }
     float lengthSquared() const { return x * x + y * y; }
+
+    void operator+=(Vector2 r)
+    {
+        x += r.x;
+        y += r.y;
+    }
+
+    void operator-=(Vector2 r)
+    {
+        x -= r.x;
+        y -= r.y;
+    }
 };
 
 static forceinline Vector2 vec2(float x, float y)

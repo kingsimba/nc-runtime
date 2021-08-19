@@ -13,6 +13,20 @@ public:
     void setZero() { x = y = z = 0; }
     float length() const { return sqrtf(x * x + y * y + z * z); }
     float lengthSquared() const { return x * x + y * y + z * z; }
+
+    void operator+=(Vector3 r)
+    {
+        x += r.x;
+        y += r.y;
+        z += r.z;
+    }
+
+    void operator-=(Vector3 r)
+    {
+        x -= r.x;
+        y -= r.y;
+        z -= r.z;
+    }
 };
 
 forceinline Vector3 vec3(float x, float y, float z)
