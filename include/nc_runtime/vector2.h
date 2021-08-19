@@ -25,6 +25,18 @@ public:
         x -= r.x;
         y -= r.y;
     }
+
+    void operator*=(float r)
+    {
+        x *= r;
+        y *= r;
+    }
+
+    void operator/=(float r)
+    {
+        x /= r;
+        y /= r;
+    }
 };
 
 static forceinline Vector2 vec2(float x, float y)

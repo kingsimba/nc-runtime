@@ -27,6 +27,20 @@ public:
         y -= r.y;
         z -= r.z;
     }
+
+    void operator*=(int r)
+    {
+        x *= r;
+        y *= r;
+        z *= r;
+    }
+
+    void operator/=(int r)
+    {
+        x /= r;
+        y /= r;
+        z /= r;
+    }
 };
 
 forceinline Vector3i vec3i(int x, int y, int z)
