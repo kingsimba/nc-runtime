@@ -44,6 +44,11 @@ static forceinline Vector2 vec2(float x, float y)
     return Vector2{x, y};
 }
 
+forceinline float Vector2_dot(Vector2 l, Vector2 r)
+{
+    return l.x * r.x + l.y * r.y;
+}
+
 forceinline bool operator==(Vector2 l, Vector2 r)
 {
     return l.x == r.x && l.y == r.y;

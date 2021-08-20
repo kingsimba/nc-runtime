@@ -43,6 +43,11 @@ public:
     }
 };
 
+forceinline float Vector3_dot(Vector3 l, Vector3 r)
+{
+    return l.x * r.x + l.y * r.y + l.z * r.z;
+}
+
 forceinline Vector3 vec3(float x, float y, float z)
 {
     return Vector3{x, y, z};
