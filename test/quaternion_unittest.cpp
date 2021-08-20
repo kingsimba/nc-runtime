@@ -27,6 +27,14 @@ TEST(Quaternion, basic)
     EXPECT_NEAR(angles.roll, 1, 0.01f);
     EXPECT_NEAR(angles.pitch, 1.2, 0.01f);
     EXPECT_NEAR(angles.yaw, 1.3, 0.01f);
+
+    // rotate vector
+    q.initWithRPY(0, 0, NC_PI / 2);
+    Vector3 r = q.transformVector(vec3(10, 0, 0));
+
+    EXPECT_NEAR(r.x, 0, 0.0001);
+    EXPECT_NEAR(r.y, 10, 0.0001);
+    EXPECT_FLOAT_EQ(r.z, 0);
 }
 
 TEST(Quaternion, multiply)
