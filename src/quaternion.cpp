@@ -21,9 +21,9 @@ void Quaternion::initWithRPY(float roll, float pitch, float yaw)
     this->w = cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw;
 }
 
-EulerAngles Quaternion::ToEulerAngles()
+RollPitchYaw Quaternion::toRPY()
 {
-    EulerAngles angles;
+    RollPitchYaw angles;
 
     // roll (x-axis rotation)
     float sinr_cosp = 2 * (this->w * this->x + this->y * this->z);
@@ -67,6 +67,33 @@ Quaternion Quaternion_multiply(const Quaternion& second, const Quaternion& first
     o.w = -second.x * first.x - second.y * first.y - second.z * first.z + second.w * first.w;
 
     return o;
+}
+
+Vector3 Quaternion::transformVector(Vector3 v)
+{
+    Vector3 rtn;
+
+    float num12 = this->x + this->x;
+    float num2 = this->y + this->y;
+    float num = this->z + this->z;
+    float num11 = this->w * num12;
+    float num10 = this->w * num2;
+    float num9 = this->w * num;
+    float num8 = this->x * num12;
+    float num7 = this->x * num2;
+    float num6 = this->x * num;
+    float num5 = this->y * num2;
+    float num4 = this->y * num;
+    float num3 = this->z * num;
+    float num15 = ((v.x * ((1.0f - num5) - num3)) + (v.y * (num7 - num9))) + (v.z * (num6 + num10));
+    float num14 = ((v.x * (num7 + num9)) + (v.y * ((1.0f - num8) - num3))) + (v.z * (num4 - num11));
+    float num13 = ((v.x * (num6 - num10)) + (v.y * (num4 + num11))) + (v.z * ((1.0f - num8) - num5));
+
+    rtn.x = num15;
+    rtn.y = num14;
+    rtn.z = num13;
+
+    return rtn;
 }
 
 } // namespace nc

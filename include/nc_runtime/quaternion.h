@@ -1,11 +1,12 @@
 #pragma once
 
 #include "nc_runtime/nc_types.h"
+#include "vector3.h"
 
 namespace nc
 {
 
-struct EulerAngles
+struct RollPitchYaw
 {
     float roll, pitch, yaw;
 };
@@ -30,13 +31,15 @@ public:
     }
 
     void initWithRPY(float roll, float pitch, float yaw);
+    forceinline void initWithRPY(RollPitchYaw rpy) { initWithRPY(rpy.roll, rpy.pitch, rpy.yaw); }
 
     void multiply(const Quaternion& r);
+    Vector3 transformVector(Vector3 value);
 
-    EulerAngles ToEulerAngles();
+    RollPitchYaw toRPY();
 };
 
-static forceinline Quaternion vec2(float x, float y, float z, float w)
+static forceinline Quaternion quaternion(float x, float y, float z, float w)
 {
     return Quaternion{x, y, z, w};
 }
