@@ -30,6 +30,17 @@ forceinline void nc_flipU32(u32& val)
     val = (val << 16) | (val >> 16);
 }
 
+forceinline void nc_flipI16(i16& val)
+{
+    val = (i16)((u16)(val) << 8) | ((u16)(val) >> 8);
+}
+
+forceinline void nc_flipI32(i32& val)
+{
+    val = (i32)((((u32)(val) << 8) & 0xFF00FF00) | (((u32)(val) >> 8) & 0xFF00FF));
+    val = (i32)(((u32)(val) << 16) | ((u32)(val) >> 16));
+}
+
 /////////////////////////////////////////////////////////////////
 // TimeTick
 
@@ -131,29 +142,6 @@ template <typename T> inline T* nc_copyArray(const T* arr, size_t count)
 }
 
 /////////////////////////////////////////////////
-
-class __NcMutexGuard__
-{
-public:
-    __NcMutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
-
-    bool next()
-    {
-        if (!m_firstTime)
-            return false;
-        m_firstTime = false;
-        return true;
-    }
-
-private:
-    std::lock_guard<std::recursive_mutex> m_guard;
-    bool m_firstTime;
-};
-
-// clang-format off
-#define synchronized(o) for(__NcMutexGuard__ guard(o##Mutex); guard.next(); )
-
-// clang-format on
 
 template <typename Func> TimeTick TimeTick::measure(Func func)
 {
