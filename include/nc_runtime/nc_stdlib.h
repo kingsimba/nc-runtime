@@ -143,6 +143,29 @@ template <typename T> inline T* nc_copyArray(const T* arr, size_t count)
 
 /////////////////////////////////////////////////
 
+class __NcMutexGuard__
+{
+public:
+    __NcMutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
+
+    bool next()
+    {
+        if (!m_firstTime)
+            return false;
+        m_firstTime = false;
+        return true;
+    }
+
+private:
+    std::lock_guard<std::recursive_mutex> m_guard;
+    bool m_firstTime;
+};
+
+// clang-format off
+#define synchronized(o) for(__NcMutexGuard__ guard(o##Mutex); guard.next(); )
+
+// clang-format on
+
 template <typename Func> TimeTick TimeTick::measure(Func func)
 {
     TimeTick start = TimeTick::now();
