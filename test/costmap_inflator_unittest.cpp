@@ -8,8 +8,9 @@ TEST(CostmapInflator, basic)
     auto pixels = o->mutablePixels();
     for (int i = 0; i < 10000; i++)
     {
-        pixels[i] = (u8)(0);
+        pixels[i] = (u8)(0); // free space
     }
+    pixels[0] = 255; // unknown
     pixels[100 * 50 + 50] = (u8)(125);
     pixels[100 * 50 + 60] = (u8)(125);
     pixels[100 * 50 + 70] = (u8)(125);
@@ -28,6 +29,9 @@ TEST(CostmapInflator, basic)
     CostmapInflator inflator(params);
     Rect region = Rect_make(20, 20, 80, 80);
     auto d = inflator.inflate(o.get(), region);
+
+    EXPECT_EQ(d->pixelAt(0, 0), 255); // unknown should be kept
+    EXPECT_EQ(d->pixelAt(1, 0), 0);   // free space should be kept
 
     EXPECT_TRUE(d->saveAs("test_data/output/test_inflate.png"_str));
 }
