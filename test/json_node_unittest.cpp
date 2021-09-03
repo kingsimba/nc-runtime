@@ -25,6 +25,12 @@ TEST(JsonSettingLoaderTest, basic)
     EXPECT_FALSE(root["nonexist"]->asString().hasValue());
     EXPECT_FALSE(root["user.nonexist"]->asString().hasValue());
     EXPECT_STREQ(root["user.nonexist"]->asString().Or("simba"), "simba");
+
+    EXPECT_TRUE(root["user.forward"]->isTrue());
+    EXPECT_FALSE(root["user.nonexist"]->isTrue());
+    EXPECT_FALSE(root["user.nonexist"]->isFalse());
+    EXPECT_FALSE(root["user.age"]->isTrue());
+    EXPECT_FALSE(root["user.age"]->isFalse());
 }
 
 TEST(JsonSettingLoaderTest, nonexistFile)

@@ -1,5 +1,7 @@
 # Changelog
 
+- 2021-09-03 Add StringSlice::equalsCaseInsensitive().
+- 2021-09-03 Add JsonNode::asBool(), JsonNode::isTrue(), JsonNode::isFalse().
 - 2021-08-18 Add nc_ntohl() nc_ntohs(), nc_flipU16(), nc_flipU32() for endian swapping.
 - 2021-08-18 `ResetableEvent` supports auto-reset.
 - 2021-08-04 Add `Vector3` and some common operations.

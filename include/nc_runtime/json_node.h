@@ -34,6 +34,18 @@ public:
     Some<const char*> asString();
     Some<float> asFloat();
 
+    Some<bool> asBool();
+    forceinline bool isTrue()
+    {
+        auto v = asBool();
+        return v.hasValue() && v.value();
+    }
+    forceinline bool isFalse()
+    {
+        Some<bool> v = asBool();
+        return v.hasValue() && !v.value();
+    }
+
     Some<JsonNode> asArray();
     int arraySize();
 

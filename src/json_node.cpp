@@ -110,6 +110,14 @@ Some<float> JsonNode::asFloat()
         return noValue;
 }
 
+Some<bool> JsonNode::asBool()
+{
+    if (json_is_boolean(m_root))
+        return json_boolean_value(m_root);
+    else
+        return noValue;
+}
+
 Some<JsonNode> JsonNode::asArray()
 {
     if (json_is_array(m_root))
