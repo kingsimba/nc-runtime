@@ -204,6 +204,24 @@ int StringSlice::countSlice(const StringSlice& target)
     return count;
 }
 
+bool StringSlice::equalsCaseInsensitive(const char* r)
+{
+#ifdef NC_OS_WIN
+    return m_length == (int)strlen(r) && _stricmp(m_str, r) == 0;
+#else
+    return m_length == (int)strlen(r) && strcasecmp(m_str, r) == 0;
+#endif
+}
+
+bool StringSlice::equalsCaseInsensitive(const StringSlice& r)
+{
+#ifdef NC_OS_WIN
+    return m_length == r.m_length && _stricmp(m_str, r.m_str) == 0;
+#else
+    return m_length == r.m_length && strcasecmp(m_str, r.m_str) == 0;
+#endif
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 StringSlice::StringSlice(NcString* str)

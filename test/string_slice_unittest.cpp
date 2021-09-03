@@ -5,7 +5,14 @@
 TEST(StringSlice, basic)
 {
     EXPECT_TRUE("blood"_s.equals("blood"));
+    EXPECT_FALSE("blood"_s.equals("blond"));
     EXPECT_TRUE("blood"_s.equals("blood"_s));
+    EXPECT_FALSE("blood"_s.equals("blond"_s));
+
+    EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"));
+    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOND"));
+    EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"_s));
+    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOND"_s));
 }
 
 TEST(StringSlice, iter)
