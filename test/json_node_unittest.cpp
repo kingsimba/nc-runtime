@@ -43,7 +43,7 @@ TEST(JsonSettingLoaderTest, nonexistFile)
 
 static const char s_configJson[] =
     "{\"user\":{\"name\":\"Alexander the Great\",\"titles\":[\"King of Macedon\",\"Hegemon of Hellenic "
-    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32}}";
+    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true}}";
 
 TEST(JsonSettingLoaderTest, dumps)
 {
