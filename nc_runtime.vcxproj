@@ -77,6 +77,7 @@
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\costmap_inflator.h" />
     <ClInclude Include="include\nc_runtime\json_node.h" />
+    <ClInclude Include="include\nc_runtime\mutex.h" />
     <ClInclude Include="include\nc_runtime\nc_argparse.h" />
     <ClInclude Include="include\nc_runtime\nc_array.h" />
     <ClInclude Include="include\nc_runtime\nc_data.h" />

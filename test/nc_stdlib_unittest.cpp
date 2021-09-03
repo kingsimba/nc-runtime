@@ -25,36 +25,6 @@ TEST(Stdlib, TimeTick)
     EXPECT_GE(duration.ms(), 10);
 }
 
-TEST(Stdlib, MutexGuard)
-{
-    const static int REPEAT = 5000000;
-    recursive_mutex arrMutex;
-    int counter = 0;
-    int counterUnprotected = 0;
-
-    thread t1([&] {
-        for (int i = 0; i < REPEAT; i++)
-        {
-            synchronized(arr) { counter++; }
-            counterUnprotected++;
-        }
-    });
-
-    thread t2([&] {
-        for (int i = 0; i < REPEAT; i++)
-        {
-            synchronized(arr) { counter++; }
-            counterUnprotected++;
-        }
-    });
-
-    t1.join();
-    t2.join();
-
-    EXPECT_EQ(counter, REPEAT * 2);
-    EXPECT_LT(counterUnprotected, REPEAT * 2);
-}
-
 TEST(Stdlib, someInt)
 {
     auto v = Some<int>(5);

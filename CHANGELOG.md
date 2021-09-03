@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-09-03 Add Mutex, LockGuard. Use GUARDED_BY() to detect thread error with clang.
 - 2021-09-03 Add StringSlice::equalsCaseInsensitive().
 - 2021-09-03 Add JsonNode::asBool(), JsonNode::isTrue(), JsonNode::isFalse().
 - 2021-08-18 Add nc_ntohl() nc_ntohs(), nc_flipU16(), nc_flipU32() for endian swapping.

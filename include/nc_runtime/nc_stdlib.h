@@ -68,6 +68,14 @@ forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r)
     return TimeTick{l.__time + r.__time};
 }
 
+template <typename Func> TimeTick TimeTick::measure(Func func)
+{
+    TimeTick start = TimeTick::now();
+    func();
+    TimeTick elapsed = TimeTick::now() - start;
+    return elapsed;
+}
+
 /////////////////////////////////////////////////////////////////
 // Thread
 
@@ -139,37 +147,4 @@ template <typename T> inline T* nc_copyArray(const T* arr, size_t count)
     T* copy = (T*)malloc(totalSize);
     memcpy(copy, arr, totalSize);
     return copy;
-}
-
-/////////////////////////////////////////////////
-
-class __NcMutexGuard__
-{
-public:
-    __NcMutexGuard__(std::recursive_mutex& m) : m_guard(m) { m_firstTime = true; }
-
-    bool next()
-    {
-        if (!m_firstTime)
-            return false;
-        m_firstTime = false;
-        return true;
-    }
-
-private:
-    std::lock_guard<std::recursive_mutex> m_guard;
-    bool m_firstTime;
-};
-
-// clang-format off
-#define synchronized(o) for(__NcMutexGuard__ guard(o##Mutex); guard.next(); )
-
-// clang-format on
-
-template <typename Func> TimeTick TimeTick::measure(Func func)
-{
-    TimeTick start = TimeTick::now();
-    func();
-    TimeTick elapsed = TimeTick::now() - start;
-    return elapsed;
 }
