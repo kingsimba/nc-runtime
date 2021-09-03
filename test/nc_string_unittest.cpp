@@ -24,6 +24,22 @@ TEST(NcString, basic)
     EXPECT_EQ(s->length(), 8);
 }
 
+TEST(StringSlice, compare)
+{
+    EXPECT_TRUE("blood"_str->equals("blood"_str));
+    EXPECT_FALSE("blood"_str->equals("bloom"_str));
+
+    EXPECT_TRUE("blood"_str->equals("blood"));
+    EXPECT_FALSE("blood"_str->equals("bloom"));
+    EXPECT_TRUE("blood"_str->equals("blood"_s));
+    EXPECT_FALSE("blood"_str->equals("bloom"_s));
+
+    EXPECT_TRUE("blood"_str->equalsCaseInsensitive("BLOOD"));
+    EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"));
+    EXPECT_TRUE("blood"_str->equalsCaseInsensitive("BLOOD"_s));
+    EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"_s));
+}
+
 TEST(NcString, literal)
 {
     sp<NcString> s1, s2;

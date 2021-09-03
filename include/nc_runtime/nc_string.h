@@ -101,6 +101,8 @@ public:
     // from NcObject
     virtual sp<NcString> toString() override { return sp<NcString>(this); }
     virtual bool equals(NcObject* r) override;
+    forceinline bool equals(const StringSlice& r) { return StringSlice::equals(r); }
+    forceinline bool equals(const char* r) { return StringSlice::equals(r); }
 
 private:
     NcString() : m_shouldFree(false) {}

@@ -94,9 +94,6 @@ public:
 
     forceinline bool next(StringSlice* sliceOut) { return next(sliceOut, NULL); }
     bool next(StringSlice* sliceOut, Range* rangeOut);
-
-private:
-    bool _isSep(char c);
 };
 
 /**
@@ -255,10 +252,6 @@ public:
     //////////////////////////////////////////////////////////////////////////
     // Equals
 
-    forceinline bool equals(StringSlice* r)
-    {
-        return m_length == r->m_length && memcmp(m_str, r->m_str, m_length) == 0;
-    }
     forceinline bool equals(const StringSlice& r)
     {
         return m_length == r.m_length && memcmp(m_str, r.m_str, m_length) == 0;
