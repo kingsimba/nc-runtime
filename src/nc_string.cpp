@@ -1,6 +1,7 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_string.h"
 #include "nc_runtime/nc_stdlib.h"
+#include "nc_runtime/nc_array.h"
 #include <mutex>
 #include <unordered_map>
 #include <stdarg.h>
@@ -131,19 +132,36 @@ void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount,
     totalLen += sep.length() * (sliceCount - 1);
 
     char* str = (char*)malloc(totalLen + 1);
-    totalLen = 0;
-    for (size_t i = 0; i < sliceCount; i++)
+    if (str != NULL)
     {
-        const StringSlice& s = slices[i];
-        memcpy(str + totalLen, s.bytes(), s.length());
-        totalLen += s.length();
-        if (i != sliceCount - 1)
+        totalLen = 0;
+        for (size_t i = 0; i < sliceCount; i++)
         {
-            memcpy(str + totalLen, sep.bytes(), sep.length());
-            totalLen += sep.length();
+            const StringSlice& s = slices[i];
+            memcpy(str + totalLen, s.bytes(), s.length());
+            totalLen += s.length();
+            if (i != sliceCount - 1)
+            {
+                memcpy(str + totalLen, sep.bytes(), sep.length());
+                totalLen += sep.length();
+            }
         }
+        str[totalLen] = '\0';
     }
-    str[totalLen] = '\0';
 
     initByTakingBytes(str, totalLen);
+}
+
+void NcString::initByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep)
+{
+    StackOrHeapAllocator allocator(nc_alloca(1024), 1024);
+
+    int n = strs->size();
+    StringSlice* slices = allocator.allocArray<StringSlice>(n);
+    for (int i = 0; i < n; i++)
+    {
+        new (slices + i) StringSlice();
+        slices[i] = strs->objectAtIndex(i)->toSlice();
+    }
+    initByJoiningSlices(slices, n, sep);
 }

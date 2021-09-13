@@ -83,6 +83,11 @@ typedef size_t Handle;
 
 #define invalidHandle 0
 #define countof(o) (sizeof(o) / sizeof((o)[0]))
+#ifdef NC_OS_WIN
+#    define nc_alloca(o) _malloca(o)
+#else
+#    define nc_alloca(o) alloca(o)
+#endif
 
 //////////////////////////////////////////
 // Size

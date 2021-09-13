@@ -3,6 +3,8 @@
 #include "nc_types.h"
 #include "string_slice.h"
 
+template <typename T> class NcArray;
+
 class NcString : public NcObject, public StringSlice
 {
 public:
@@ -64,6 +66,13 @@ public:
         return o;
     }
 
+    static sp<NcString> allocByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep)
+    {
+        auto o = new NcString();
+        o->initByJoiningStrings(strs, sep);
+        return o;
+    }
+
     static sp<NcString> allocWithLiteralCString(const char* str, size_t len)
     {
         auto o = new NcString(true);
@@ -98,6 +107,8 @@ public:
         return toSlice().splitWithLimit(sep, slicesOut, maxNum);
     }
 
+    forceinline sp<NcString> join(NcArray<NcString>* strs) { return NcString::allocByJoiningStrings(strs, *this); }
+
     // from NcObject
     virtual sp<NcString> toString() override { return sp<NcString>(this); }
     virtual bool equals(NcObject* r) override;
@@ -116,7 +127,8 @@ private:
         m_shouldFree = true;
     }
 
-    void initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep);
+    void initByJoiningSlices(const StringSlice* slices, size_t count, const StringSlice& sep);
+    void initByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep);
 
 private:
     bool m_shouldFree;

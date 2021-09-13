@@ -3,7 +3,7 @@
 
 TEST(Stdlib, stackOrHeapAllocator)
 {
-    u8* stack = (u8*)alloca(1024);
+    u8* stack = (u8*)nc_alloca(1024);
     StackOrHeapAllocator allocator(stack, 1024);
     EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 0u);
     EXPECT_EQ(allocator.allocArray<u8>(512) - stack, 512u);

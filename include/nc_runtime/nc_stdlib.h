@@ -92,7 +92,7 @@ public:
  * All allocated memory will be freed in destructor.
  *
  * ```
- * StackOrHeapAllocator allocator(alloca(1024), 1024);
+ * StackOrHeapAllocator allocator(nc_alloca(1024), 1024);
  * allocator.allocArray<char>(512); // from stack
  * allocator.allocArray<char>(512); // from stack
  * allocator.allocArray<char>(1); // from heap

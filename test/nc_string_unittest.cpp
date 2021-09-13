@@ -1,5 +1,6 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/nc_string.h"
+#include "nc_runtime/nc_array.h"
 
 static int _calculateStringLength(NcString* str)
 {
@@ -71,6 +72,15 @@ TEST(NcString, join)
     sp<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
     EXPECT_STREQ(s->cstr(), "hello---world");
     EXPECT_EQ(s->length(), 13);
+
+    auto strs = NcArray<NcString>::alloc();
+    strs->addObject("hello"_str);
+    strs->addObject("world"_str);
+    s = NcString::allocByJoiningStrings(strs, "---");
+    EXPECT_STREQ(s->cstr(), "hello---world");
+    EXPECT_EQ(s->length(), 13);
+
+    EXPECT_STREQ("==="_str->join(strs)->cstr(), "hello===world");
 }
 
 TEST(NcString, toSlice)

@@ -25,7 +25,7 @@ void NcLog_write(LogLevel level, const char* file, int line, const char* func, c
 {
     UNUSED_VAR(func);
     const static size_t STR_MAX_LEN = 2048;
-    StackOrHeapAllocator allocator(alloca(STR_MAX_LEN * 2), STR_MAX_LEN * 2);
+    StackOrHeapAllocator allocator(nc_alloca(STR_MAX_LEN * 2), STR_MAX_LEN * 2);
 
     char* finalFormat = allocator.allocArray<char>(STR_MAX_LEN);
     char* message = allocator.allocArray<char>(STR_MAX_LEN);
