@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-09-15 Add `CostmapInflator::inflateInplace()`.
 - 2021-09-13 Add NcString::join() and NcString::allocByJoiningStrings().
 - 2021-09-03 Add Mutex, LockGuard. Use GUARDED_BY() to detect thread error with clang.
 - 2021-09-03 Add StringSlice::equalsCaseInsensitive().

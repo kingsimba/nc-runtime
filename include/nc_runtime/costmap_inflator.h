@@ -30,6 +30,8 @@ public:
 
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
 
+    void inflateInplace(NcImageU8* img, Rect region);
+
 private:
     CostmapInflatorImple* m_imple;
 };

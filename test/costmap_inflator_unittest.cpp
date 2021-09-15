@@ -58,3 +58,58 @@ TEST(CostmapInflator, officeArea)
 
     EXPECT_TRUE(d->saveAs("test_data/output/test_inflate_office.png"_str));
 }
+
+TEST(CostmapInflator, inflateInplace)
+{
+    auto o = NcImageU8::allocWithSize(Size{100, 100});
+    auto pixels = o->mutablePixels();
+    memset(pixels, (int)CostValue::freeSpace, o->height() * o->width());
+
+    pixels[0] = (u8)CostValue::noInfo;
+    pixels[100 * 50 + 50] = (u8)CostValue::obstacle;
+    pixels[100 * 50 + 58] = (u8)CostValue::obstacle;
+
+    CostmapInflatorParams params;
+    params.costScalingFactor = 6.0f;
+    params.resolution = 0.05f;
+    params.inflationRadius = 0.6f;
+    params.inscribedRadius = 0.2f;
+    CostmapInflator inflator(params);
+    Rect region = Rect_make(20, 20, 80, 80);
+    inflator.inflateInplace(o.get(), region);
+
+    EXPECT_EQ(o->pixelAt(0, 0), (u8)CostValue::noInfo);
+    EXPECT_EQ(o->pixelAt(0, 1), (u8)CostValue::freeSpace);
+    EXPECT_EQ(o->pixelAt(50, 50), (u8)CostValue::obstacle);
+    EXPECT_EQ(o->pixelAt(49, 49), (u8)CostValue::inflatedObstacle);
+
+    EXPECT_GT(o->pixelAt(40, 50), (u8)0);
+    EXPECT_LT(o->pixelAt(40, 50), (u8)CostValue::inflatedObstacle);
+
+    EXPECT_TRUE(o->saveAs("test_data/output/test_inflate_inplace.png"_str));
+}
+
+TEST(CostmapInflator, tooLargeInflationRadius)
+{
+    auto o = NcImageU8::allocWithSize(Size{100, 100});
+    auto pixels = o->mutablePixels();
+    memset(pixels, (int)CostValue::freeSpace, o->height() * o->width());
+
+    pixels[0] = (u8)CostValue::obstacle;
+
+    CostmapInflatorParams params;
+    params.costScalingFactor = 6.0f;
+    params.resolution = 0.01f;
+    params.inflationRadius = 1.0f;
+    params.inscribedRadius = 0.2f;
+    CostmapInflator inflator(params);
+    Rect region = Rect_make(0, 0, o->width(), o->height());
+    inflator.inflateInplace(o.get(), region);
+
+    EXPECT_EQ(o->pixelAt(0, 0), (u8)CostValue::obstacle);
+    EXPECT_EQ(o->pixelAt(1, 0), (u8)CostValue::inflatedObstacle);
+    EXPECT_EQ(o->pixelAt(0, 1), (u8)CostValue::inflatedObstacle);
+
+    EXPECT_GT(o->pixelAt(50, 50), (u8)0);
+    EXPECT_LT(o->pixelAt(50, 50), (u8)CostValue::inflatedObstacle);
+}
