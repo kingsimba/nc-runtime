@@ -100,6 +100,7 @@
     <ClCompile Include="test\nc_log_unittest.cpp" />
     <ClCompile Include="test\nc_math_unittest.cpp" />
     <ClCompile Include="test\nc_object_unittest.cpp" />
+    <ClCompile Include="test\nc_polyline_unittest.cpp" />
     <ClCompile Include="test\nc_stdlib_unittest.cpp" />
     <ClCompile Include="test\nc_string_unittest.cpp" />
     <ClCompile Include="test\vector3_unittest.cpp" />
