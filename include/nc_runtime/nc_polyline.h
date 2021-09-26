@@ -6,17 +6,18 @@
 class NcPolyline : public NcObject
 {
 public:
-    static sp<NcPolyline> alloc(const nc::Vector2* points, int count, bool closed);
+    static sp<NcPolyline> alloc(const nc::Vector2* points, int count, bool closed)
+    {
+        sp<NcPolyline> o = new NcPolyline(points, count, closed);
+        return o;
+    }
 
-    inline bool isClosed() { return m_closed; }
-
-    inline int pointCount() { return m_pointCount; }
-    inline const nc::Vector2* points() { return m_points; }
+    forceinline bool isClosed() { return m_closed; }
+    forceinline int pointCount() { return m_pointCount; }
+    forceinline const nc::Vector2* points() { return m_points; }
 
 protected:
-    void initWithPoints(const nc::Vector2* points, int count);
-
-    NcPolyline() = default;
+    NcPolyline(const nc::Vector2* points, int count, bool closed);
     ~NcPolyline();
 
     bool m_closed;
