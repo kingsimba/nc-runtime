@@ -1,9 +1,12 @@
+#include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_polyline.h"
 
-NcPolyline::NcPolyline(const nc::Vector2* points, int count, bool closed)
+sp<NcPolyline> NcPolyline::alloc(const nc::Vector2* points, int count, bool closed)
 {
-    m_closed = closed;
-    initWithPoints(points, count);
+    sp<NcPolyline> o = new NcPolyline();
+    o->initWithPoints(points, count);
+    o->m_closed = closed;
+    return o;
 }
 
 NcPolyline::~NcPolyline()

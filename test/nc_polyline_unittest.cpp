@@ -5,27 +5,25 @@ TEST(NcPolylineTest, polyline)
 {
     std::vector<nc::Vector2> points;
     points.push_back({0, 0});
-    points.push_back({2, 0});
-    points.push_back({0, 2});
-    points.push_back({3, 3});
-    points.push_back({2, 5});
+    points.push_back({1, 2});
+    points.push_back({3, 4});
 
-    NcPolyline polyline(points.data(), (int)points.size(), false);
-    EXPECT_EQ(polyline.pointCount(), 5);
-    EXPECT_FALSE(polyline.isClosed());
+    sp<NcPolyline> polyline = NcPolyline::alloc(points.data(), (int)points.size(), false);
+    EXPECT_EQ(polyline->points()[0], vec2(0, 0));
+    EXPECT_EQ(polyline->points()[1], vec2(1, 2));
+    EXPECT_EQ(polyline->points()[2], vec2(3, 4));
+    EXPECT_EQ(polyline->pointCount(), 3);
+    EXPECT_FALSE(polyline->isClosed());
 }
 
 TEST(NcPolylineTest, polygon)
 {
     std::vector<nc::Vector2> points;
     points.push_back({0, 0});
-    points.push_back({2, 0});
+    points.push_back({1, 0});
     points.push_back({0, 2});
-    points.push_back({3, 3});
-    points.push_back({2, 5});
-    points.push_back({0, 0});
 
-    NcPolyline ploygon(points.data(), (int)points.size(), true);
-    EXPECT_EQ(ploygon.pointCount(), 6);
-    EXPECT_TRUE(ploygon.isClosed());
+    sp<NcPolyline> ploygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
+    EXPECT_EQ(ploygon->pointCount(), 3);
+    EXPECT_TRUE(ploygon->isClosed());
 }

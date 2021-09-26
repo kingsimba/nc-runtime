@@ -1,13 +1,12 @@
 #pragma once
 
-#include <memory>
 #include "vector2.h"
+#include "nc_object.h"
 
-class NcPolyline
+class NcPolyline : public NcObject
 {
 public:
-    NcPolyline(const nc::Vector2* points, int count, bool closed);
-    ~NcPolyline();
+    static sp<NcPolyline> alloc(const nc::Vector2* points, int count, bool closed);
 
     inline bool isClosed() { return m_closed; }
 
@@ -16,6 +15,9 @@ public:
 
 protected:
     void initWithPoints(const nc::Vector2* points, int count);
+
+    NcPolyline() = default;
+    ~NcPolyline();
 
     bool m_closed;
     int m_pointCount;
