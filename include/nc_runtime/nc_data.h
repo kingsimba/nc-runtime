@@ -17,8 +17,12 @@ public:
     size_t length() { return m_length; }
     void* bytes() { return m_bytes; }
 
+protected:
+    NcData() = default;
+    ~NcData() = default;
+
 private:
-    size_t m_length;
-    void* m_bytes;
+    size_t m_length = 0;
+    void* m_bytes = NULL;
     bool m_shouldFree = false;
 };

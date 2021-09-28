@@ -88,6 +88,7 @@
     <ClInclude Include="include\nc_runtime\nc_math.h" />
     <ClInclude Include="include\nc_runtime\nc_object.h" />
     <ClInclude Include="include\nc_runtime\nc_polyline.h" />
+    <ClInclude Include="include\nc_runtime\pose2.h" />
     <ClInclude Include="include\nc_runtime\quaternion.h" />
     <ClInclude Include="include\nc_runtime\quaternion_d.h" />
     <ClInclude Include="include\nc_runtime\nc_stdlib.h" />
