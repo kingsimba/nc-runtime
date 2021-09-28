@@ -3,6 +3,7 @@
     "name": "Alexander the Great",
     "titles": [ "King of Macedon", "Hegemon of Hellenic League", "Pharaoh of Egypt", "King of Persia", "Lord of Asia" ],
     "age": 32,
-    "forward": true
+    "forward": true,
+    "height": 1.8
   }
 }

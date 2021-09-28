@@ -69,4 +69,7 @@
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test_data\config.json" />
+  </ItemGroup>
 </Project>

@@ -14,8 +14,17 @@ TEST(JsonSettingLoaderTest, basic)
     auto age = userNode["age"]->asInt();
     ASSERT_TRUE(age.hasValue());
     EXPECT_EQ(age.value(), 32);
+    auto ageFloat = userNode["age"]->asFloat();
+    ASSERT_TRUE(ageFloat.hasValue());
+    EXPECT_FLOAT_EQ(ageFloat.value(), 32.0f);
     auto wrongType = userNode->asFloat();
     EXPECT_FALSE(wrongType.hasValue());
+
+    auto height = userNode["height"]->asFloat();
+    EXPECT_FLOAT_EQ(height.value(), 1.8f);
+    auto heightInt = userNode["height"]->asInt();
+    EXPECT_FALSE(heightInt.hasValue());
+    EXPECT_EQ(heightInt.value(), 0);
 
     auto titles = root["user.titles"]->asArray();
     ASSERT_TRUE(titles.hasValue());

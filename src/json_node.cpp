@@ -104,8 +104,8 @@ Some<const char*> JsonNode::asString()
 
 Some<float> JsonNode::asFloat()
 {
-    if (json_is_real(m_root))
-        return (float)json_real_value(m_root);
+    if (json_is_number(m_root))
+        return (float)json_number_value(m_root);
     else
         return noValue;
 }
