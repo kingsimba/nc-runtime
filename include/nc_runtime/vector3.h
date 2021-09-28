@@ -10,32 +10,35 @@ class Vector3
 public:
     float x, y, z;
 
-    void setZero() { x = y = z = 0; }
-    float length() const { return sqrtf(x * x + y * y + z * z); }
-    float lengthSquared() const { return x * x + y * y + z * z; }
+    Vector3() = default;
+    forceinline Vector3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
 
-    void operator+=(Vector3 r)
+    forceinline void setZero() { x = y = z = 0; }
+    forceinline float length() const { return sqrtf(x * x + y * y + z * z); }
+    forceinline float lengthSquared() const { return x * x + y * y + z * z; }
+
+    forceinline void operator+=(Vector3 r)
     {
         x += r.x;
         y += r.y;
         z += r.z;
     }
 
-    void operator-=(Vector3 r)
+    forceinline void operator-=(Vector3 r)
     {
         x -= r.x;
         y -= r.y;
         z -= r.z;
     }
 
-    void operator*=(float r)
+    forceinline void operator*=(float r)
     {
         x *= r;
         y *= r;
         z *= r;
     }
 
-    void operator/=(float r)
+    forceinline void operator/=(float r)
     {
         x /= r;
         y /= r;
@@ -50,7 +53,7 @@ forceinline float Vector3_dot(Vector3 l, Vector3 r)
 
 forceinline Vector3 vec3(float x, float y, float z)
 {
-    return Vector3{x, y, z};
+    return Vector3(x, y, z);
 }
 
 forceinline bool operator==(Vector3 l, Vector3 r)

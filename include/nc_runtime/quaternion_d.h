@@ -15,6 +15,9 @@ class QuaternionD
 public:
     double x, y, z, w;
 
+    QuaternionD() = default;
+    QuaternionD(double x_, double y_, double z_, double w_) : x(x_), y(y_), z(z_), w(w_) {}
+
     forceinline void init(double x_, double y_, double z_, double w_)
     {
         this->x = x_;
@@ -36,11 +39,6 @@ public:
     EulerAnglesD ToEulerAngles();
 };
 
-static forceinline QuaternionD vec2(double x, double y, double z, double w)
-{
-    return QuaternionD{x, y, z, w};
-}
-
-QuaternionD Quaternion_multiply(const QuaternionD& second, const QuaternionD& first);
+QuaternionD QuaternionD_multiply(const QuaternionD& second, const QuaternionD& first);
 
 } // namespace nc

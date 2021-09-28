@@ -10,29 +10,32 @@ class Vector2
 public:
     float x, y;
 
-    void setZero() { x = y = 0; }
-    float length() const { return sqrtf(x * x + y * y); }
-    float lengthSquared() const { return x * x + y * y; }
+    Vector2() = default;
+    forceinline Vector2(float x_, float y_) : x(x_), y(y_) {}
 
-    void operator+=(Vector2 r)
+    forceinline void setZero() { x = y = 0; }
+    forceinline float length() const { return sqrtf(x * x + y * y); }
+    forceinline float lengthSquared() const { return x * x + y * y; }
+
+    forceinline void operator+=(Vector2 r)
     {
         x += r.x;
         y += r.y;
     }
 
-    void operator-=(Vector2 r)
+    forceinline void operator-=(Vector2 r)
     {
         x -= r.x;
         y -= r.y;
     }
 
-    void operator*=(float r)
+    forceinline void operator*=(float r)
     {
         x *= r;
         y *= r;
     }
 
-    void operator/=(float r)
+    forceinline void operator/=(float r)
     {
         x /= r;
         y /= r;
@@ -41,7 +44,7 @@ public:
 
 static forceinline Vector2 vec2(float x, float y)
 {
-    return Vector2{x, y};
+    return Vector2(x, y);
 }
 
 forceinline float Vector2_dot(Vector2 l, Vector2 r)

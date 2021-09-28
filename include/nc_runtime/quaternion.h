@@ -16,6 +16,9 @@ class Quaternion
 public:
     float x, y, z, w;
 
+    Quaternion() = default;
+    Quaternion(float x_, float y_, float z_, float w_) : x(x_), y(y_), z(z_), w(w_) {}
+
     forceinline void init(float x_, float y_, float z_, float w_)
     {
         this->x = x_;

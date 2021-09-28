@@ -10,32 +10,35 @@ class Vector3i
 public:
     int x, y, z;
 
-    void setZero() { x = y = z = 0; }
-    int length() const { return (int)sqrtf((float)(x * x + y * y + z * z)); }
-    int lengthSquared() const { return x * x + y * y + z * z; }
+    Vector3i() = default;
+    forceinline Vector3i(int x_, int y_, int z_) : x(x_), y(y_), z(z_) {}
 
-    void operator+=(Vector3i r)
+    forceinline void setZero() { x = y = z = 0; }
+    forceinline int length() const { return (int)sqrtf((float)(x * x + y * y + z * z)); }
+    forceinline int lengthSquared() const { return x * x + y * y + z * z; }
+
+    forceinline void operator+=(Vector3i r)
     {
         x += r.x;
         y += r.y;
         z += r.z;
     }
 
-    void operator-=(Vector3i r)
+    forceinline void operator-=(Vector3i r)
     {
         x -= r.x;
         y -= r.y;
         z -= r.z;
     }
 
-    void operator*=(int r)
+    forceinline void operator*=(int r)
     {
         x *= r;
         y *= r;
         z *= r;
     }
 
-    void operator/=(int r)
+    forceinline void operator/=(int r)
     {
         x /= r;
         y /= r;
