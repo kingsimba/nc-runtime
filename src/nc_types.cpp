@@ -1,6 +1,10 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_types.h"
+#include "nc_runtime/vector2.h"
 #include "nc_runtime/vector3.h"
+#include "nc_runtime/vector3i.h"
+#include "nc_runtime/quaternion.h"
+#include "nc_runtime/pose2.h"
 #include <iostream>
 
 std::ostream& operator<<(std::ostream& os, const Size& c)
@@ -24,9 +28,37 @@ std::ostream& operator<<(std::ostream& os, const Range& c)
     return os << buffer;
 }
 
+std::ostream& operator<<(std::ostream& os, const nc::Vector2& c)
+{
+    char buffer[128];
+    sprintf(buffer, "Vector2(%f, %f)", c.x, c.y);
+    return os << buffer;
+}
+
 std::ostream& operator<<(std::ostream& os, const nc::Vector3& c)
 {
     char buffer[128];
-    sprintf(buffer, "vec3(%f, %f, %f)", c.x, c.y, c.z);
+    sprintf(buffer, "Vector3(%f, %f, %f)", c.x, c.y, c.z);
+    return os << buffer;
+}
+
+std::ostream& operator<<(std::ostream& os, const nc::Vector3i& c)
+{
+    char buffer[128];
+    sprintf(buffer, "Vector3i(%d, %d, %d)", c.x, c.y, c.z);
+    return os << buffer;
+}
+
+std::ostream& operator<<(std::ostream& os, const nc::Quaternion& c)
+{
+    char buffer[128];
+    sprintf(buffer, "Quaternion(%f, %f, %f, %f)", c.x, c.y, c.z, c.w);
+    return os << buffer;
+}
+
+std::ostream& operator<<(std::ostream& os, const nc::Pose2& c)
+{
+    char buffer[128];
+    sprintf(buffer, "Pose2(%f, %f, %f)", c.pos.x, c.pos.y, c.ori);
     return os << buffer;
 }
