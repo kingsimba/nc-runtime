@@ -24,7 +24,6 @@ TEST(JsonSettingLoaderTest, basic)
     EXPECT_FLOAT_EQ(height.value(), 1.8f);
     auto heightInt = userNode["height"]->asInt();
     EXPECT_FALSE(heightInt.hasValue());
-    EXPECT_EQ(heightInt.value(), 0);
 
     auto titles = root["user.titles"]->asArray();
     ASSERT_TRUE(titles.hasValue());
@@ -52,7 +51,7 @@ TEST(JsonSettingLoaderTest, nonexistFile)
 
 static const char s_configJson[] =
     "{\"user\":{\"name\":\"Alexander the Great\",\"titles\":[\"King of Macedon\",\"Hegemon of Hellenic "
-    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true}}";
+    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true,\"height\":1.8}}";
 
 TEST(JsonSettingLoaderTest, dumps)
 {

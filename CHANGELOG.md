@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-09-28 Fixed bug in JsonNode::asFloat().
 - 2021-09-26 Add `NcPolyline` to support polyline and polygon.
 - 2021-09-15 Add `CostmapInflator::inflateInplace()`.
 - 2021-09-13 Add NcString::join() and NcString::allocByJoiningStrings().
