@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nc_types.h"
+#include "vector2.h"
 
 u32 Math_hashString(const char* str);
 u32 Math_hashU32(u32 o);
@@ -12,3 +13,5 @@ float Math_wrapTwoPi(float angle);
 
 // calculate the nearest turn angle between two directions.
 float Math_turnAngle(float from, float to);
+
+bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt);

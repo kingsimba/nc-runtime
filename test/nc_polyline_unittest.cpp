@@ -29,8 +29,8 @@ TEST(NcPolylineTest, isPointInConvexPolygon)
     sp<NcPolyline> ploygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
     EXPECT_EQ(ploygon->pointCount(), 3);
     EXPECT_TRUE(ploygon->isClosed());
-    EXPECT_TRUE(ploygon->isPointInConvexPolygon({0.5f, 0.6f}));
-    EXPECT_TRUE(ploygon->isPointInConvexPolygon({0.f, 2.f}));
-    EXPECT_FALSE(ploygon->isPointInConvexPolygon({1.f, 2.f}));
-    EXPECT_FALSE(ploygon->isPointInConvexPolygon({0.f, 2.1f}));
+    EXPECT_TRUE(ploygon->testPoint({0.5f, 0.6f}));
+    EXPECT_TRUE(ploygon->testPoint({0.001f, 1.99f}));
+    EXPECT_FALSE(ploygon->testPoint({1.f, 2.f}));
+    EXPECT_FALSE(ploygon->testPoint({0.f, 2.1f}));
 }
