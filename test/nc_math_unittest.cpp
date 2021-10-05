@@ -31,8 +31,30 @@ TEST(Math, turnAngle)
 
 TEST(Math, Math_pointInPolygon)
 {
-    vector<Vector2> points{{0, 0}, {10, 0}, {10, 10}, {0, 10}};
-    EXPECT_TRUE(Math_pointInPolygon(points.data(), points.size(), Vector2(5, 5)));
-    EXPECT_TRUE(Math_pointInPolygon(points.data(), points.size(), Vector2(10, 5)));
-    EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(10.01f, 5)));
+    // 0 point
+    {
+        vector<Vector2> points;
+        EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(0, 0)));
+    }
+
+    // 1 point
+    {
+        vector<Vector2> points{{0, 0}};
+        EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(0, 0)));
+    }
+
+    // 2 points
+    {
+        vector<Vector2> points{{0, 0}, {10, 0}};
+        EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(0, 0)));
+        EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(5, 0)));
+    }
+
+    // more points
+    {
+        vector<Vector2> points{{0, 0}, {10, 0}, {10, 10}, {0, 10}};
+        EXPECT_TRUE(Math_pointInPolygon(points.data(), points.size(), Vector2(5, 5)));
+        EXPECT_TRUE(Math_pointInPolygon(points.data(), points.size(), Vector2(10, 5)));
+        EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(10.01f, 5)));
+    }
 }

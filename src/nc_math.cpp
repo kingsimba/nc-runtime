@@ -113,6 +113,9 @@ float Math_turnAngle(float from, float to)
  */
 bool Math_pointInPolygon(const Vector2* pgon, size_t numverts, Vector2 pt)
 {
+    if (numverts <= 2)
+        return false;
+
 #ifdef WINDING
     int crossings;
 #endif
