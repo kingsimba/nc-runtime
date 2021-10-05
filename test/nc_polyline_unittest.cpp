@@ -21,3 +21,16 @@ TEST(NcPolylineTest, polygon)
     EXPECT_EQ(ploygon->pointCount(), 3);
     EXPECT_TRUE(ploygon->isClosed());
 }
+
+TEST(NcPolylineTest, isPointInConvexPolygon)
+{
+    std::vector<nc::Vector2> points{{0, 0}, {1, 0}, {0, 2}};
+
+    sp<NcPolyline> ploygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
+    EXPECT_EQ(ploygon->pointCount(), 3);
+    EXPECT_TRUE(ploygon->isClosed());
+    EXPECT_TRUE(ploygon->isPointInConvexPolygon({0.5f, 0.6f}));
+    EXPECT_TRUE(ploygon->isPointInConvexPolygon({0.f, 2.f}));
+    EXPECT_FALSE(ploygon->isPointInConvexPolygon({1.f, 2.f}));
+    EXPECT_FALSE(ploygon->isPointInConvexPolygon({0.f, 2.1f}));
+}
