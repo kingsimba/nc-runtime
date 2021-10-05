@@ -51,6 +51,11 @@ forceinline float Vector3_dot(Vector3 l, Vector3 r)
     return l.x * r.x + l.y * r.y + l.z * r.z;
 }
 
+forceinline Vector3 Vector3_cross(Vector3 l, Vector3 r)
+{
+    return Vector3{l.y * r.z - l.z * r.y, l.x * r.z - l.z * r.x, l.x * r.y - l.y * r.x};
+}
+
 forceinline Vector3 vec3(float x, float y, float z)
 {
     return Vector3(x, y, z);

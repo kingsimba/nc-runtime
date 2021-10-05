@@ -1,6 +1,9 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/nc_math.h"
 
+using namespace nc;
+using namespace std;
+
 TEST(Math, hash)
 {
     EXPECT_TRUE(Math_hashSizeT(1) != Math_hashSizeT(2));
@@ -24,4 +27,12 @@ TEST(Math, turnAngle)
 
     EXPECT_NEAR(Math_turnAngle(NC_TWO_PI - 0.1f, 0.1f), 0.2f, 0.00001f);
     EXPECT_NEAR(Math_turnAngle(0.1f, NC_TWO_PI - 0.1f), -0.2f, 0.00001f);
+}
+
+TEST(Math, Math_pointInPolygon)
+{
+    vector<Vector2> points{{0, 0}, {10, 0}, {10, 10}, {0, 10}};
+    EXPECT_TRUE(Math_pointInPolygon(points.data(), points.size(), Vector2(5, 5)));
+    EXPECT_TRUE(Math_pointInPolygon(points.data(), points.size(), Vector2(10, 5)));
+    EXPECT_FALSE(Math_pointInPolygon(points.data(), points.size(), Vector2(10.01f, 5)));
 }

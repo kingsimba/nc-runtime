@@ -52,6 +52,11 @@ forceinline float Vector2_dot(Vector2 l, Vector2 r)
     return l.x * r.x + l.y * r.y;
 }
 
+forceinline float Vector2_cross(Vector2 l, Vector2 r)
+{
+    return l.x * r.y - l.y * r.x;
+}
+
 forceinline bool operator==(Vector2 l, Vector2 r)
 {
     return l.x == r.x && l.y == r.y;

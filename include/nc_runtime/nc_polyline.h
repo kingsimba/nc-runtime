@@ -16,6 +16,8 @@ public:
     forceinline int pointCount() { return m_pointCount; }
     forceinline const nc::Vector2* points() { return m_points; }
 
+    bool testPoint(nc::Vector2 pt);
+
 protected:
     NcPolyline(const nc::Vector2* points, int count, bool closed);
     ~NcPolyline();

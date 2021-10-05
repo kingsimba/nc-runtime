@@ -1,5 +1,6 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_polyline.h"
+#include "nc_runtime/nc_math.h"
 
 NcPolyline::~NcPolyline()
 {
@@ -13,4 +14,9 @@ NcPolyline::NcPolyline(const nc::Vector2* points, int count, bool closed)
     m_closed = closed;
     memcpy(m_points, points, bufferSize);
     m_pointCount = count;
+}
+
+bool NcPolyline::testPoint(nc::Vector2 pt)
+{
+    return Math_pointInPolygon(m_points, m_pointCount, pt);
 }
