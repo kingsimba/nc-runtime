@@ -16,6 +16,8 @@ public:
     forceinline int pointCount() { return m_pointCount; }
     forceinline const nc::Vector2* points() { return m_points; }
 
+    bool isPointInConvexPolygon(nc::Vector2 pt);
+
 protected:
     NcPolyline(const nc::Vector2* points, int count, bool closed);
     ~NcPolyline();
@@ -23,4 +25,5 @@ protected:
     bool m_closed;
     int m_pointCount;
     nc::Vector2* m_points;
+    RectF m_boundingBox;
 };

@@ -117,6 +117,49 @@ inline bool operator!=(Size l, Size r)
 #include "_rectf.h"
 
 /////////////////////////////////////////////////
+// RectF
+
+struct RectF
+{
+    float left;
+    float top;
+    float right;
+    float bottom;
+
+    invliad() { left = top = 1e30f, right = bottom = -1e30f; }
+
+    void combinePointF(float x, float y)
+    {
+        if (x < this->left)
+            this->left = x;
+        if (y < this->top)
+            this->top = y;
+        if (x > this->right)
+            this->right = x;
+        if (y > this->bottom)
+            this->bottom = y;
+    }
+
+    bool testPointF(float x, float y)
+    {
+        return x >= this->left && y >= this->top && x <= this->right && y <= this->bottom;
+    }
+
+    void intersectWith(RectF r)
+    {
+        this->left = std::max(r.left, this->left);
+        this->top = std::max(r.top, this->top);
+        this->right = std::min(r.right, this->right);
+        this->bottom = std::min(r.bottom, this->bottom);
+    }
+};
+
+inline RectF RectF_make(float l, float t, float r, float b)
+{
+    return RectF{l, t, r, b};
+}
+
+/////////////////////////////////////////////////
 // Rgba8
 struct Rgba8
 {
