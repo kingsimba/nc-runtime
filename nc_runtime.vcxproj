@@ -119,6 +119,8 @@
     </ClCompile>
     <ClInclude Include="include\nc_runtime\vector3.h" />
     <ClInclude Include="include\nc_runtime\vector3i.h" />
+    <ClInclude Include="include\nc_runtime\_rect.h" />
+    <ClInclude Include="include\nc_runtime\_rectf.h" />
     <ClInclude Include="src\costmap_inflator_imple.h" />
     <ClInclude Include="src\stdafx_nc_runtime.h" />
     <ClCompile Include="src\string_slice.cpp" />

@@ -144,6 +144,12 @@
     <ClInclude Include="include\nc_runtime\pose2.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="include\nc_runtime\_rect.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\_rectf.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

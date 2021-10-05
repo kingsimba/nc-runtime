@@ -27,7 +27,7 @@ TEST(CostmapInflator, basic)
     params.inflationRadius = 0.6f;
     params.inscribedRadius = 0.2f;
     CostmapInflator inflator(params);
-    Rect region = Rect_make(20, 20, 80, 80);
+    Rect region(20, 20, 80, 80);
     auto d = inflator.inflate(o.get(), region);
 
     EXPECT_EQ(d->pixelAt(0, 0), 255); // unknown should be kept
@@ -75,7 +75,7 @@ TEST(CostmapInflator, inflateInplace)
     params.inflationRadius = 0.6f;
     params.inscribedRadius = 0.2f;
     CostmapInflator inflator(params);
-    Rect region = Rect_make(20, 20, 80, 80);
+    Rect region(20, 20, 80, 80);
     inflator.inflateInplace(o.get(), region);
 
     EXPECT_EQ(o->pixelAt(0, 0), (u8)CostValue::noInfo);
@@ -103,7 +103,7 @@ TEST(CostmapInflator, tooLargeInflationRadius)
     params.inflationRadius = 1.0f;
     params.inscribedRadius = 0.2f;
     CostmapInflator inflator(params);
-    Rect region = Rect_make(0, 0, o->width(), o->height());
+    Rect region(0, 0, o->width(), o->height());
     inflator.inflateInplace(o.get(), region);
 
     EXPECT_EQ(o->pixelAt(0, 0), (u8)CostValue::obstacle);

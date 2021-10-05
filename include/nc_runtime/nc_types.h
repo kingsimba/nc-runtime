@@ -113,44 +113,8 @@ inline bool operator!=(Size l, Size r)
     return l.width != r.width || l.height != r.height;
 }
 
-//////////////////////////////////////////
-// Rect
-
-struct Rect
-{
-    int left;
-    int top;
-    int right;
-    int bottom;
-
-    void expand(int radius)
-    {
-        this->left -= radius, this->top -= radius, this->right += radius, this->bottom += radius;
-    }
-
-    void intersectWith(Rect r)
-    {
-        this->left = std::max(r.left, this->left);
-        this->top = std::max(r.top, this->top);
-        this->right = std::min(r.right, this->right);
-        this->bottom = std::min(r.bottom, this->bottom);
-    }
-};
-
-inline Rect Rect_make(int l, int t, int r, int b)
-{
-    return Rect{l, t, r, b};
-}
-
-inline bool operator==(Rect l, Rect r)
-{
-    return l.left == r.left && l.top == r.top && l.right == r.right && l.bottom == r.bottom;
-}
-
-inline bool operator!=(Rect l, Rect r)
-{
-    return l.left != r.left || l.top != r.top || l.right != r.right || l.bottom != r.bottom;
-}
+#include "_rect.h"
+#include "_rectf.h"
 
 /////////////////////////////////////////////////
 // Rgba8
