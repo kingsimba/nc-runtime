@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 #include <new>
 
 #define UNUSED_VAR(o) (void)(o)
