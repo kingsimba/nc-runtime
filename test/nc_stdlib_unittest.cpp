@@ -113,3 +113,23 @@ TEST(Stdlib, absMinMaxClampSwap)
     EXPECT_EQ(a, 0x04030201u);
     EXPECT_EQ(b, 0x0201u);
 }
+
+TEST(Stdlib, rect)
+{
+    Rect rct;
+    rct.setAsNegativeMinimum();
+    rct.combinePoint(5, 8);
+    EXPECT_EQ(rct, Rect(5, 8, 5, 8));
+    rct.combinePoint(6, -3);
+    EXPECT_EQ(rct, Rect(5, -3, 6, 8));
+}
+
+TEST(Stdlib, rectF)
+{
+    RectF rct;
+    rct.setAsNegativeMinimum();
+    rct.combinePoint(5, 8);
+    EXPECT_EQ(rct, RectF(5, 8, 5, 8));
+    rct.combinePoint(6, -3);
+    EXPECT_EQ(rct, RectF(5, -3, 6, 8));
+}

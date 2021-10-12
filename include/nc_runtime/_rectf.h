@@ -29,6 +29,20 @@ struct RectF
         this->right = nc_min(r.right, this->right);
         this->bottom = nc_min(r.bottom, this->bottom);
     }
+
+    void setAsNegativeMinimum()
+    {
+        this->left = this->top = FLT_MAX;
+        this->right = this->bottom = FLT_MIN;
+    }
+
+    void combinePoint(float x, float y)
+    {
+        this->left = nc_min(x, this->left);
+        this->top = nc_min(y, this->top);
+        this->right = nc_max(x, this->right);
+        this->bottom = nc_max(y, this->bottom);
+    }
 };
 
 inline bool operator==(RectF l, RectF r)

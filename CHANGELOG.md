@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-10-12 Add `Rect::setAsNegativeMinimum()` and `Rect::combinePoint()`.
 - 2021-10-05 Add `Math_pointInPolygon()` and `NcPolyline::testPoint()`.
 - 2021-09-28 Fixed bug in JsonNode::asFloat().
 - 2021-09-26 Add `NcPolyline` to support polyline and polygon.
