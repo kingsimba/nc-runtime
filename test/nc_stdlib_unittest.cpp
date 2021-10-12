@@ -125,6 +125,17 @@ TEST(Stdlib, rect)
 
     rct.combineRect(Rect(3, 9, 8, 12));
     EXPECT_EQ(rct, Rect(3, -3, 8, 12));
+
+    rct.set(0, 0, 5, 5);
+    EXPECT_FALSE(rct.isIntersectWith(Rect(4, 5, 10, 10)));
+    EXPECT_FALSE(rct.isIntersectWith(Rect(5, 4, 10, 10)));
+    EXPECT_FALSE(rct.isIntersectWith(Rect(5, 5, 10, 10)));
+    EXPECT_TRUE(rct.isIntersectWith(Rect(4, 4, 10, 10)));
+    EXPECT_TRUE(rct.isIntersectWith(Rect(4, 0, 10, 10)));
+    EXPECT_TRUE(rct.isIntersectWith(Rect(0, 4, 10, 10)));
+    EXPECT_FALSE(rct.isIntersectWith(Rect(-10, -10, 0, 0)));
+    EXPECT_FALSE(rct.isIntersectWith(Rect(-10, -10, 1, 0)));
+    EXPECT_TRUE(rct.isIntersectWith(Rect(-10, -10, 1, 1)));
 }
 
 TEST(Stdlib, rectF)
@@ -138,4 +149,15 @@ TEST(Stdlib, rectF)
 
     rct.combineRect(RectF(3, 9, 8, 12));
     EXPECT_EQ(rct, RectF(3, -3, 8, 12));
+
+    rct.set(0, 0, 5, 5);
+    EXPECT_FALSE(rct.isIntersectWith(RectF(4, 5, 10, 10)));
+    EXPECT_FALSE(rct.isIntersectWith(RectF(5, 4, 10, 10)));
+    EXPECT_FALSE(rct.isIntersectWith(RectF(5, 5, 10, 10)));
+    EXPECT_TRUE(rct.isIntersectWith(RectF(4, 4, 10, 10)));
+    EXPECT_TRUE(rct.isIntersectWith(RectF(4, 0, 10, 10)));
+    EXPECT_TRUE(rct.isIntersectWith(RectF(0, 4, 10, 10)));
+    EXPECT_FALSE(rct.isIntersectWith(RectF(-10, -10, 0, 0)));
+    EXPECT_FALSE(rct.isIntersectWith(RectF(-10, -10, 1, 0)));
+    EXPECT_TRUE(rct.isIntersectWith(RectF(-10, -10, 1, 1)));
 }

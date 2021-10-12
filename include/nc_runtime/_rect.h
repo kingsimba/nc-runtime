@@ -17,6 +17,14 @@ struct Rect
         bottom = b;
     }
 
+    void set(int l, int t, int r, int b)
+    {
+        left = l;
+        top = t;
+        right = r;
+        bottom = b;
+    }
+
     void expand(int radius)
     {
         this->left -= radius, this->top -= radius, this->right += radius, this->bottom += radius;
@@ -28,6 +36,16 @@ struct Rect
         this->top = nc_max(r.top, this->top);
         this->right = nc_min(r.right, this->right);
         this->bottom = nc_min(r.bottom, this->bottom);
+    }
+
+    bool isIntersectWith(Rect r)
+    {
+        return !(this->right <= r.left || this->bottom <= r.top || this->left >= r.right || this->top >= r.bottom);
+    }
+
+    bool containsPoint(int x, int y)
+    {
+        return x >= this->left && x < this->right && y >= this->top && y < this->bottom;
     }
 
     void setAsNegativeMinimum()

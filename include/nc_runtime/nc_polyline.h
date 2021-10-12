@@ -18,6 +18,8 @@ public:
 
     bool testPoint(nc::Vector2 pt);
 
+    RectF calculateBBox();
+
 protected:
     NcPolyline(const nc::Vector2* points, int count, bool closed);
     ~NcPolyline();

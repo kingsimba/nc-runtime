@@ -2,6 +2,8 @@
 #include "nc_runtime/nc_polyline.h"
 #include "nc_runtime/nc_math.h"
 
+using namespace nc;
+
 NcPolyline::~NcPolyline()
 {
     free(m_points);
@@ -19,4 +21,17 @@ NcPolyline::NcPolyline(const nc::Vector2* points, int count, bool closed)
 bool NcPolyline::testPoint(nc::Vector2 pt)
 {
     return Math_pointInPolygon(m_points, m_pointCount, pt);
+}
+
+RectF NcPolyline::calculateBBox()
+{
+    RectF rtn;
+    rtn.setAsNegativeMinimum();
+    const Vector2* end = m_points + m_pointCount;
+    for (const Vector2* p = m_points; p != end; p++)
+    {
+        rtn.combinePoint(p->x, p->y);
+    }
+
+    return rtn;
 }
