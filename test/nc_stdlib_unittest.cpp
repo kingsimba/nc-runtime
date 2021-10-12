@@ -122,6 +122,9 @@ TEST(Stdlib, rect)
     EXPECT_EQ(rct, Rect(5, 8, 5, 8));
     rct.combinePoint(6, -3);
     EXPECT_EQ(rct, Rect(5, -3, 6, 8));
+
+    rct.combineRect(Rect(3, 9, 8, 12));
+    EXPECT_EQ(rct, Rect(3, -3, 8, 12));
 }
 
 TEST(Stdlib, rectF)
@@ -132,4 +135,7 @@ TEST(Stdlib, rectF)
     EXPECT_EQ(rct, RectF(5, 8, 5, 8));
     rct.combinePoint(6, -3);
     EXPECT_EQ(rct, RectF(5, -3, 6, 8));
+
+    rct.combineRect(RectF(3, 9, 8, 12));
+    EXPECT_EQ(rct, RectF(3, -3, 8, 12));
 }

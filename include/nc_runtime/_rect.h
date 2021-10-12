@@ -43,6 +43,14 @@ struct Rect
         this->right = nc_max(x, this->right);
         this->bottom = nc_max(y, this->bottom);
     }
+
+    void combineRect(Rect rct)
+    {
+        this->left = nc_min(rct.left, this->left);
+        this->top = nc_min(rct.top, this->top);
+        this->right = nc_max(rct.right, this->right);
+        this->bottom = nc_max(rct.bottom, this->bottom);
+    }
 };
 
 inline bool operator==(Rect l, Rect r)
