@@ -16,4 +16,10 @@ float Math_turnAngle(float from, float to);
 
 bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt);
 
+/*
+ * @brief Clip line segment by rectangle
+ * @return
+ *  true: part or whole of the line segment p1-p2 lies within the rectangle;
+ *  false: 
+ */
 bool Math_clipLineByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
