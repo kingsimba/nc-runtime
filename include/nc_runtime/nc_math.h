@@ -15,3 +15,5 @@ float Math_wrapTwoPi(float angle);
 float Math_turnAngle(float from, float to);
 
 bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt);
+
+bool Math_clipLineByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2);

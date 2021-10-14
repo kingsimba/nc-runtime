@@ -113,3 +113,38 @@ TEST_F(PointInPolygonTest, performance)
         Math_pointInPolygon(g_polygon.data(), g_polygon.size(), v);
     }
 }
+
+TEST(Math, clipLineByRect)
+{
+    RectF area{10.0f, 10.0f, 20.0f, 20.0f};
+    Vector2 p1, p2;
+    
+    p1 = {13.0f, 13.0f};
+    p2 = {17.0f, 17.0f};
+
+    EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
+    EXPECT_EQ(p1, vec2(13.0f, 13.0f));
+    EXPECT_EQ(p2, vec2(17.0f, 17.0f));
+
+    p1 = {5.0f, 18.0f};
+    p2 = {15.0f, 30.0f};
+    EXPECT_FALSE(Math_clipLineByRect(area, &p1, &p2));
+
+    p1 = {11.0f, 19.0f};
+    p2 = {19.0f, 21.0f};
+    EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
+    EXPECT_EQ(p1, vec2(11.0f, 19.0f));
+    EXPECT_EQ(p2, vec2(15.0f, 20.0f));
+
+    p1 = {0.0f, 13.0f};
+    p2 = {50.0f, 13.0f};
+    EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
+    EXPECT_EQ(p1, vec2(10.0f, 13.0f));
+    EXPECT_EQ(p2, vec2(20.0f, 13.0f));
+
+    p1 = {8.0f, 19.0f};
+    p2 = {16.0f, 7.0f};
+    EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
+    EXPECT_EQ(p1, vec2(10.0f, 16.0f));
+    EXPECT_EQ(p2, vec2(14.0f, 10.0f));
+}
