@@ -195,17 +195,17 @@ enum class RectRegionCode
     top = 8
 };
 
-inline RectRegionCode operator|(RectRegionCode r, RectRegionCode l)
+static forceinline RectRegionCode operator|(RectRegionCode r, RectRegionCode l)
 {
     return (RectRegionCode)((int)r | (int)l);
 }
 
-inline RectRegionCode& operator|=(RectRegionCode& r, RectRegionCode l)
+static forceinline RectRegionCode& operator|=(RectRegionCode& r, RectRegionCode l)
 {
     return r = r | l;
 }
 
-bool operator&(RectRegionCode r, RectRegionCode l)
+static forceinline bool operator&(RectRegionCode r, RectRegionCode l)
 {
     return ((int)r & (int)l) != 0;
 }
