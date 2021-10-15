@@ -191,8 +191,8 @@ enum class RectRegionCode
     inside = 0,
     left = 1,
     right = 2,
-    bottom = 4,
-    top = 8
+    top = 4,
+    bottom = 8
 };
 
 static forceinline RectRegionCode operator|(RectRegionCode r, RectRegionCode l)
@@ -227,6 +227,23 @@ static RectRegionCode _calcRectRegionCode(RectF rect, nc::Vector2 pt)
     return code;
 }
 
+static RectRegionCode _calcRectRegionCode(Rect rect, nc::Vector2i pt)
+{
+    RectRegionCode code = RectRegionCode::inside;
+
+    if (pt.x < rect.left)
+        code = RectRegionCode::left;
+    else if (pt.x >= rect.right)
+        code = RectRegionCode::right;
+
+    if (pt.y < rect.top)
+        code |= RectRegionCode::top;
+    else if (pt.y >= rect.bottom)
+        code |= RectRegionCode::bottom;
+
+    return code;
+}
+
 /**
  * @sa https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
  */
@@ -251,17 +268,11 @@ bool Math_clipLineByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2)
          *  y = y1 + slope * (x - x1)
          *  x = x1 + (1 / slope) * (y - y1)
          */
-        if (codeOut & RectRegionCode::top)
+        if (codeOut & RectRegionCode::left)
         {
-            /* point is above the clip rectangle */
-            p.x = p1->x + (p2->x - p1->x) * (rect.top - p1->y) / (p2->y - p1->y);
-            p.y = rect.top;
-        }
-        else if (codeOut & RectRegionCode::bottom)
-        {
-            /* point is below the rectangle */
-            p.x = p1->x + (p2->x - p1->x) * (rect.bottom - p1->y) / (p2->y - p1->y);
-            p.y = rect.bottom;
+            /* point is to the left of rectangle */
+            p.y = p1->y + (p2->y - p1->y) * (rect.left - p1->x) / (p2->x - p1->x);
+            p.x = rect.left;
         }
         else if (codeOut & RectRegionCode::right)
         {
@@ -269,12 +280,78 @@ bool Math_clipLineByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2)
             p.y = p1->y + (p2->y - p1->y) * (rect.right - p1->x) / (p2->x - p1->x);
             p.x = rect.right;
         }
+        else if (codeOut & RectRegionCode::top)
+        {
+            /* point is above the clip rectangle */
+            p.x = p1->x + (p2->x - p1->x) * (rect.top - p1->y) / (p2->y - p1->y);
+            p.y = rect.top;
+        }
         else
         {
-            NC_ASSERT(codeOut & RectRegionCode::left);
+            NC_ASSERT(codeOut & RectRegionCode::bottom);
+            /* point is below the rectangle */
+            p.x = p1->x + (p2->x - p1->x) * (rect.bottom - p1->y) / (p2->y - p1->y);
+            p.y = rect.bottom;
+        }
+
+        if (codeOut == code1)
+        {
+            *p1 = p;
+            code1 = _calcRectRegionCode(rect, *p1);
+        }
+        else
+        {
+            *p2 = p;
+            code2 = _calcRectRegionCode(rect, *p2);
+        }
+    }
+}
+
+bool Math_clipLineByRect(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2)
+{
+    RectRegionCode code1 = _calcRectRegionCode(rect, *p1);
+    RectRegionCode code2 = _calcRectRegionCode(rect, *p2);
+
+    for (;;)
+    {
+        if (code1 == RectRegionCode::inside && code2 == RectRegionCode::inside)
+            return true;
+
+        if (code1 & code2)
+            return false;
+
+        RectRegionCode codeOut = (int)code1 ? code1 : code2;
+        Vector2i p;
+
+        /*
+         *  Find intersection point, using formulas:
+         *  y = y1 + slope * (x - x1)
+         *  x = x1 + (1 / slope) * (y - y1)
+         */
+        if (codeOut & RectRegionCode::left)
+        {
             /* point is to the left of rectangle */
             p.y = p1->y + (p2->y - p1->y) * (rect.left - p1->x) / (p2->x - p1->x);
             p.x = rect.left;
+        }
+        else if (codeOut & RectRegionCode::right)
+        {
+            /* point is to the right of rectangle */
+            p.y = p1->y + (p2->y - p1->y) * (rect.right - 1 - p1->x) / (p2->x - p1->x);
+            p.x = rect.right - 1;
+        }
+        else if (codeOut & RectRegionCode::top)
+        {
+            /* point is above the clip rectangle */
+            p.x = p1->x + (p2->x - p1->x) * (rect.top - p1->y) / (p2->y - p1->y);
+            p.y = rect.top;
+        }
+        else
+        {
+            NC_ASSERT(codeOut & RectRegionCode::bottom);
+            /* point is below the rectangle */
+            p.x = p1->x + (p2->x - p1->x) * (rect.bottom - 1 - p1->y) / (p2->y - p1->y);
+            p.y = rect.bottom - 1;
         }
 
         if (codeOut == code1)

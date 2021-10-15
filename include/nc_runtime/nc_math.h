@@ -2,6 +2,7 @@
 
 #include "nc_types.h"
 #include "vector2.h"
+#include "vector2i.h"
 
 u32 Math_hashString(const char* str);
 u32 Math_hashU32(u32 o);
@@ -23,3 +24,4 @@ bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt
  *  false: the line segment lies outside the rectangle.
  */
 bool Math_clipLineByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
+bool Math_clipLineByRect(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2);
