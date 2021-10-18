@@ -1,6 +1,7 @@
 # Changelog
 
 - 2021-10-14 Add `Vector2i` and `Math_clipLineByRect()`.
+- 2021-10-18 Add `Math_linePointDistance()` and `Math_segmentsIntersect()`.
 - 2021-10-12 Add `Rect::setAsNegativeMinimum()`, `Rect::combinePoint()` and `Rect::combineRect()`.
 - 2021-10-05 Add `Math_pointInPolygon()` and `NcPolyline::testPoint()`.
 - 2021-09-28 Fixed bug in JsonNode::asFloat().

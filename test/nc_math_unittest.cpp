@@ -114,6 +114,43 @@ TEST_F(PointInPolygonTest, performance)
     }
 }
 
+TEST(Math, linePointDistance)
+{
+    Vector2 p1 = {1.0f, 6.0f};
+    Vector2 p2 = {5.0f, 3.0f};
+    Vector2 proj;
+
+    EXPECT_EQ(Math_linePointDistance({1.0f, 9.0f}, p1, p2, &proj), 2.4f);
+    EXPECT_FLOAT_EQ(proj.x, -0.44f);
+    EXPECT_FLOAT_EQ(proj.y, 7.08f);
+
+    EXPECT_EQ(Math_linePointDistance({5.0f, 6.0f}, p1, p2, &proj), 2.4f);
+    EXPECT_FLOAT_EQ(proj.x, 3.56f);
+    EXPECT_FLOAT_EQ(proj.y, 4.08f);
+
+    // parameter projectionOut is optional
+    EXPECT_EQ(Math_linePointDistance({8.0f, 3.0f}, p1, p2, NULL), 1.8f);
+}
+
+TEST(Math, segmentsIntersect)
+{
+    Vector2 p1 = {4.0f, 12.0f};
+    Vector2 p2 = {10.0f, 2.0f};
+    Vector2 p3 = {10.0f, 10.0f};
+    Vector2 p4 = {4.0f, 8.0f};
+
+    EXPECT_TRUE(Math_segmentsIntersect(p1, p2, p3, p4));
+
+    p4 = {8.0f, 8.0f};
+    EXPECT_FALSE(Math_segmentsIntersect(p1, p2, p3, p4));
+
+    p4 = {4.0f, 12.0f}; // the same as p1
+    EXPECT_TRUE(Math_segmentsIntersect(p1, p2, p3, p4));
+
+    p3 = {10.0f, 14.0f};
+    EXPECT_TRUE(Math_segmentsIntersect(p1, p2, p3, p4));
+}
+
 TEST(Math, clipLineByRectFloatVersion)
 {
     RectF area{10.0f, 10.0f, 20.0f, 20.0f};
