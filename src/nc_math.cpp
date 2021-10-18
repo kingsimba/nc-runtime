@@ -205,14 +205,14 @@ float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc:
     return d;
 }
 
-bool Math_segmentsIntersect(nc::Vector2 p1, nc::Vector2 p2, nc::Vector2 p3, nc::Vector2 p4)
+bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::Vector2 b2)
 {
-    if (std::max(p1.x, p2.x) < std::min(p3.x, p4.x) || std::max(p3.x, p4.x) < std::min(p1.x, p2.x) ||
-        std::max(p1.y, p2.y) < std::min(p3.y, p4.y) || std::max(p3.y, p4.y) < std::min(p1.y, p2.y))
+    if (std::max(a1.x, a2.x) < std::min(b1.x, b2.x) || std::max(b1.x, b2.x) < std::min(a1.x, a2.x)
+        || std::max(a1.y, a2.y) < std::min(b1.y, b2.y) || std::max(b1.y, b2.y) < std::min(a1.y, a2.y))
         return false;
 
-    return Vector2_cross(p2 - p1, p3 - p1) * Vector2_cross(p2 - p1, p4 - p1) <= 0 &&
-           Vector2_cross(p4 - p3, p1 - p3) * Vector2_cross(p4 - p3, p2 - p3) <= 0;
+    return Vector2_cross(a2 - a1, b1 - a1) * Vector2_cross(a2 - a1, b2 - a1) <= 0
+           && Vector2_cross(b2 - b1, a1 - b1) * Vector2_cross(b2 - b1, a2 - b1) <= 0;
 }
 
 namespace
