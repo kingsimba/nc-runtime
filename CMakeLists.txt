@@ -7,10 +7,6 @@ include(platform_detect.cmake)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if (NOT WIN32)
-	add_compile_options(-Wunused-variable -Wunused-parameter -fPIC)
-endif()
-
 include_directories("../3rd-party/include")
 link_directories("../3rd-party/lib/${NC_PLATFORM}/Release")
 
@@ -21,6 +17,7 @@ if (WIN32)
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Ob1")	# inline only __inline
 else()
 	SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fno-delete-null-pointer-checks")
+	add_compile_options(-fPIC)
 	add_compile_options(-Wall)
 	add_compile_options(-Werror=unused)
 	add_compile_options(-Werror=address)
