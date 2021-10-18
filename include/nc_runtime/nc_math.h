@@ -29,5 +29,5 @@ bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::
  *  true: part or whole of the line segment p1-p2 lies within the rectangle;
  *  false: the line segment lies outside the rectangle.
  */
-bool Math_clipLineByRectF(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
-bool Math_clipLineByRect(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2);
+bool Math_clipSegmentByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
+bool Math_clipSegmentByRectI(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2);
