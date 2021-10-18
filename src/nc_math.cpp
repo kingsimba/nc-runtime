@@ -187,6 +187,34 @@ bool Math_pointInPolygon(const Vector2* pgon, size_t numverts, Vector2 pt)
     return inside;
 }
 
+float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* projectionOut)
+{
+    Vector2 v = p2 - p1;
+    Vector2 w = pt - p1;
+
+    float c1 = Vector2_dot(w, v);
+    float c2 = Vector2_dot(v, v);
+    float b = c1 / c2;
+    Vector2 pb = p1 + v * b;
+    Vector2 tmp = pt - pb;
+    float d = tmp.length();
+
+    if (projectionOut != NULL)
+        *projectionOut = pb;
+
+    return d;
+}
+
+bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::Vector2 b2)
+{
+    if (std::max(a1.x, a2.x) < std::min(b1.x, b2.x) || std::max(b1.x, b2.x) < std::min(a1.x, a2.x)
+        || std::max(a1.y, a2.y) < std::min(b1.y, b2.y) || std::max(b1.y, b2.y) < std::min(a1.y, a2.y))
+        return false;
+
+    return Vector2_cross(a2 - a1, b1 - a1) * Vector2_cross(a2 - a1, b2 - a1) <= 0
+           && Vector2_cross(b2 - b1, a1 - b1) * Vector2_cross(b2 - b1, a2 - b1) <= 0;
+}
+
 namespace
 {
 enum class RectRegionCode

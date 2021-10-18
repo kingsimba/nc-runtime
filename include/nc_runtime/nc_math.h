@@ -17,6 +17,12 @@ float Math_turnAngle(float from, float to);
 
 bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt);
 
+// calculate distance from a straight line to a point
+float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* projectionOut);
+
+// determine if two line segments intersect
+bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::Vector2 b2);
+
 /*
  * @brief Clip line segment (p1, p2) by rectangle
  * @return
