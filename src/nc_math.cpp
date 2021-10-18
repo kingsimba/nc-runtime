@@ -310,7 +310,7 @@ static bool _clipLineByRect(RECT rect, VECTOR* p1, VECTOR* p2)
     }
 }
 
-bool Math_clipLineByRect(RectF rect, Vector2* p1, Vector2* p2)
+bool Math_clipLineByRectF(RectF rect, Vector2* p1, Vector2* p2)
 {
     return _clipLineByRect<RectF, Vector2, BoundaryFloat>(rect, p1, p2);
 }

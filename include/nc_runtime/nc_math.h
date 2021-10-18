@@ -23,5 +23,5 @@ bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt
  *  true: part or whole of the line segment p1-p2 lies within the rectangle;
  *  false: the line segment lies outside the rectangle.
  */
-bool Math_clipLineByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
+bool Math_clipLineByRectF(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
 bool Math_clipLineByRect(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2);
