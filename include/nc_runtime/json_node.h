@@ -70,12 +70,13 @@ private:
     json_t* m_root = nullptr;
 };
 
-template <> class Some<JsonNode>
+template <>
+class Some<JsonNode>
 {
 public:
     forceinline Some(const NoValueType& v) : m_hasValue(false) { UNUSED_VAR(v); }
-    forceinline Some(const JsonNode& v) : m_value(v), m_hasValue(true) {}
-    forceinline Some(const JsonNode&& v) : m_value(std::move(v)), m_hasValue(true) {}
+    forceinline Some(const JsonNode& v) : m_hasValue(true), m_value(v) {}
+    forceinline Some(const JsonNode&& v) : m_hasValue(true), m_value(std::move(v)) {}
 
     forceinline bool hasValue() { return m_hasValue; }
 
