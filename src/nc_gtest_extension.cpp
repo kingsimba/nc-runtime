@@ -1,11 +1,5 @@
 #include "stdafx_nc_runtime.h"
-#include "nc_runtime/nc_types.h"
-#include "nc_runtime/vector2.h"
-#include "nc_runtime/vector3.h"
-#include "nc_runtime/vector3i.h"
-#include "nc_runtime/quaternion.h"
-#include "nc_runtime/pose2.h"
-#include <iostream>
+#include "nc_runtime/nc_gtest_extension.h"
 
 std::ostream& operator<<(std::ostream& os, const Size& c)
 {
@@ -32,6 +26,13 @@ std::ostream& operator<<(std::ostream& os, const nc::Vector2& c)
 {
     char buffer[128];
     sprintf(buffer, "Vector2(%f, %f)", c.x, c.y);
+    return os << buffer;
+}
+
+std::ostream& operator<<(std::ostream& os, const nc::Vector2i& c)
+{
+    char buffer[128];
+    sprintf(buffer, "Vector2(%d, %d)", c.x, c.y);
     return os << buffer;
 }
 

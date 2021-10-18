@@ -22,7 +22,7 @@
     <ClCompile Include="src\nc_string.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\nc_types.cpp">
+    <ClCompile Include="src\nc_gtest_extension.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
@@ -150,6 +150,9 @@
     <ClInclude Include="include\nc_runtime\_rectf.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="include\nc_runtime\vector2i.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -162,5 +165,8 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include="CHANGELOG.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

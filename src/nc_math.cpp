@@ -42,7 +42,8 @@ size_t Math_hashSizeT(size_t o)
 // Floating-point modulo
 // The result (the remainder) has same sign as the divisor.
 // Similar to matlab's mod(); Not similar to fmod() -   Mod(-3,4)= 1   fmod(-3,4)= -3
-template <typename T> static T _mod(T x, T y)
+template <typename T>
+static T _mod(T x, T y)
 {
     static_assert(!std::numeric_limits<T>::is_exact, "Mod: floating-point type expected");
 
@@ -184,4 +185,137 @@ bool Math_pointInPolygon(const Vector2* pgon, size_t numverts, Vector2 pt)
     }
 
     return inside;
+}
+
+namespace
+{
+enum class RectRegionCode
+{
+    inside = 0,
+    left = 1,
+    right = 2,
+    top = 4,
+    bottom = 8
+};
+
+static forceinline RectRegionCode operator|(RectRegionCode r, RectRegionCode l)
+{
+    return (RectRegionCode)((int)r | (int)l);
+}
+
+static forceinline RectRegionCode& operator|=(RectRegionCode& r, RectRegionCode l)
+{
+    return r = r | l;
+}
+
+static forceinline bool operator&(RectRegionCode r, RectRegionCode l)
+{
+    return ((int)r & (int)l) != 0;
+}
+
+class BoundaryFloat
+{
+public:
+    static forceinline bool greater(float l, float r) { return l > r; }
+    static forceinline float value() { return 0; }
+};
+
+class BoundaryInt
+{
+public:
+    static forceinline bool greater(int l, int r) { return l >= r; }
+    static forceinline int value() { return 1; }
+};
+} // namespace
+
+template <typename RECT, typename VECTOR, typename Boundary>
+static RectRegionCode _calcRectRegionCode(RECT rect, VECTOR pt)
+{
+    RectRegionCode code = RectRegionCode::inside;
+
+    if (pt.x < rect.left)
+        code = RectRegionCode::left;
+    else if (Boundary::greater(pt.x, rect.right))
+        code = RectRegionCode::right;
+
+    if (pt.y < rect.top)
+        code |= RectRegionCode::top;
+    else if (Boundary::greater(pt.y, rect.bottom))
+        code |= RectRegionCode::bottom;
+
+    return code;
+}
+
+/**
+ * @sa https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
+ */
+template <typename RECT, typename VECTOR, typename Boundary>
+static bool _clipLineByRect(RECT rect, VECTOR* p1, VECTOR* p2)
+{
+    RectRegionCode code1 = _calcRectRegionCode<RECT, VECTOR, Boundary>(rect, *p1);
+    RectRegionCode code2 = _calcRectRegionCode<RECT, VECTOR, Boundary>(rect, *p2);
+
+    for (;;)
+    {
+        if (code1 == RectRegionCode::inside && code2 == RectRegionCode::inside)
+            return true;
+
+        if (code1 & code2)
+            return false;
+
+        RectRegionCode codeOut = (int)code1 ? code1 : code2;
+        VECTOR p;
+
+        /*
+         *  Find intersection point, using formulas:
+         *  y = y1 + slope * (x - x1)
+         *  x = x1 + (1 / slope) * (y - y1)
+         */
+        if (codeOut & RectRegionCode::left)
+        {
+            /* point is to the left of rectangle */
+            p.y = p1->y + (p2->y - p1->y) * (rect.left - p1->x) / (p2->x - p1->x);
+            p.x = rect.left;
+        }
+        else if (codeOut & RectRegionCode::right)
+        {
+            /* point is to the right of rectangle */
+            p.y = p1->y + (p2->y - p1->y) * (rect.right - Boundary::value() - p1->x) / (p2->x - p1->x);
+            p.x = rect.right - Boundary::value();
+        }
+        else if (codeOut & RectRegionCode::top)
+        {
+            /* point is above the clip rectangle */
+            p.x = p1->x + (p2->x - p1->x) * (rect.top - p1->y) / (p2->y - p1->y);
+            p.y = rect.top;
+        }
+        else
+        {
+            NC_ASSERT(codeOut & RectRegionCode::bottom);
+            /* point is below the rectangle */
+            p.x = p1->x + (p2->x - p1->x) * (rect.bottom - Boundary::value() - p1->y) / (p2->y - p1->y);
+            p.y = rect.bottom - Boundary::value();
+        }
+
+        if (codeOut == code1)
+        {
+            *p1 = p;
+            code1 = _calcRectRegionCode<RECT, VECTOR, Boundary>(rect, *p1);
+        }
+        else
+        {
+            *p2 = p;
+            code2 = _calcRectRegionCode<RECT, VECTOR, Boundary>(rect, *p2);
+        }
+    }
+}
+
+bool Math_clipLineByRectF(RectF rect, Vector2* p1, Vector2* p2)
+{
+    return _clipLineByRect<RectF, Vector2, BoundaryFloat>(rect, p1, p2);
+}
+
+bool Math_clipLineByRect(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2)
+{
+    return _clipLineByRect<Rect, Vector2i, BoundaryInt>(rect, p1, p2);
 }

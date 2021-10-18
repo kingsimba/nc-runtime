@@ -8,3 +8,4 @@ AccessModifierOffset: -4
 ColumnLimit: 120
 SortIncludes: false
 IndentPPDirectives: AfterHash
+AlwaysBreakTemplateDeclarations: Yes

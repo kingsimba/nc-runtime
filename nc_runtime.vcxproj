@@ -110,13 +110,14 @@
     <ClCompile Include="src\nc_polyline.cpp" />
     <ClCompile Include="src\nc_stdlib.cpp" />
     <ClCompile Include="src\nc_string.cpp" />
-    <ClCompile Include="src\nc_types.cpp" />
+    <ClCompile Include="src\nc_gtest_extension.cpp" />
     <ClCompile Include="src\quaternion.cpp" />
     <ClCompile Include="src\quaternion_d.cpp" />
     <ClCompile Include="src\nc_event.cpp" />
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="include\nc_runtime\vector2i.h" />
     <ClInclude Include="include\nc_runtime\vector3.h" />
     <ClInclude Include="include\nc_runtime\vector3i.h" />
     <ClInclude Include="include\nc_runtime\_rect.h" />
@@ -132,6 +133,9 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include="CHANGELOG.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
