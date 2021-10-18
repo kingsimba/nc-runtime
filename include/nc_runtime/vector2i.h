@@ -42,17 +42,12 @@ public:
     }
 };
 
-static forceinline Vector2i vec2i(int x, int y)
-{
-    return Vector2i{x, y};
-}
-
-forceinline int Vector2_dot(Vector2i l, Vector2i r)
+forceinline int Vector2i_dot(Vector2i l, Vector2i r)
 {
     return l.x * r.x + l.y * r.y;
 }
 
-forceinline int Vector2_cross(Vector2i l, Vector2i r)
+forceinline int Vector2i_cross(Vector2i l, Vector2i r)
 {
     return l.x * r.y - l.y * r.x;
 }

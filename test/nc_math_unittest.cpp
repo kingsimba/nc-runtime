@@ -164,8 +164,8 @@ TEST(Math, clipLineByRectIntVersion)
     p2 = {17, 17};
 
     EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
-    EXPECT_EQ(p1, vec2i(13, 13));
-    EXPECT_EQ(p2, vec2i(17, 17));
+    EXPECT_EQ(p1, Vector2i(13, 13));
+    EXPECT_EQ(p2, Vector2i(17, 17));
 
     p1 = {5, 18};
     p2 = {15, 30};
@@ -174,24 +174,24 @@ TEST(Math, clipLineByRectIntVersion)
     p1 = {11, 19};
     p2 = {19, 21};
     EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
-    EXPECT_EQ(p1, vec2i(11, 19));
-    EXPECT_EQ(p2, vec2i(11, 19));
+    EXPECT_EQ(p1, Vector2i(11, 19));
+    EXPECT_EQ(p2, Vector2i(11, 19));
 
     p1 = {0, 13};
     p2 = {50, 13};
     EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
-    EXPECT_EQ(p1, vec2i(10, 13));
-    EXPECT_EQ(p2, vec2i(19, 13));
+    EXPECT_EQ(p1, Vector2i(10, 13));
+    EXPECT_EQ(p2, Vector2i(19, 13));
 
     p1 = {8, 19};
     p2 = {16, 7};
     EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
-    EXPECT_EQ(p1, vec2i(10, 16));
-    EXPECT_EQ(p2, vec2i(14, 10));
+    EXPECT_EQ(p1, Vector2i(10, 16));
+    EXPECT_EQ(p2, Vector2i(14, 10));
 
     p1 = {8, 21};
     p2 = {21, 8};
     EXPECT_TRUE(Math_clipLineByRect(area, &p1, &p2));
-    EXPECT_EQ(p1, vec2i(10, 19));
-    EXPECT_EQ(p2, vec2i(19, 10));
+    EXPECT_EQ(p1, Vector2i(10, 19));
+    EXPECT_EQ(p2, Vector2i(19, 10));
 }

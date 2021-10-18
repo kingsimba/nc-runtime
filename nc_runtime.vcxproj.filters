@@ -22,7 +22,7 @@
     <ClCompile Include="src\nc_string.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\nc_types.cpp">
+    <ClCompile Include="src\nc_gtest_extension.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
@@ -165,5 +165,8 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include="CHANGELOG.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>
