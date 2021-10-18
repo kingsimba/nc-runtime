@@ -21,9 +21,18 @@ if (WIN32)
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Ob1")	# inline only __inline
 else()
 	SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fno-delete-null-pointer-checks")
-	add_compile_options(-Werror)  # make all warning into error
-	add_compile_options(-Wno-unused-variable)
-	add_compile_options(-Wno-unused-parameter)
+	add_compile_options(-Wall)
+	add_compile_options(-Werror=unused)
+	add_compile_options(-Werror=address)
+	add_compile_options(-Werror=return-type)
+	add_compile_options(-Werror=uninitialized)
+	add_compile_options(-Werror=unused-parameter)
+	add_compile_options(-Werror=dangling-else)
+	add_compile_options(-Wsign-compare)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		add_compile_options(-Werror=unused-private-field)
+		add_compile_options(-Wthread-safety)
+	endif()
 endif()
 
 ########################################################################################

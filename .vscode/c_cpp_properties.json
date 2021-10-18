@@ -7,6 +7,7 @@
       },
       "includePath": [
         "${workspaceFolder}/include",
+        "${workspaceFolder}/../3rd-party/include",
         "/opt/ros/melodic/include/**",
         "/opt/ax-platform/include/**",
         "/usr/include/**"
