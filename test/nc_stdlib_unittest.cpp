@@ -161,3 +161,15 @@ TEST(Stdlib, rectF)
     EXPECT_FALSE(rct.isIntersectWith(RectF(-10, -10, 1, 0)));
     EXPECT_TRUE(rct.isIntersectWith(RectF(-10, -10, 1, 1)));
 }
+
+TEST(Stdlib, rectFSetAsNegativeMinimum)
+{
+    RectF area;
+    area.setAsNegativeMinimum();
+    area.combinePoint(-1.0f, -2.0f);
+
+    EXPECT_EQ(area.left, -1.0f);
+    EXPECT_EQ(area.right, -1.0f);
+    EXPECT_EQ(area.top, -2.0f);
+    EXPECT_EQ(area.bottom, -2.0f);
+}
