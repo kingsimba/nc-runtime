@@ -51,7 +51,7 @@ struct RectF
     void setAsNegativeMinimum()
     {
         this->left = this->top = FLT_MAX;
-        this->right = this->bottom = FLT_MIN;
+        this->right = this->bottom = -FLT_MAX;
     }
 
     void combinePoint(float x, float y)
