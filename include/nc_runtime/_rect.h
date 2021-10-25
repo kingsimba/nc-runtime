@@ -6,6 +6,8 @@ struct Rect
     int top;
     int right;
     int bottom;
+    forceinline int width() { return this->right - this->left; }
+    forceinline int height() { return this->bottom - this->top; }
 
     Rect() = default;
 
