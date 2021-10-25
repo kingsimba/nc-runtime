@@ -58,7 +58,7 @@ void CostmapInflatorImple::inflateInplace(NcImageU8* img, Rect region)
 
     float cachedDistance = -1.0f;
     std::vector<CellData>* cachedCells = NULL;
-    auto enqueue = [&cachedDistance, &cachedCells, seen, size, this](const CellData& cell) {
+    auto enqueue = [&cachedDistance, &cachedCells, seen, this](const CellData& cell) {
         if (seen[cell.index])
         {
             return;

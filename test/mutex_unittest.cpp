@@ -12,7 +12,10 @@ public:
 TEST_F(MutexTest, basic)
 {
     const static int REPEAT = 5000000;
-    m_counter = 0;
+    {
+        LockGuard lg(m_mutex);
+        m_counter = 0;
+    }
     m_counterUnprotected = 0;
 
     thread t1([&] {
@@ -40,6 +43,9 @@ TEST_F(MutexTest, basic)
     t1.join();
     t2.join();
 
-    EXPECT_EQ(m_counter, REPEAT * 2);
+    {
+        LockGuard lg(m_mutex);
+        EXPECT_EQ(m_counter, REPEAT * 2);
+    }
     EXPECT_LT(m_counterUnprotected, REPEAT * 2);
 }
