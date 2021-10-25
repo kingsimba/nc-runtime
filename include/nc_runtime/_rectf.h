@@ -6,8 +6,8 @@ struct RectF
     float top;
     float right;
     float bottom;
-    forceinline float width() { return this->right - this->left; }
-    forceinline float height() { return this->bottom - this->top; }
+    forceinline float width() const { return this->right - this->left; }
+    forceinline float height() const { return this->bottom - this->top; }
 
     RectF() = default;
 
