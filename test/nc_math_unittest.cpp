@@ -132,6 +132,24 @@ TEST(Math, linePointDistance)
     EXPECT_EQ(Math_linePointDistance({8.0f, 3.0f}, p1, p2, NULL), 1.8f);
 }
 
+TEST(Math, segmentPointDistance)
+{
+    Vector2 p1 = {1.0f, 6.0f};
+    Vector2 p2 = {5.0f, 3.0f};
+    Vector2 nearest;
+
+    EXPECT_EQ(Math_segmentPointDistance({1.0f, 9.0f}, p1, p2, &nearest), 3.0f);
+    EXPECT_FLOAT_EQ(nearest.x, 1.0f);
+    EXPECT_FLOAT_EQ(nearest.y, 6.0f);
+
+    EXPECT_EQ(Math_segmentPointDistance({5.0f, 6.0f}, p1, p2, &nearest), 2.4f);
+    EXPECT_FLOAT_EQ(nearest.x, 3.56f);
+    EXPECT_FLOAT_EQ(nearest.y, 4.08f);
+
+    // parameter nearestPtOut is optional
+    EXPECT_EQ(Math_segmentPointDistance({8.0f, 3.0f}, p1, p2, NULL), 3.0f);
+}
+
 TEST(Math, segmentsIntersect)
 {
     Vector2 p1 = {4.0f, 12.0f};

@@ -205,6 +205,24 @@ float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc:
     return d;
 }
 
+float Math_segmentPointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* nearestPtOut)
+{
+    Vector2 v = p2 - p1;
+    Vector2 w = pt - p1;
+
+    float c1 = Vector2_dot(w, v);
+    float c2 = Vector2_dot(v, v);
+    float b = nc_clamp(c1 / c2, 0.0f, 1.0f);
+    Vector2 pb = p1 + v * b;
+    Vector2 tmp = pt - pb;
+    float d = tmp.length();
+
+    if (nearestPtOut != NULL)
+        *nearestPtOut = pb;
+
+    return d;
+}
+
 bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::Vector2 b2)
 {
     if (std::max(a1.x, a2.x) < std::min(b1.x, b2.x) || std::max(b1.x, b2.x) < std::min(a1.x, a2.x)

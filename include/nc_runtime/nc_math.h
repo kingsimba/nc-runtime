@@ -20,6 +20,9 @@ bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt
 // calculate distance from a straight line to a point
 float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* projectionOut);
 
+// calculate distance from a line segment to a point
+float Math_segmentPointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* nearestPtOut);
+
 // determine if two line segments intersect
 bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::Vector2 b2);
 
