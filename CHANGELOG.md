@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-10-26 Add `Math_segmentPointDistance()`.
 - 2021-10-22 Fix a bug in `RectF::setAsNegativeMinimum()`.
 - 2021-10-18 Add `Math_linePointDistance()` and `Math_segmentsIntersect()`.
 - 2021-10-14 Add `Vector2i` and `Math_clipSegmentByRect()`.
