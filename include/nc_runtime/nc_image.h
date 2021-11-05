@@ -32,6 +32,9 @@ protected:
 class NcImage : public NcImageBase
 {
 public:
+    NcImage() = default;
+    ~NcImage();
+
     static sp<NcImage> allocWithSize(Size size);
     static sp<NcImage> allocWithBytesNoCopy(Rgba8* bytes, Size size);
     static sp<NcImage> allocWithFileName(const char* fileName);
@@ -44,9 +47,6 @@ public:
     bool saveAs(NcString* fileName) override;
 
 protected:
-    NcImage() = default;
-    ~NcImage();
-
     bool initWithSize(Size size);
     bool initWithFileName(const char* fileName);
 
@@ -59,6 +59,9 @@ protected:
 class NcImageU8 : public NcImageBase
 {
 public:
+    NcImageU8() = default;
+    ~NcImageU8();
+
     static sp<NcImageU8> allocWithSize(Size size);
     static sp<NcImageU8> allocWithFileName(const char* fileName);
 
@@ -75,9 +78,6 @@ public:
     bool saveAs(NcString* fileName) override;
 
 protected:
-    NcImageU8() = default;
-    ~NcImageU8();
-
     bool initWithSize(Size size);
     bool initWithFileName(const char* fileName);
 

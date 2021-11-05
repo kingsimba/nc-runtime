@@ -3,11 +3,16 @@
 #include "nc_types.h"
 #include "string_slice.h"
 
-template <typename T> class NcArray;
+template <typename T>
+class NcArray;
 
 class NcString : public NcObject, public StringSlice
 {
 public:
+    NcString() : m_shouldFree(false) {}
+    NcString(bool isStatic) : NcObject(true), m_shouldFree(false) { UNUSED_VAR(isStatic); }
+    ~NcString();
+
     /**
      * Create a string by C string. |str| must ends with \0.
      */
@@ -29,7 +34,7 @@ public:
      */
     static sp<NcString> allocByTakingBytes(char* str, size_t len)
     {
-        auto o = new NcString();
+        auto o = sp<NcString>::alloc();
         o->initByTakingBytes(str, len);
         return o;
     }
@@ -54,28 +59,28 @@ public:
      */
     static sp<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep)
     {
-        auto o = new NcString();
+        auto o = sp<NcString>::alloc();
         o->initByJoiningSlices(&slices[0], slices.size(), sep);
         return o;
     }
 
     static sp<NcString> allocByJoiningSlices(StringSlice* slices, size_t sliceCount, const StringSlice& sep)
     {
-        auto o = new NcString();
+        auto o = sp<NcString>::alloc();
         o->initByJoiningSlices(slices, sliceCount, sep);
         return o;
     }
 
     static sp<NcString> allocByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep)
     {
-        auto o = new NcString();
+        auto o = sp<NcString>::alloc();
         o->initByJoiningStrings(strs, sep);
         return o;
     }
 
     static sp<NcString> allocWithLiteralCString(const char* str, size_t len)
     {
-        auto o = new NcString(true);
+        auto o = sp<NcString>::alloc(true);
         o->m_str = (char*)str;
         o->m_length = (int)len;
         o->m_shouldFree = false;
@@ -115,11 +120,7 @@ public:
     forceinline bool equals(const StringSlice& r) { return StringSlice::equals(r); }
     forceinline bool equals(const char* r) { return StringSlice::equals(r); }
 
-private:
-    NcString() : m_shouldFree(false) {}
-    NcString(bool isStatic) : NcObject(true), m_shouldFree(false) { UNUSED_VAR(isStatic); }
-    ~NcString();
-
+protected:
     void initByTakingBytes(char* str, size_t len)
     {
         m_str = str;

@@ -160,7 +160,7 @@ void NcString::initByJoiningStrings(NcArray<NcString>* strs, const StringSlice& 
     StringSlice* slices = allocator.allocArray<StringSlice>(n);
     for (int i = 0; i < n; i++)
     {
-        new (slices + i) StringSlice();
+        ::new (slices + i) StringSlice();
         slices[i] = strs->objectAtIndex(i)->toSlice();
     }
     initByJoiningSlices(slices, n, sep);

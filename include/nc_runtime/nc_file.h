@@ -33,6 +33,9 @@ enum class FileSeekOrigin
 class NcFile : public NcObject
 {
 public:
+    NcFile() = default;
+    ~NcFile() { close(); }
+
     forceinline static sp<NcFile> alloc(NcString* fileName, FileOpenFlag flags)
     {
         return alloc(fileName->toSlice(), flags);
@@ -47,10 +50,6 @@ public:
     i64 tell();
     int read(void* bufferOut, int bytesToRead);      // return number of bytes read
     int write(const void* buffer, int bytesToWrite); // return number of bytes written
-
-private:
-    NcFile() {}
-    ~NcFile() { close(); }
 
 private:
     FILE* m_fp = NULL;

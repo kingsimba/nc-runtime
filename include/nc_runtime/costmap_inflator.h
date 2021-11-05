@@ -22,7 +22,7 @@ struct CostmapInflatorParams
 
 class CostmapInflatorImple;
 
-class CostmapInflator
+class CostmapInflator : public NcObject
 {
 public:
     CostmapInflator(const CostmapInflatorParams& params);
@@ -33,5 +33,5 @@ public:
     void inflateInplace(NcImageU8* img, Rect region);
 
 private:
-    CostmapInflatorImple* m_imple;
+    std::unique_ptr<CostmapInflatorImple> m_imple;
 };

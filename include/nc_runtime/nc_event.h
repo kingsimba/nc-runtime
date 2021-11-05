@@ -22,5 +22,5 @@ public:
     EventWaitResult waitWithTimeout(const TimeTick& t);
 
 private:
-    ResetableEventImple* m_imple;
+    std::unique_ptr<ResetableEventImple> m_imple;
 };

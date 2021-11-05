@@ -1,5 +1,7 @@
 # Changelog
 
+- 2021-11-05 Add `sp<T>::alloc()`. Avoid using of new/delete.
+- 2021-11-05 Add StateMachine.
 - 2021-10-26 Add `Math_segmentPointDistance()`.
 - 2021-10-22 Fix a bug in `RectF::setAsNegativeMinimum()`.
 - 2021-10-18 Add `Math_linePointDistance()` and `Math_segmentsIntersect()`.

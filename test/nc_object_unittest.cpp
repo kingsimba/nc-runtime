@@ -1,12 +1,10 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/nc_object.h"
+#include "nc_runtime/nc_stdlib.h"
 
 class MyBox : public NcObject
 {
 public:
-    static sp<MyBox> alloc() { return new MyBox(); }
-
-private:
     MyBox() { m_data = 3; };
     ~MyBox(){};
 
@@ -17,16 +15,13 @@ private:
 class MyString : public NcObject
 {
 public:
-    static sp<MyString> alloc() { return new MyString(); }
-
-private:
     MyString(){};
     ~MyString(){};
 };
 
 TEST(NcObject, weak)
 {
-    auto box = MyBox::alloc();
+    auto box = sp<MyBox>::alloc();
     EXPECT_EQ(box->retainCount(), 1);
     EXPECT_EQ(box->weakCount(), 0);
 
@@ -68,7 +63,7 @@ TEST(NcObject, weak)
 
 TEST(NcObject, rcAndCast)
 {
-    auto box = MyBox::alloc();
+    auto box = sp<MyBox>::alloc();
     EXPECT_EQ(box->retainCount(), 1);
 
     sp<MyBox> box2(box); // copy constructor
@@ -104,7 +99,7 @@ TEST(NcObject, copyNULL)
 
 TEST(NcObject, compare)
 {
-    auto box = MyBox::alloc();
+    auto box = sp<MyBox>::alloc();
     EXPECT_EQ(box->retainCount(), 1);
 
     EXPECT_TRUE(box != NULL);
@@ -117,7 +112,7 @@ TEST(NcObject, compare)
 TEST(NcObject, retainReleaseSmartPointer)
 {
     // allow using retain() and release() on smart pointer
-    auto box = MyBox::alloc();
+    auto box = sp<MyBox>::alloc();
     EXPECT_EQ(box->retainCount(), 1);
 
     EXPECT_TRUE(box != NULL);
@@ -138,7 +133,7 @@ TEST(NcObject, retainReleaseSmartPointer)
 
 TEST(NcObject, isKindOf)
 {
-    auto box = MyBox::alloc();
+    auto box = sp<MyBox>::alloc();
     EXPECT_EQ(box->retainCount(), 1);
     EXPECT_TRUE(box->isKindOf<MyBox>());
     EXPECT_TRUE(box->isKindOf<NcObject>());

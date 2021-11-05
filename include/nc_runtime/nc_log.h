@@ -18,6 +18,7 @@ extern "C"
     typedef void (*NcLogCallback)(const char* str, void* userdata);
 
     void NcLog_setCallback(NcLogCallback callback, void* userdata);
+    static forceinline void NcLog_setLevel(LogLevel level) { g_ncLogLevel = level; }
     void NcLog_write(LogLevel level, const char* file, int line, const char* func, const char* format, ...);
 
     void Dal_writeLog(const char* str); // (DAL = device adaption layer) device dependent implementation

@@ -102,9 +102,16 @@ private:
 /**
  * Smart pointer of NcObject
  */
-template <typename T> class sp
+template <typename T>
+class sp
 {
 public:
+    template <class... Types>
+    static sp<T> alloc(Types... args)
+    {
+        return new T(args...);
+    }
+
     forceinline sp() { m_ptr = NULL; }
     forceinline sp(T* p) { m_ptr = p; }
     forceinline sp(const sp<T>& p)
@@ -113,7 +120,8 @@ public:
         if (m_ptr)
             m_ptr->_retain();
     }
-    template <typename Derived> forceinline sp(const sp<Derived>& p)
+    template <typename Derived>
+    forceinline sp(const sp<Derived>& p)
     {
         m_ptr = p.get();
         if (m_ptr)
@@ -135,7 +143,8 @@ public:
         return *this;
     }
 
-    template <typename Derived> sp<T>& operator=(const sp<Derived>& p)
+    template <typename Derived>
+    sp<T>& operator=(const sp<Derived>& p)
     {
         release(m_ptr);
         m_ptr = p.get();
@@ -171,7 +180,8 @@ private:
     T* m_ptr;
 };
 
-template <class T1, class T2> sp<T1> static_pointer_cast(const sp<T2>& r) noexcept
+template <class T1, class T2>
+sp<T1> static_pointer_cast(const sp<T2>& r) noexcept
 {
     T1* derived = static_cast<T1*>(r.get());
     return sp<T1>(retain(derived));
@@ -180,7 +190,8 @@ template <class T1, class T2> sp<T1> static_pointer_cast(const sp<T2>& r) noexce
 /**
  * Weak Pointer
  */
-template <typename T> class wp
+template <typename T>
+class wp
 {
 public:
     wp() = default;
@@ -229,7 +240,8 @@ public:
         return *this;
     }
 
-    template <typename Derived> wp<T>& operator=(const sp<Derived>& r)
+    template <typename Derived>
+    wp<T>& operator=(const sp<Derived>& r)
     {
         if (m_ptr)
             m_ptr->_releaseWeak();
@@ -238,7 +250,8 @@ public:
         return *this;
     }
 
-    template <typename Derived> wp<T>& operator=(Derived* r)
+    template <typename Derived>
+    wp<T>& operator=(Derived* r)
     {
         if (m_ptr)
             m_ptr->_releaseWeak();
@@ -275,7 +288,7 @@ public:
     using ArrayElement = NcObject;
 
 public:
-    static sp<NcObject> alloc() { return new NcObject(); }
+    NcObject() {}
 
     /**
      * It malloc() a block of memory and initialize the control block.
@@ -299,7 +312,7 @@ public:
         void* buffer = malloc(sizeof(ControlBlock) + size);
         ControlBlock* ctrl = (ControlBlock*)buffer;
 
-        new (ctrl) ControlBlock();
+        ::new (ctrl) ControlBlock();
         return ctrl + 1;
     }
 #ifdef NC_PLATFORM_WIN
@@ -320,7 +333,11 @@ public:
 
     virtual bool equals(NcObject* r) { return this == r; }
 
-    template <typename ToType> forceinline bool isKindOf() { return dynamic_cast<ToType*>(this) != NULL; }
+    template <typename ToType>
+    forceinline bool isKindOf()
+    {
+        return dynamic_cast<ToType*>(this) != NULL;
+    }
 
     // private:
     forceinline void _retain() { _controlBlock()->retain(); }
@@ -356,7 +373,6 @@ public:
     }
 
 protected:
-    NcObject() {}
     NcObject(bool /*isStatic*/)
     {
         ControlBlock* ctrl = _controlBlock();
@@ -365,7 +381,8 @@ protected:
     virtual ~NcObject() {}
 };
 
-template <typename T> forceinline T* retain(T* o)
+template <typename T>
+forceinline T* retain(T* o)
 {
     if (o)
         o->_retain();
@@ -379,7 +396,8 @@ forceinline void release(NcObject* o)
 }
 
 // to prevent error caused by releasing smart pointer through implicit conversion to T*
-template <typename T> forceinline void release(sp<T>& o)
+template <typename T>
+forceinline void release(sp<T>& o)
 {
     o->ERROR_should_not_call_release_on_smart_pointer();
 }

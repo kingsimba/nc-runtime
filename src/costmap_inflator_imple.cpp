@@ -162,12 +162,11 @@ CostValue CostmapInflatorImple::computeCost(float distance)
 
 CostmapInflator::CostmapInflator(const CostmapInflatorParams& params)
 {
-    m_imple = new CostmapInflatorImple(params);
+    m_imple = std::make_unique<CostmapInflatorImple>(params);
 }
 
 CostmapInflator::~CostmapInflator()
 {
-    delete m_imple;
 }
 
 sp<NcImageU8> CostmapInflator::inflate(NcImageU8* inputImg, Rect region)

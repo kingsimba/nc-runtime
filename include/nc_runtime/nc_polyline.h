@@ -6,9 +6,12 @@
 class NcPolyline : public NcObject
 {
 public:
+    NcPolyline(const nc::Vector2* points, int count, bool closed);
+    ~NcPolyline();
+
     static sp<NcPolyline> alloc(const nc::Vector2* points, int count, bool closed)
     {
-        sp<NcPolyline> o = new NcPolyline(points, count, closed);
+        sp<NcPolyline> o = sp<NcPolyline>::alloc(points, count, closed);
         return o;
     }
 
@@ -21,9 +24,6 @@ public:
     RectF calculateBBox();
 
 protected:
-    NcPolyline(const nc::Vector2* points, int count, bool closed);
-    ~NcPolyline();
-
     bool m_closed;
     int m_pointCount;
     nc::Vector2* m_points;

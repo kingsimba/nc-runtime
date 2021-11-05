@@ -10,7 +10,7 @@ NcObject* NcObject::allocRawObjectWithSize(size_t size, bool zero_memory)
     else
         buffer = malloc(size + sizeof(ControlBlock));
     ControlBlock* ctrl = (ControlBlock*)buffer;
-    new (ctrl) ControlBlock();
+    ::new (ctrl) ControlBlock();
     return (NcObject*)(ctrl + 1);
 }
 

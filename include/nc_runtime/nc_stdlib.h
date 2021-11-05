@@ -50,7 +50,8 @@ struct TimeTick
     static TimeTick now();
 
     // return the time used to run some code
-    template <typename Func> static TimeTick measure(Func func);
+    template <typename Func>
+    static TimeTick measure(Func func);
 
     TimeTick() : __time(0) {}
     TimeTick(i64 ms) { __time = ms; }
@@ -68,7 +69,8 @@ forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r)
     return TimeTick{l.__time + r.__time};
 }
 
-template <typename Func> TimeTick TimeTick::measure(Func func)
+template <typename Func>
+TimeTick TimeTick::measure(Func func)
 {
     TimeTick start = TimeTick::now();
     func();
@@ -115,7 +117,11 @@ public:
 
     void* alloc(size_t count);
 
-    template <typename T> T* allocArray(size_t count) { return (T*)alloc(sizeof(T) * count); }
+    template <typename T>
+    T* allocArray(size_t count)
+    {
+        return (T*)alloc(sizeof(T) * count);
+    }
 
     // for testing
     size_t _moreHeapPointerCount() { return m_moreHeapPointers == NULL ? 0 : m_moreHeapPointers->size(); }
@@ -141,10 +147,48 @@ private:
     void* m_p;
 };
 
-template <typename T> inline T* nc_copyArray(const T* arr, size_t count)
+template <typename T>
+inline T* nc_copyArray(const T* arr, size_t count)
 {
     size_t totalSize = sizeof(T) * count;
     T* copy = (T*)malloc(totalSize);
     memcpy(copy, arr, totalSize);
     return copy;
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+class MachineState : public NcObject
+{
+public:
+    virtual void stateBegin() = 0;
+    virtual void stateUpdate() = 0;
+    virtual void stateEnd() = 0;
+};
+
+class StateMachine : public NcObject
+{
+public:
+    StateMachine() {}
+    ~StateMachine()
+    {
+        if (m_currentState)
+            m_currentState->stateEnd();
+    }
+
+    void gotoState(sp<MachineState> state)
+    {
+        if (state == m_currentState)
+            return;
+
+        if (m_currentState)
+            m_currentState->stateEnd();
+        state->stateBegin();
+        m_currentState = state;
+    }
+
+    void spinOnce() { m_currentState->stateUpdate(); }
+
+private:
+    sp<MachineState> m_currentState;
+};

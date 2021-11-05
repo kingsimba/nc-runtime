@@ -153,6 +153,9 @@
     <ClInclude Include="include\nc_runtime\vector2i.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="include\nc_runtime\state_machine.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

@@ -71,11 +71,10 @@ private:
 ResetableEvent::ResetableEvent(bool signaled, bool autoReset)
 {
     UNUSED_VAR(autoReset);
-    m_imple = new ResetableEventImple(signaled, autoReset);
+    m_imple = std::make_unique<ResetableEventImple>(signaled, autoReset);
 }
 ResetableEvent::~ResetableEvent()
 {
-    delete m_imple;
 }
 void ResetableEvent::set()
 {

@@ -3,13 +3,14 @@
 #include "nc_types.h"
 #include "nc_string.h"
 
-template <typename T> class NcArray : public NcObject
+template <typename T>
+class NcArray : public NcObject
 {
 public:
     using ArrayElement = T;
 
 public:
-    static sp<NcArray<T>> alloc() { return new NcArray(); }
+    static sp<NcArray<T>> alloc() { return sp<NcArray<T>>::alloc(); }
 
     forceinline int capacity() { return (int)m_array.capacity(); }
     forceinline int size() { return (int)m_array.size(); }
@@ -42,7 +43,8 @@ public:
      * });
      * ```
      */
-    template <typename Func> sp<T> findWithCondition(Func func)
+    template <typename Func>
+    sp<T> findWithCondition(Func func)
     {
         for (auto& obj : m_array)
             if (func(obj.get()))
@@ -58,7 +60,8 @@ public:
         return indexOfObjectWithCondition([=](T* obj) { return obj == r || obj->equals(r); });
     }
 
-    template <typename Func> int indexOfObjectWithCondition(Func func)
+    template <typename Func>
+    int indexOfObjectWithCondition(Func func)
     {
         int len = (int)m_array.size();
         for (int i = 0; i < len; i++)

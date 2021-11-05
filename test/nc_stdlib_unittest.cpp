@@ -173,3 +173,44 @@ TEST(Stdlib, rectFSetAsNegativeMinimum)
     EXPECT_EQ(area.top, -2.0f);
     EXPECT_EQ(area.bottom, -2.0f);
 }
+
+namespace
+{
+static std::vector<const char*> g_stateLogs;
+class IdleState : public MachineState
+{
+public:
+    void stateBegin() override { g_stateLogs.push_back("IdleState begin"); }
+    void stateUpdate() override { g_stateLogs.push_back("IdleState update"); }
+    void stateEnd() override { g_stateLogs.push_back("IdleState end"); }
+};
+
+class DownloadState : public MachineState
+{
+public:
+    void stateBegin() override { g_stateLogs.push_back("DownloadState begin"); }
+    void stateUpdate() override { g_stateLogs.push_back("DownloadState update"); }
+    void stateEnd() override { g_stateLogs.push_back("DownloadState end"); }
+};
+} // namespace
+
+TEST(Stdlib, stateMachine)
+{
+    auto o = sp<StateMachine>::alloc();
+    auto idleState = sp<IdleState>::alloc();
+    auto downloadState = sp<DownloadState>::alloc();
+
+    o->gotoState(idleState);
+    o->spinOnce();
+    o->gotoState(downloadState);
+    o->spinOnce();
+    o = NULL;
+
+    ASSERT_EQ(g_stateLogs.size(), 6);
+    EXPECT_STREQ(g_stateLogs[0], "IdleState begin");
+    EXPECT_STREQ(g_stateLogs[1], "IdleState update");
+    EXPECT_STREQ(g_stateLogs[2], "IdleState end");
+    EXPECT_STREQ(g_stateLogs[3], "DownloadState begin");
+    EXPECT_STREQ(g_stateLogs[4], "DownloadState update");
+    EXPECT_STREQ(g_stateLogs[5], "DownloadState end");
+}

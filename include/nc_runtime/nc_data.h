@@ -6,6 +6,9 @@
 class NcData : public NcObject
 {
 public:
+    NcData() = default;
+    ~NcData() = default;
+
     static sp<NcData> allocWithBytes(const void* bytes, size_t len);
     static sp<NcData> allocByTakingBytes(void* bytes, size_t len);
     static sp<NcData> allocWithContentsOfFile(NcString* fileName)
@@ -16,10 +19,6 @@ public:
 
     size_t length() { return m_length; }
     void* bytes() { return m_bytes; }
-
-protected:
-    NcData() = default;
-    ~NcData() = default;
 
 private:
     size_t m_length = 0;
