@@ -42,7 +42,7 @@ public:
     RollPitchYaw toRPY();
 };
 
-static forceinline Quaternion quaternion(float x, float y, float z, float w)
+NC_DEPRECATED forceinline Quaternion quaternion(float x, float y, float z, float w)
 {
     return Quaternion{x, y, z, w};
 }
