@@ -30,7 +30,7 @@ TEST(Quaternion, basic)
 
     // rotate vector
     q.initWithRPY(0, 0, NC_PI / 2);
-    Vector3 r = q.transformVector(vec3(10, 0, 0));
+    Vector3 r = q.transformVector(Vector3(10, 0, 0));
 
     EXPECT_NEAR(r.x, 0, 0.0001);
     EXPECT_NEAR(r.y, 10, 0.0001);

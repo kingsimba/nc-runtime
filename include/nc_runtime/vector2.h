@@ -42,7 +42,7 @@ public:
     }
 };
 
-static forceinline Vector2 vec2(float x, float y)
+NC_DEPRECATED forceinline Vector2 vec2(float x, float y)
 {
     return Vector2(x, y);
 }

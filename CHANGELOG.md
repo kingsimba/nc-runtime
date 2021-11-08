@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-11-08 Add `NC_DEPRECATED`
 - 2021-11-05 Add `sp<T>::alloc()`. Avoid using of new/delete.
 - 2021-11-05 Add StateMachine.
 - 2021-10-26 Add `Math_segmentPointDistance()`.

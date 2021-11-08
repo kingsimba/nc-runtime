@@ -46,7 +46,7 @@ public:
     }
 };
 
-forceinline Vector3i vec3i(int x, int y, int z)
+NC_DEPRECATED forceinline Vector3i vec3i(int x, int y, int z)
 {
     return Vector3i{x, y, z};
 }

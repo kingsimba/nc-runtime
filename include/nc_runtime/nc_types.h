@@ -39,6 +39,12 @@
 #    define NC_ENVIRONMENT_32 1
 #endif
 
+#ifdef NC_OS_WIN
+#    define NC_DEPRECATED __declspec(deprecated)
+#else
+#    define NC_DEPRECATED __attribute__((deprecated))
+#endif
+
 // single precision
 #define NC_TWO_PI 6.2831853f // 2 * pi
 #define NC_PI 3.14159265f    // pi
