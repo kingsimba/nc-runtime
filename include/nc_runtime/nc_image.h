@@ -85,3 +85,34 @@ protected:
     bool m_shouldFreePixels = false;
     u8* m_pixels = NULL;
 };
+
+// Grayscale image
+class NcImageU16 : public NcImageBase
+{
+public:
+    NcImageU16() = default;
+    ~NcImageU16();
+
+    static sp<NcImageU16> allocWithSize(Size size);
+    static sp<NcImageU16> allocWithFileName(const char* fileName);
+
+    // The image doesn't own the memory. The user must keep it valid.
+    static sp<NcImageU16> allocWithBytesNoCopy(u16* bytes, Size size);
+    static sp<NcImageU16> allocByCoping(NcImageU16* r);
+
+    inline u16* mutablePixels() { return m_pixels; }
+    inline const u16* pixels() { return m_pixels; }
+    inline u16 pixelAt(int x, int y) { return m_pixels[y * m_size.width + x]; }
+
+    void clear(u16 color);
+
+    bool saveAs(NcString* fileName) override;
+
+protected:
+    bool initWithSize(Size size);
+    bool initWithFileName(const char* fileName);
+
+protected:
+    bool m_shouldFreePixels = false;
+    u16* m_pixels = NULL;
+};

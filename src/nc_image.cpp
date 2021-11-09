@@ -167,3 +167,90 @@ void NcImageU8::clear(u8 color)
         }
     }
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+bool NcImageU16::initWithSize(Size size)
+{
+    m_size = size;
+    m_shouldFreePixels = true;
+    m_pixels = (u16*)malloc((size_t)size.width * size.height * sizeof(u16));
+    return true;
+}
+
+bool NcImageU16::initWithFileName(const char* fileName)
+{
+    int w, h, channelsInFile;
+    u16* buffer = (u16*)stbi_load(fileName, &w, &h, &channelsInFile, 1);
+    if (buffer != NULL)
+    {
+        m_shouldFreePixels = true;
+        m_pixels = buffer;
+        m_size = Size_make(w, h);
+        return true;
+    }
+
+    return false;
+}
+
+NcImageU16::~NcImageU16()
+{
+    if (m_shouldFreePixels)
+        free(m_pixels);
+}
+
+bool NcImageU16::saveAs(NcString* fileName)
+{
+    int bytesWritten =
+        stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 1, m_pixels, sizeof(u16) * m_size.width);
+    return bytesWritten != 0;
+}
+
+sp<NcImageU16> NcImageU16::allocWithSize(Size size)
+{
+    sp<NcImageU16> o = alloc<NcImageU16>();
+    if (!o->initWithSize(size))
+        o.reset();
+    return o;
+}
+
+sp<NcImageU16> NcImageU16::allocWithBytesNoCopy(u16* bytes, Size size)
+{
+    sp<NcImageU16> o = alloc<NcImageU16>();
+    o->m_size = size;
+    o->m_pixels = bytes;
+    return o;
+}
+
+sp<NcImageU16> NcImageU16::allocWithFileName(const char* fileName)
+{
+    sp<NcImageU16> o = alloc<NcImageU16>();
+    if (!o->initWithFileName(fileName))
+        o.reset();
+    return o;
+}
+
+sp<NcImageU16> NcImageU16::allocByCoping(NcImageU16* r)
+{
+    sp<NcImageU16> o = NcImageU16::allocWithSize(r->size());
+    o->setOrigin(r->origin());
+    memcpy(o->mutablePixels(), r->pixels(), r->pixelCount());
+    return o;
+}
+
+void NcImageU16::clear(u16 color)
+{
+    if (color == 0)
+    {
+        memset(m_pixels, 0, sizeof(color) * pixelCount());
+    }
+    else
+    {
+        u16* p = m_pixels;
+        u16* pend = p + pixelCount();
+        for (; p != pend; p++)
+        {
+            *p = color;
+        }
+    }
+}
