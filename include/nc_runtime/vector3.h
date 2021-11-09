@@ -13,6 +13,7 @@ public:
     Vector3() = default;
     forceinline Vector3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
 
+    forceinline void set(float x_, float y_, float z_) { x = x_, y = y_, z = z_; }
     forceinline void setZero() { x = y = z = 0; }
     forceinline float length() const { return sqrtf(x * x + y * y + z * z); }
     forceinline float lengthSquared() const { return x * x + y * y + z * z; }

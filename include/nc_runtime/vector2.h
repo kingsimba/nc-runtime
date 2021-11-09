@@ -13,6 +13,7 @@ public:
     Vector2() = default;
     forceinline Vector2(float x_, float y_) : x(x_), y(y_) {}
 
+    forceinline void set(float x_, float y_) { x = x_, y = y_; }
     forceinline void setZero() { x = y = 0; }
     forceinline float length() const { return sqrtf(x * x + y * y); }
     forceinline float lengthSquared() const { return x * x + y * y; }
