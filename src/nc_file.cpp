@@ -22,7 +22,7 @@ sp<NcFile> NcFile::alloc(const StringSlice& fileName, FileOpenFlag flags)
     if (fp == NULL)
         return NULL;
 
-    sp<NcFile> o = sp<NcFile>::alloc();
+    sp<NcFile> o = NcObject::alloc<NcFile>();
     o->m_fp = fp;
     return o;
 }

@@ -106,12 +106,6 @@ template <typename T>
 class sp
 {
 public:
-    template <class... Types>
-    static sp<T> alloc(Types... args)
-    {
-        return new T(args...);
-    }
-
     forceinline sp() { m_ptr = NULL; }
     forceinline sp(T* p) { m_ptr = p; }
     forceinline sp(const sp<T>& p)
@@ -370,6 +364,13 @@ public:
     {
         this->~NcObject();
         free(_controlBlock());
+    }
+
+protected:
+    template <class T, class... Types>
+    static sp<T> alloc(Types... args)
+    {
+        return new T(args...);
     }
 
 protected:

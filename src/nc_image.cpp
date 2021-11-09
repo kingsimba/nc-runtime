@@ -42,7 +42,7 @@ bool NcImage::saveAs(NcString* fileName)
 
 sp<NcImage> NcImage::allocWithSize(Size size)
 {
-    sp<NcImage> o = sp<NcImage>::alloc();
+    sp<NcImage> o = alloc<NcImage>();
     if (!o->initWithSize(size))
         o = NULL;
     return o;
@@ -50,7 +50,7 @@ sp<NcImage> NcImage::allocWithSize(Size size)
 
 sp<NcImage> NcImage::allocWithBytesNoCopy(Rgba8* bytes, Size size)
 {
-    sp<NcImage> o = sp<NcImage>::alloc();
+    sp<NcImage> o = alloc<NcImage>();
     o->m_size = size;
     o->m_pixels = bytes;
     return o;
@@ -58,7 +58,7 @@ sp<NcImage> NcImage::allocWithBytesNoCopy(Rgba8* bytes, Size size)
 
 sp<NcImage> NcImage::allocWithFileName(const char* fileName)
 {
-    sp<NcImage> o = sp<NcImage>::alloc();
+    sp<NcImage> o = alloc<NcImage>();
     if (!o->initWithFileName(fileName))
         o = NULL;
     return o;
@@ -121,7 +121,7 @@ bool NcImageU8::saveAs(NcString* fileName)
 
 sp<NcImageU8> NcImageU8::allocWithSize(Size size)
 {
-    sp<NcImageU8> o = sp<NcImageU8>::alloc();
+    sp<NcImageU8> o = alloc<NcImageU8>();
     if (!o->initWithSize(size))
         o.reset();
     return o;
@@ -129,7 +129,7 @@ sp<NcImageU8> NcImageU8::allocWithSize(Size size)
 
 sp<NcImageU8> NcImageU8::allocWithBytesNoCopy(u8* bytes, Size size)
 {
-    sp<NcImageU8> o = sp<NcImageU8>::alloc();
+    sp<NcImageU8> o = alloc<NcImageU8>();
     o->m_size = size;
     o->m_pixels = bytes;
     return o;
@@ -137,7 +137,7 @@ sp<NcImageU8> NcImageU8::allocWithBytesNoCopy(u8* bytes, Size size)
 
 sp<NcImageU8> NcImageU8::allocWithFileName(const char* fileName)
 {
-    sp<NcImageU8> o = sp<NcImageU8>::alloc();
+    sp<NcImageU8> o = alloc<NcImageU8>();
     if (!o->initWithFileName(fileName))
         o.reset();
     return o;

@@ -16,7 +16,7 @@ sp<NcData> NcData::allocWithBytes(const void* bytes, size_t len)
 
 sp<NcData> NcData::allocByTakingBytes(void* bytes, size_t len)
 {
-    auto o = sp<NcData>::alloc();
+    auto o = alloc<NcData>();
     o->m_bytes = bytes;
     o->m_length = len;
     o->m_shouldFree = false;

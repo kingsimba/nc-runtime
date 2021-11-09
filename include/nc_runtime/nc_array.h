@@ -10,7 +10,7 @@ public:
     using ArrayElement = T;
 
 public:
-    static sp<NcArray<T>> alloc() { return sp<NcArray<T>>::alloc(); }
+    static sp<NcArray<T>> alloc() { return NcObject::alloc<NcArray<T>>(); }
 
     forceinline int capacity() { return (int)m_array.capacity(); }
     forceinline int size() { return (int)m_array.size(); }

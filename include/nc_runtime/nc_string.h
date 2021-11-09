@@ -34,7 +34,7 @@ public:
      */
     static sp<NcString> allocByTakingBytes(char* str, size_t len)
     {
-        auto o = sp<NcString>::alloc();
+        auto o = alloc<NcString>();
         o->initByTakingBytes(str, len);
         return o;
     }
@@ -59,28 +59,28 @@ public:
      */
     static sp<NcString> allocByJoiningSlices(const std::vector<StringSlice>& slices, const StringSlice& sep)
     {
-        auto o = sp<NcString>::alloc();
+        auto o = alloc<NcString>();
         o->initByJoiningSlices(&slices[0], slices.size(), sep);
         return o;
     }
 
     static sp<NcString> allocByJoiningSlices(StringSlice* slices, size_t sliceCount, const StringSlice& sep)
     {
-        auto o = sp<NcString>::alloc();
+        auto o = alloc<NcString>();
         o->initByJoiningSlices(slices, sliceCount, sep);
         return o;
     }
 
     static sp<NcString> allocByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep)
     {
-        auto o = sp<NcString>::alloc();
+        auto o = alloc<NcString>();
         o->initByJoiningStrings(strs, sep);
         return o;
     }
 
     static sp<NcString> allocWithLiteralCString(const char* str, size_t len)
     {
-        auto o = sp<NcString>::alloc(true);
+        auto o = alloc<NcString>(true);
         o->m_str = (char*)str;
         o->m_length = (int)len;
         o->m_shouldFree = false;

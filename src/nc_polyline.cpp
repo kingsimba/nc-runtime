@@ -6,7 +6,8 @@ using namespace nc;
 
 NcPolyline::~NcPolyline()
 {
-    free(m_points);
+    if (m_shouldFree)
+        free(m_points);
 }
 
 NcPolyline::NcPolyline(const nc::Vector2* points, int count, bool closed)

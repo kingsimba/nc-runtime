@@ -9,6 +9,14 @@ public:
     NcData() = default;
     ~NcData() = default;
 
+    static forceinline NcData makeWithBytesNoCopy(const void* bytes, size_t len)
+    {
+        NcData o;
+        o.m_bytes = (void*)bytes;
+        o.m_length = len;
+        return o;
+    }
+
     static sp<NcData> allocWithBytes(const void* bytes, size_t len);
     static sp<NcData> allocByTakingBytes(void* bytes, size_t len);
     static sp<NcData> allocWithContentsOfFile(NcString* fileName)

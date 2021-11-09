@@ -180,6 +180,8 @@ static std::vector<const char*> g_stateLogs;
 class IdleState : public MachineState
 {
 public:
+    static sp<IdleState> alloc() { return NcObject::alloc<IdleState>(); }
+
     void stateBegin() override { g_stateLogs.push_back("IdleState begin"); }
     void stateUpdate() override { g_stateLogs.push_back("IdleState update"); }
     void stateEnd() override { g_stateLogs.push_back("IdleState end"); }
@@ -188,6 +190,8 @@ public:
 class DownloadState : public MachineState
 {
 public:
+    static sp<DownloadState> alloc() { return NcObject::alloc<DownloadState>(); }
+
     void stateBegin() override { g_stateLogs.push_back("DownloadState begin"); }
     void stateUpdate() override { g_stateLogs.push_back("DownloadState update"); }
     void stateEnd() override { g_stateLogs.push_back("DownloadState end"); }
@@ -196,15 +200,16 @@ public:
 
 TEST(Stdlib, stateMachine)
 {
-    auto o = sp<StateMachine>::alloc();
-    auto idleState = sp<IdleState>::alloc();
-    auto downloadState = sp<DownloadState>::alloc();
+    {
+        StateMachine o;
+        auto idleState = IdleState::alloc();
+        auto downloadState = DownloadState::alloc();
 
-    o->gotoState(idleState);
-    o->spinOnce();
-    o->gotoState(downloadState);
-    o->spinOnce();
-    o = NULL;
+        o.gotoState(idleState);
+        o.spinOnce();
+        o.gotoState(downloadState);
+        o.spinOnce();
+    }
 
     ASSERT_EQ(g_stateLogs.size(), 6);
     EXPECT_STREQ(g_stateLogs[0], "IdleState begin");
