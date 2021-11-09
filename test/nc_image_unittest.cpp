@@ -32,7 +32,7 @@ public:
             u16* pixels = m_image16->mutablePixels();
             for (int i = 0; i < 256; i++)
             {
-                pixels[i] = i;
+                pixels[i] = i << 8;
             }
         }
     }
@@ -94,18 +94,25 @@ TEST_F(NcImageTest, u8NoCopy)
     EXPECT_EQ(pixels[1], 2);
 }
 
-TEST_F(NcImageTest, u16)
+TEST_F(NcImageTest, u16saveToU8)
 {
     auto o = m_image16;
 
-    EXPECT_TRUE(o->saveAs("test_data/output/u16.png"_str));
+    EXPECT_TRUE(o->saveAs("test_data/output/u8.png"_str));
 
-    auto loaded = NcImageU16::allocWithFileName("test_data/output/u16.png");
+    auto loaded = NcImageU8::allocWithFileName("test_data/output/u8.png");
     ASSERT_TRUE(loaded != NULL);
     EXPECT_EQ(loaded->size(), Size_make(16, 16));
-    const u16* pixels = loaded->pixels();
+    const u8* pixels = loaded->pixels();
     EXPECT_EQ(pixels[0], 0);
     EXPECT_EQ(pixels[1], 1);
+}
+
+TEST_F(NcImageTest, u16load)
+{
+    auto loaded = NcImageU16::allocWithFileName("test_data/u16.png");
+    ASSERT_TRUE(loaded != NULL);
+    EXPECT_EQ(loaded->size(), Size_make(100, 100));
 }
 
 TEST_F(NcImageTest, u16Copy)
@@ -114,7 +121,7 @@ TEST_F(NcImageTest, u16Copy)
     EXPECT_EQ(o->size(), Size_make(16, 16));
     const u16* pixels = o->pixels();
     EXPECT_EQ(pixels[0], 0);
-    EXPECT_EQ(pixels[1], 1);
+    EXPECT_EQ(pixels[1], 256);
 }
 
 TEST_F(NcImageTest, u16NoCopy)

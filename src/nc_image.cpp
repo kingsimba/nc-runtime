@@ -181,7 +181,7 @@ bool NcImageU16::initWithSize(Size size)
 bool NcImageU16::initWithFileName(const char* fileName)
 {
     int w, h, channelsInFile;
-    u16* buffer = (u16*)stbi_load(fileName, &w, &h, &channelsInFile, 1);
+    u16* buffer = (u16*)stbi_load_16(fileName, &w, &h, &channelsInFile, 1);
     if (buffer != NULL)
     {
         m_shouldFreePixels = true;
@@ -201,8 +201,16 @@ NcImageU16::~NcImageU16()
 
 bool NcImageU16::saveAs(NcString* fileName)
 {
+    u8* u8Data = (u8*)malloc((size_t)pixelCount() * sizeof(u8));
+    u16* u16Ptr = m_pixels;
+    u16* pend = u16Ptr + pixelCount();
+    u8* u8Ptr = u8Data;
+    for (; u16Ptr != pend; u16Ptr++, u8Ptr++)
+    {
+        *u8Ptr = (*u16Ptr) >> 8;
+    }
     int bytesWritten =
-        stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 1, m_pixels, sizeof(u16) * m_size.width);
+        stbi_write_png(fileName->cstr(), m_size.width, m_size.height, 1, u8Data, sizeof(u8) * m_size.width);
     return bytesWritten != 0;
 }
 
