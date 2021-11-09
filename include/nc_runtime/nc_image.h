@@ -108,6 +108,8 @@ public:
 
     bool saveAs(NcString* fileName) override;
 
+    void normalize();
+
 protected:
     bool initWithSize(Size size);
     bool initWithFileName(const char* fileName);

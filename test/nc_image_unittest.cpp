@@ -126,3 +126,16 @@ TEST_F(NcImageTest, u16NoCopy)
     EXPECT_EQ(pixels[0], 1);
     EXPECT_EQ(pixels[1], 2);
 }
+
+TEST_F(NcImageTest, u16Normalize)
+{
+    u16 bytes[] = {1, 2, 3, 4};
+    auto o = NcImageU16::allocWithBytesNoCopy(bytes, Size_make(2, 2));
+    EXPECT_EQ(o->size(), Size_make(2, 2));
+    o->normalize();
+    const u16* pixels = o->pixels();
+    EXPECT_EQ(pixels[0], 0);
+    EXPECT_EQ(pixels[1], UINT16_MAX / 3 * 1);
+    EXPECT_EQ(pixels[2], UINT16_MAX / 3 * 2);
+    EXPECT_EQ(pixels[3], UINT16_MAX);
+}

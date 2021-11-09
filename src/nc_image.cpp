@@ -254,3 +254,22 @@ void NcImageU16::clear(u16 color)
         }
     }
 }
+
+void NcImageU16::normalize()
+{
+    u16 l = UINT16_MAX, r = 0;
+    u16* p = m_pixels;
+    u16* pend = p + pixelCount();
+    for (; p != pend; p++)
+    {
+        l = nc_min(l, *p);
+        r = nc_max(r, *p);
+    }
+
+    p = m_pixels;
+    for (; p != pend; p++)
+    {
+        double t = (*p - l) * 1.0 / (r - l);
+        *p = (u16)(t * UINT16_MAX);
+    }
+}
