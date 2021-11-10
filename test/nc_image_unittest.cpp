@@ -30,7 +30,7 @@ public:
         {
             m_image16 = NcImageU16::allocWithSize(Size{16, 16});
             u16* pixels = m_image16->mutablePixels();
-            for (int i = 0; i < 256; i++)
+            for (u16 i = 0; i < 256; i++)
             {
                 pixels[i] = i << 8;
             }
