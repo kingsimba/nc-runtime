@@ -5,13 +5,32 @@
 #include "nc_runtime/nc_types.h"
 
 /**
- * JsonSettingLoader o;
- * o.loadFile("test_data/config.json");
- * auto root = o.root();
- * auto v = root.stringValueForKey("user.name");
- * ASSERT_TRUE(v.hasValue());
- * EXPECT_STREQ(v.value(), "Alaxender The Great");
- * EXPECT_STREQ(root.stringValueForKey("user.nonexist").Or("Tony"), "Tony");
+ * auto o = JsonNode::instanceWithCString(R"(
+ *   {
+ *       "user": {
+ *           "name": "Alexander The Great",
+ *           "age": 38
+ *      },
+ *       "document": {
+ *       }
+ *   })");
+ *   EXPECT_TRUE(o.hasValue());
+ *
+ *   auto name = o["user.name"]->asString();
+ *   ASSERT_TRUE(name.hasValue());
+ *   EXPECT_STREQ(name.value(), "Alexander The Great");
+ *
+ *   auto age = o["user.age"]->asInt();
+ *   ASSERT_TRUE(age.hasValue());
+ *   EXPECT_EQ(age.value(), 38);
+ *
+ *   EXPECT_STREQ(o["user.nonexist"]->asString().Or("Tony"), "Tony");
+ *
+ *   // Delete
+ *   o->deleteKey("user.age");
+ *   o->deleteKey("document");
+ *   auto str = o->dumpAsString();
+ *   EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great"}})");
  */
 class JsonNode
 {
@@ -24,6 +43,7 @@ public:
     JsonNode(const JsonNode& r) { m_root = json_incref(r.m_root); }
     ~JsonNode() { json_decref(m_root); }
 
+    bool deleteKey(const char* key);
     Some<JsonNode> nodeForKey(const char* key);
     Some<JsonNode> operator[](const char* key);
     Some<JsonNode> operator[](int index);

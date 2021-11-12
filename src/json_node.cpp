@@ -34,6 +34,32 @@ Some<JsonNode> JsonNode::instanceWithCString(const char* buffer)
     return node;
 }
 
+bool JsonNode::deleteKey(const char* key)
+{
+    if (strchr(key, '.') == NULL)
+    {
+        return json_object_del(m_root, key) != 0;
+    }
+    else
+    {
+        char keyCopy[512];
+        strcpy(keyCopy, key);
+        char* context = keyCopy;
+        char* token;
+        json_t* node = m_root;
+        json_t* parent = NULL;
+        char* lastNodeName = NULL;
+        while (node != nullptr && (token = nc_strtok(NULL, ".", &context)) != NULL)
+        {
+            parent = node;
+            lastNodeName = token;
+            node = json_object_get(node, token);
+        }
+
+        return parent != NULL && json_object_del(parent, lastNodeName) != 0;
+    }
+}
+
 Some<JsonNode> JsonNode::nodeForKey(const char* key)
 {
     auto node = _nodeForKey(key);
@@ -45,16 +71,23 @@ Some<JsonNode> JsonNode::nodeForKey(const char* key)
 
 json_t* JsonNode::_nodeForKey(const char* key)
 {
-    char keyCopy[512];
-    strcpy(keyCopy, key);
-    char* context = keyCopy;
-    char* token;
-    json_t* node = m_root;
-    while (node != nullptr && (token = nc_strtok(NULL, ".", &context)) != NULL)
+    if (strchr(key, '.') == NULL)
     {
-        node = json_object_get(node, token);
+        return json_object_get(m_root, key);
     }
-    return node;
+    else
+    {
+        char keyCopy[512];
+        strcpy(keyCopy, key);
+        char* context = keyCopy;
+        char* token;
+        json_t* node = m_root;
+        while (node != nullptr && (token = nc_strtok(NULL, ".", &context)) != NULL)
+        {
+            node = json_object_get(node, token);
+        }
+        return node;
+    }
 }
 
 Some<JsonNode> JsonNode::operator[](const char* key)

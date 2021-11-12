@@ -1,6 +1,45 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/json_node.h"
 
+TEST(JsonSettingLoaderTest, example)
+{
+    auto o = JsonNode::instanceWithCString(R"(
+    {
+        "user": {
+            "name": "Alexander The Great",
+            "age": 38
+        },
+        "document": {
+        }
+    })");
+    EXPECT_TRUE(o.hasValue());
+
+    // chained access
+    auto name = o["user"]["name"]->asString();
+    ASSERT_TRUE(name.hasValue());
+    EXPECT_STREQ(name.value(), "Alexander The Great");
+    name = o["user"]["age"]->asString();
+    ASSERT_FALSE(name.hasValue()); // type error
+    name = o["user"]["name"]["non-exist"]["non-exist"]->asString();
+    ASSERT_FALSE(name.hasValue()); // chain doesn't exist
+
+    // chained access with '.'
+    name = o["user.name"]->asString();
+    ASSERT_TRUE(name.hasValue());
+    EXPECT_STREQ(name.value(), "Alexander The Great");
+
+    auto age = o["user.age"]->asInt();
+    ASSERT_TRUE(age.hasValue());
+    EXPECT_EQ(age.value(), 38);
+
+    EXPECT_STREQ(o["user.nonexist"]->asString().Or("Tony"), "Tony");
+
+    // Delete
+    o->deleteKey("user.age");
+    o->deleteKey("document");
+    auto str = o->dumpAsString();
+    EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great"}})");
+}
 TEST(JsonSettingLoaderTest, basic)
 {
     auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");

@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-11-08 Add `JsonNode::deleteKey()`.
 - 2021-11-08 Add `NC_DEPRECATED`
 - 2021-11-05 Add `NcObject::alloc<T>()`. Avoid using of new/delete.
 - 2021-11-05 Add StateMachine.
