@@ -158,6 +158,8 @@ class MyData
 public:
     MyData(int v) : m_v(v) {}
 
+    int value() { return m_v; }
+
 private:
     nc::Mutex m_mutex;
     int m_v;
@@ -182,4 +184,5 @@ TEST(NcObject, byReference)
     MyData d(3);
     auto s = MyReference::alloc(d);
     EXPECT_EQ(&s->data(), &d);
+    EXPECT_EQ(s->data().value(), 3);
 }
