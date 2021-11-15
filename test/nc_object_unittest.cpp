@@ -1,6 +1,7 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/nc_object.h"
 #include "nc_runtime/nc_stdlib.h"
+#include "nc_runtime/mutex.h"
 
 class MyBox : public NcObject
 {
@@ -148,4 +149,37 @@ TEST(NcObject, tryStd)
     std::weak_ptr<int> w(s);
     s.reset();
     w.reset();
+}
+
+namespace
+{
+class MyData
+{
+public:
+    MyData(int v) : m_v(v) {}
+
+private:
+    nc::Mutex m_mutex;
+    int m_v;
+};
+
+class MyReference : public NcObject
+{
+public:
+    static sp<MyReference> alloc(MyData& d) { return NcObject::alloc<MyReference>(d); }
+    MyReference(MyData& d) : m_data(d) {}
+
+    MyData& data() { return m_data; }
+
+private:
+    MyData& m_data;
+};
+
+} // namespace
+
+TEST(NcObject, byReference)
+{
+    MyData d(3);
+    auto s = MyReference::alloc(d);
+    EXPECT_EQ(&s->data(), &d);
 }

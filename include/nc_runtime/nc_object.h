@@ -368,9 +368,9 @@ public:
 
 protected:
     template <class T, class... Types>
-    static sp<T> alloc(Types... args)
+    static sp<T> alloc(Types&&... args)
     {
-        return new T(args...);
+        return new T(std::forward<Types>(args)...);
     }
 
 protected:
