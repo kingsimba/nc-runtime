@@ -34,7 +34,12 @@ Some<JsonNode> JsonNode::instanceWithCString(const char* buffer)
     return node;
 }
 
-bool JsonNode::deleteKey(const char* key)
+void JsonNode::add(const char* key, const JsonNode& node)
+{
+    json_object_set(m_root, key, node.m_root);
+}
+
+bool JsonNode::remove(const char* key)
 {
     if (strchr(key, '.') == NULL)
     {

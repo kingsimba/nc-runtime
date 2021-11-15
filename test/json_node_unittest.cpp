@@ -35,10 +35,15 @@ TEST(JsonSettingLoaderTest, example)
     EXPECT_STREQ(o["user.nonexist"]->asString().Or("Tony"), "Tony");
 
     // Delete
-    o->deleteKey("user.age");
-    o->deleteKey("document");
+    o->remove("user.age");
+    o->remove("document");
     auto str = o->dumpAsString();
     EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great"}})");
+
+    // Add
+    o["user"]->add("age", JsonNode::integer(22));
+    str = o->dumpAsString();
+    EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great", "age": 22}})");
 }
 TEST(JsonSettingLoaderTest, basic)
 {

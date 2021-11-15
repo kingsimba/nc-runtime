@@ -1,7 +1,7 @@
 # Changelog
 
+- 2021-11-15 Support JSON modification with`JsonNode::remove()`, `JsonNode::add()`, `JsonNode::object()`, `JsonNode::integer()`, `JsonNode::real()` etc.
 - 2021-11-15 Improve `NcObject::alloc()`.
-- 2021-11-08 Add `JsonNode::deleteKey()`.
 - 2021-11-08 Add `NC_DEPRECATED`
 - 2021-11-05 Add `NcObject::alloc<T>()`. Avoid using of new/delete.
 - 2021-11-05 Add StateMachine.

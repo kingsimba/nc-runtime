@@ -27,8 +27,8 @@
  *   EXPECT_STREQ(o["user.nonexist"]->asString().Or("Tony"), "Tony");
  *
  *   // Delete
- *   o->deleteKey("user.age");
- *   o->deleteKey("document");
+ *   o->remove("user.age");
+ *   o->remove("document");
  *   auto str = o->dumpAsString();
  *   EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great"}})");
  */
@@ -38,16 +38,54 @@ public:
     static Some<JsonNode> instanceWithContentsOfFile(const char* file);
     static Some<JsonNode> instanceWithCString(const char* buffer);
 
-    JsonNode() {}
+    JsonNode() = default;
     JsonNode(json_t* root) : m_root(json_incref(root)) {}
     JsonNode(const JsonNode& r) { m_root = json_incref(r.m_root); }
     ~JsonNode() { json_decref(m_root); }
 
-    bool deleteKey(const char* key);
+    //////////////////////////////////////////////////////////////////////////
+    // Object creation
+    static JsonNode integer(i64 v)
+    {
+        JsonNode o;
+        o.m_root = json_integer(v);
+        return o;
+    }
+    static JsonNode real(double v)
+    {
+        JsonNode o;
+        o.m_root = json_real(v);
+        return o;
+    }
+    static JsonNode string(const char* v)
+    {
+        JsonNode o;
+        o.m_root = json_string(v);
+        return o;
+    }
+    static JsonNode boolean(bool v)
+    {
+        JsonNode o;
+        o.m_root = json_boolean(v);
+        return o;
+    }
+    static JsonNode object()
+    {
+        JsonNode o;
+        o.m_root = json_object();
+        return o;
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    // Operations
+    void add(const char* key, const JsonNode& node);
+    bool remove(const char* key);
     Some<JsonNode> nodeForKey(const char* key);
     Some<JsonNode> operator[](const char* key);
     Some<JsonNode> operator[](int index);
 
+    //////////////////////////////////////////////////////////////////////////
+    // Value
     Some<int> asInt();
     Some<i64> asInt64();
     Some<u32> asU32();
@@ -69,6 +107,8 @@ public:
     Some<JsonNode> asArray();
     int arraySize();
 
+    //////////////////////////////////////////////////////////////////////////
+    // Other
     json_t* rawNode() { return m_root; }
 
     /**
