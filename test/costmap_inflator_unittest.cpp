@@ -33,7 +33,7 @@ TEST(CostmapInflator, basic)
     EXPECT_EQ(d->pixelAt(0, 0), 255); // unknown should be kept
     EXPECT_EQ(d->pixelAt(1, 0), 0);   // free space should be kept
 
-    EXPECT_TRUE(d->saveAs("test_data/output/test_inflate.png"_str));
+    EXPECT_TRUE(d->saveAs("test_data/output/test_inflate.png"));
 }
 
 TEST(CostmapInflator, officeArea)
@@ -56,7 +56,7 @@ TEST(CostmapInflator, officeArea)
     for (size_t i = 0; i < REPEAT; i++)
         d = inflator.inflate(image.get(), region);
 
-    EXPECT_TRUE(d->saveAs("test_data/output/test_inflate_office.png"_str));
+    EXPECT_TRUE(d->saveAs("test_data/output/test_inflate_office.png"));
 }
 
 TEST(CostmapInflator, inflateInplace)
@@ -86,7 +86,7 @@ TEST(CostmapInflator, inflateInplace)
     EXPECT_GT(o->pixelAt(40, 50), (u8)0);
     EXPECT_LT(o->pixelAt(40, 50), (u8)CostValue::inflatedObstacle);
 
-    EXPECT_TRUE(o->saveAs("test_data/output/test_inflate_inplace.png"_str));
+    EXPECT_TRUE(o->saveAs("test_data/output/test_inflate_inplace.png"));
 }
 
 TEST(CostmapInflator, tooLargeInflationRadius)

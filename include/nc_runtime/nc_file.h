@@ -2,8 +2,6 @@
 
 #include "nc_string.h"
 
-#define NC_MAX_PATH 512
-
 enum class FileOpenFlag
 {
     none = 0,
@@ -36,10 +34,6 @@ public:
     NcFile() = default;
     ~NcFile() { close(); }
 
-    forceinline static sp<NcFile> alloc(NcString* fileName, FileOpenFlag flags)
-    {
-        return alloc(fileName->toSlice(), flags);
-    }
     static sp<NcFile> alloc(const StringSlice& slice, FileOpenFlag flags);
 
     void close();

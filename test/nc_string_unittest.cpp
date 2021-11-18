@@ -19,10 +19,6 @@ TEST(NcString, basic)
     s = NcString::allocWithBytes("cat litter", 10);
     EXPECT_STREQ(s->cstr(), "cat litter");
     EXPECT_EQ(s->length(), 10);
-
-    s = NcString::allocWithSlice(StringSlice("dog food"));
-    EXPECT_STREQ(s->cstr(), "dog food");
-    EXPECT_EQ(s->length(), 8);
 }
 
 TEST(StringSlice, compare)
@@ -39,32 +35,6 @@ TEST(StringSlice, compare)
     EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"));
     EXPECT_TRUE("blood"_str->equalsCaseInsensitive("BLOOD"_s));
     EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"_s));
-}
-
-TEST(NcString, literal)
-{
-    sp<NcString> s1, s2;
-    for (int i = 0; i < 2; i++)
-    {
-        sp<NcString> s = "hello world"_str;
-        if (i == 0)
-            s1 = s;
-        else
-            s2 = s;
-    }
-
-    // s1 is exactly the same as s2, because of the literal string manager.
-    EXPECT_EQ(s1.get(), s2.get());
-
-    // Calling retain() or release() has no effect
-    EXPECT_EQ(s1->retainCount(), INT_MAX);
-    EXPECT_EQ(retain<NcString>(s1)->retainCount(), INT_MAX);
-    release(s1.get());
-    EXPECT_EQ(s1->retainCount(), INT_MAX);
-
-    auto s3 = "hello world"_str;
-    // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
-    EXPECT_EQ(s1.get(), s3.get());
 }
 
 TEST(NcString, join)

@@ -109,6 +109,11 @@ public:
         m_ncstring = NULL;
     }
     StringSlice(const StringSlice& r) noexcept;
+
+    static StringSlice make(const char* buffer); // create a copy of C string
+    static StringSlice makeWithBytes(const char* buffer, size_t size);
+    static StringSlice makeByTakingBytes(char* buffer, size_t size);
+
     forceinline StringSlice(StringSlice&& r) noexcept
     {
         m_str = r.m_str;
@@ -141,7 +146,7 @@ public:
     //////////////////////////////////////////////////////////////////////////
     // Accessors
 
-    forceinline const char* bytes() const { return m_str; }
+    forceinline const char* cstr() const { return m_str; }
     forceinline int length() const { return m_length; }
 
     // iterate Unicode points
@@ -242,24 +247,27 @@ public:
      *
      * @rtn return the new string
      */
-    sp<NcString> replaceInRange(Range range, const StringSlice& replacement);
+    StringSlice replaceInRange(Range range, const StringSlice& replacement);
 
     /**
      * Count the occurrences of target string
      */
-    int countSlice(const StringSlice& target);
+    int countSlice(const StringSlice& target) const;
 
     //////////////////////////////////////////////////////////////////////////
     // Equals
 
-    forceinline bool equals(const StringSlice& r)
+    forceinline bool equals(const StringSlice& r) const
     {
         return m_length == r.m_length && memcmp(m_str, r.m_str, m_length) == 0;
     }
-    forceinline bool equals(const char* r) { return m_length == (int)strlen(r) && memcmp(m_str, r, m_length) == 0; }
+    forceinline bool equals(const char* r) const
+    {
+        return m_length == (int)strlen(r) && memcmp(m_str, r, m_length) == 0;
+    }
 
-    bool equalsCaseInsensitive(const char* r);
-    bool equalsCaseInsensitive(const StringSlice& r);
+    bool equalsCaseInsensitive(const char* r) const;
+    bool equalsCaseInsensitive(const StringSlice& r) const;
 
     //////////////////////////////////////////////////////////////////////////
     // private
@@ -277,9 +285,14 @@ protected:
     NcString* m_ncstring;
 };
 
+forceinline bool operator==(const StringSlice& l, const StringSlice& r)
+{
+    return l.equals(r);
+}
+
 inline StringCharIter::StringCharIter(const StringSlice& slice)
 {
-    m_str = slice.bytes();
+    m_str = slice.cstr();
     m_length = slice.length();
 }
 

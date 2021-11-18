@@ -115,7 +115,7 @@ public:
      * Returns the JSON representation of json as a string, or NULL on error.
      * The return value must be freed by the caller using free().
      */
-    sp<NcString> dumpAsString(size_t flags = 0);
+    StringSlice dumpAsString(size_t flags = 0);
 
     void operator=(const JsonNode& r)
     {

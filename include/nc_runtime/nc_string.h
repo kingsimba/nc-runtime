@@ -9,14 +9,13 @@ class NcArray;
 class NcString : public NcObject, public StringSlice
 {
 public:
-    NcString() : m_shouldFree(false) {}
-    NcString(bool isStatic) : NcObject(true), m_shouldFree(false) { UNUSED_VAR(isStatic); }
-    ~NcString();
+    NcString() = default;
+    ~NcString() = default;
 
     /**
      * Create a string by C string. |str| must ends with \0.
      */
-    static sp<NcString> allocWithCString(const char* str) { return allocWithBytes(str, strlen(str)); }
+    forceinline static sp<NcString> allocWithCString(const char* str) { return allocWithBytes(str, strlen(str)); }
 
     /**
      * Create a string by copying bytes. |str| could not ends with \0.
@@ -38,11 +37,6 @@ public:
         o->initByTakingBytes(str, len);
         return o;
     }
-
-    /**
-     * Create a string from a slice. Same as StringSlice::toString().
-     */
-    static sp<NcString> allocWithSlice(const StringSlice& str) { return allocWithBytes(str.bytes(), str.length()); }
 
     /**
      * Return a partially created String.
@@ -75,15 +69,6 @@ public:
     {
         auto o = alloc<NcString>();
         o->initByJoiningStrings(strs, sep);
-        return o;
-    }
-
-    static sp<NcString> allocWithLiteralCString(const char* str, size_t len)
-    {
-        auto o = alloc<NcString>(true);
-        o->m_str = (char*)str;
-        o->m_length = (int)len;
-        o->m_shouldFree = false;
         return o;
     }
 
@@ -125,14 +110,13 @@ protected:
     {
         m_str = str;
         m_length = (int)len;
-        m_shouldFree = true;
     }
 
     void initByJoiningSlices(const StringSlice* slices, size_t count, const StringSlice& sep);
     void initByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep);
-
-private:
-    bool m_shouldFree;
 };
 
-sp<NcString> operator""_str(const char* literalStr, size_t len);
+forceinline sp<NcString> operator""_str(const char* literalStr, size_t len)
+{
+    return NcString::allocWithBytes(literalStr, len);
+}

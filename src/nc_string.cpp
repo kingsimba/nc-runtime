@@ -8,54 +8,6 @@
 
 using namespace std;
 
-// create one NcString object for each literal string
-class GlobalStringManager
-{
-public:
-    sp<NcString> addString(const char* cstr, size_t len)
-    {
-        static mutex s_mutex;
-
-        sp<NcString> str;
-
-        s_mutex.lock();
-        auto iter = m_map.find((size_t)cstr);
-        if (iter == m_map.end())
-        {
-            str = NcString::allocWithLiteralCString(cstr, len);
-            m_map.insert(iter, std::make_pair((size_t)cstr, str));
-        }
-        else
-        {
-            str = iter->second;
-        }
-        s_mutex.unlock();
-
-        return str;
-    }
-
-    ~GlobalStringManager()
-    {
-        auto iter = m_map.begin();
-        while (iter != m_map.end())
-        {
-            NcObject* obj = iter->second;
-            obj->_deleteThis();
-            iter++;
-        }
-    }
-
-private:
-    unordered_map<size_t, NcString*> m_map;
-};
-
-static GlobalStringManager g_stringManager;
-
-sp<NcString> operator"" _str(const char* literalStr, size_t len)
-{
-    return g_stringManager.addString(literalStr, len);
-}
-
 //////////////////////////////////////////////////////////////////////////
 // NcString
 
@@ -76,7 +28,6 @@ sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
     char* buffer = (char*)(o + 1);
     o->m_str = buffer;
     o->m_length = (int)strLength;
-    o->m_shouldFree = false;
     *strOut = buffer;
     return o;
 }
@@ -107,14 +58,6 @@ bool NcString::equals(NcObject* r)
     return false;
 }
 
-NcString::~NcString()
-{
-    if (m_shouldFree)
-    {
-        free((char*)m_str);
-    }
-}
-
 void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep)
 {
     if (sliceCount == 0)
@@ -138,11 +81,11 @@ void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount,
         for (size_t i = 0; i < sliceCount; i++)
         {
             const StringSlice& s = slices[i];
-            memcpy(str + totalLen, s.bytes(), s.length());
+            memcpy(str + totalLen, s.cstr(), s.length());
             totalLen += s.length();
             if (i != sliceCount - 1)
             {
-                memcpy(str + totalLen, sep.bytes(), sep.length());
+                memcpy(str + totalLen, sep.cstr(), sep.length());
                 totalLen += sep.length();
             }
         }

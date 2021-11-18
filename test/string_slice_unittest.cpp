@@ -138,8 +138,8 @@ TEST(StringSlice, startsEndsWith)
 
 TEST(StringSlice, replace)
 {
-    auto str = NcString::allocWithCString("folder1/folder2/file.png");
-    auto pos = str->rfind('.');
+    auto str = "folder1/folder2/file.png"_s;
+    auto pos = str.rfind('.');
     ASSERT_TRUE(pos != -1);
-    EXPECT_STREQ(str->replaceInRange(Range_make(pos, str->length() - pos), ".jpg")->cstr(), "folder1/folder2/file.jpg");
+    EXPECT_STREQ(str.replaceInRange(Range_make(pos, str.length() - pos), ".jpg").cstr(), "folder1/folder2/file.jpg");
 }

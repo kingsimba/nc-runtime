@@ -21,7 +21,7 @@ TEST(ArrayTest, basic)
         ASSERT_EQ(pieces.size(), 2);
         for (auto s : pieces)
         {
-            v->addObject(NcString::allocWithSlice(s));
+            v->addObject(s.toString());
         }
 
         EXPECT_EQ(v->firstObject().get(), str.get());

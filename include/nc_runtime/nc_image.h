@@ -2,6 +2,7 @@
 
 #include "vector2.h"
 #include "nc_object.h"
+#include "string_slice.h"
 
 class NcImageBase : public NcObject
 {
@@ -17,7 +18,7 @@ public:
     inline Vector2 origin() { return m_origin; }
     inline void setOrigin(Vector2 origin) { m_origin = origin; }
 
-    virtual bool saveAs(NcString* fileName) = 0;
+    virtual bool saveAs(const StringSlice& fileName) = 0;
 
 protected:
     NcImageBase() = default;
@@ -44,7 +45,7 @@ public:
 
     void clear(Rgba8 color);
 
-    bool saveAs(NcString* fileName) override;
+    bool saveAs(const StringSlice& fileName) override;
 
 protected:
     bool initWithSize(Size size);
@@ -55,8 +56,8 @@ protected:
     Rgba8* m_pixels = NULL;
 };
 
-// Grayscale image
 class NcImageU8 : public NcImageBase
+// Grayscale image
 {
 public:
     NcImageU8() = default;
@@ -75,7 +76,7 @@ public:
 
     void clear(u8 color);
 
-    bool saveAs(NcString* fileName) override;
+    bool saveAs(const StringSlice& fileName) override;
 
 protected:
     bool initWithSize(Size size);
@@ -106,7 +107,7 @@ public:
 
     void clear(u16 color);
 
-    bool saveAs(NcString* fileName) override;
+    bool saveAs(const StringSlice& fileName) override;
 
     void normalize();
 

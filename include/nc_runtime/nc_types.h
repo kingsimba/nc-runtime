@@ -45,6 +45,8 @@
 #    define NC_DEPRECATED __attribute__((deprecated))
 #endif
 
+#define NC_MAX_PATH 512
+
 // single precision
 #define NC_TWO_PI 6.2831853f // 2 * pi
 #define NC_PI 3.14159265f    // pi
