@@ -1,6 +1,6 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_log.h"
-#include "nc_string.h"
+#include "nc_runtime/nc_log.h"
+#include "nc_runtime/nc_string.h"
 
 TEST(Log, basic) {
   static sp<NcString> message;

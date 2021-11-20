@@ -1,19 +1,25 @@
 #pragma once
 
-#include "basic_types.h"
+#include "nc_types.h"
+#include "string_slice.h"
 
 // An experimental implementation. It might be optimized in the future.
 // Keep watching https://github.com/kingsimba/nc-runtime for updates
 class ControlBlock {
 public:
+#ifdef NC_PLATFORM_WIN
+#  pragma warning(push)
+#  pragma warning(suppress : 26495)
+#endif
   ControlBlock() : m_rc(1), m_wc(0) {}
+#ifdef NC_PLATFORM_WIN
+#  pragma warning(pop)
+#endif
 
   inline void retain() {
-    if (m_rc != INT_MAX) {
-      m_lock.lock();
-      m_rc++;
-      m_lock.unlock();
-    }
+    m_lock.lock();
+    m_rc++;
+    m_lock.unlock();
   }
 
   struct Action {
@@ -23,13 +29,11 @@ public:
 
   inline Action release() {
     Action rtn = {false, false};
-    if (m_rc != INT_MAX) {
-      m_lock.lock();
-      rtn.freeObject = m_rc == 1;
-      rtn.freeMemory = m_rc == 1 && m_wc == 0;
-      m_rc--;
-      m_lock.unlock();
-    }
+    m_lock.lock();
+    rtn.freeObject = m_rc == 1;
+    rtn.freeMemory = m_rc == 1 && m_wc == 0;
+    m_rc--;
+    m_lock.unlock();
     return rtn;
   }
 
@@ -50,15 +54,13 @@ public:
 
   forceinline bool lockStrong() {
     bool succ = true;
-    if (m_rc != INT_MAX) {
-      m_lock.lock();
-      if (m_rc != 0) {
-        m_rc++;
-      } else {
-        succ = false;
-      }
-      m_lock.unlock();
+    m_lock.lock();
+    if (m_rc != 0) {
+      m_rc++;
+    } else {
+      succ = false;
     }
+    m_lock.unlock();
 
     return succ;
   }
@@ -68,7 +70,15 @@ public:
 
 private:
   Spinlock m_lock;
+
+#if defined(NC_OS_UNIX) && defined(__clang__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+#endif
   char m_unused[7];  // padding to 16 bytes
+#if defined(NC_OS_UNIX) && defined(__clang__)
+#  pragma clang diagnostic pop
+#endif
 };
 
 /**
@@ -78,7 +88,7 @@ template <typename T>
 class sp {
 public:
   forceinline sp() { m_ptr = NULL; }
-  forceinline sp(T* p) { m_ptr = p; }
+  forceinline sp(nullptr_t) { m_ptr = NULL; }
   forceinline sp(const sp<T>& p) {
     m_ptr = p.get();
     if (m_ptr) m_ptr->_retain();
@@ -93,6 +103,12 @@ public:
     r.m_ptr = NULL;
   }
   ~sp() { release(m_ptr); }
+
+  static forceinline sp<T> takeRaw(T* p) {
+    sp<T> o;
+    o.m_ptr = p;
+    return o;
+  }
 
   sp<T>& operator=(const sp<T>& p) {
     release(m_ptr);
@@ -118,13 +134,16 @@ public:
   forceinline T* get() const { return m_ptr; }
   forceinline T* operator->() const { return m_ptr; }
 
-  /**
-   * Implicit conversion to T*.
-   *
-   * Usually, implicit conversion is not a good idea. https://www.informit.com/articles/article.aspx?p=31529&seqNum=7
-   * But I still want it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
-   */
-  forceinline operator T*() const { return m_ptr; }
+  forceinline operator bool() const { return m_ptr != nullptr; }
+
+  forceinline bool operator==(const sp<T>& r) const {
+    return m_ptr == r.m_ptr || (m_ptr != NULL && r.m_ptr != NULL && m_ptr->equals(r.m_ptr));
+  }
+  forceinline bool operator!=(const sp<T>& r) const {
+    return m_ptr != r.m_ptr && (m_ptr == NULL || r.m_ptr == NULL || !m_ptr->equals(r.m_ptr));
+  }
+  forceinline bool operator==(nullptr_t) const { return m_ptr == NULL; }
+  forceinline bool operator!=(nullptr_t) const { return m_ptr != NULL; }
 
   /**
    * For accessing array element(If it's an array)
@@ -138,7 +157,7 @@ private:
 template <class T1, class T2>
 sp<T1> static_pointer_cast(const sp<T2>& r) noexcept {
   T1* derived = static_cast<T1*>(r.get());
-  return sp<T1>(retain(derived));
+  return retainToSp(derived);
 }
 
 /**
@@ -206,7 +225,7 @@ public:
 
     ControlBlock* ctrl = m_ptr->_controlBlock();
     if (ctrl->lockStrong())
-      return sp<T>(m_ptr);
+      return sp<T>::takeRaw(m_ptr);
     else
       return NULL;
   }
@@ -226,7 +245,7 @@ public:
   using ArrayElement = NcObject;
 
 public:
-  static sp<NcObject> alloc() { return new NcObject(); }
+  NcObject() {}
 
   /**
    * It malloc() a block of memory and initialize the control block.
@@ -241,14 +260,22 @@ public:
    */
   static NcObject* allocRawObjectWithSize(size_t size, bool zero_memory);
 
+#ifdef NC_PLATFORM_WIN
+#  pragma warning(push)
+#  pragma warning(suppress : 6386)
+#endif
   void* operator new(size_t size) {
-    void* buffer = malloc(size + sizeof(ControlBlock));
+    void* buffer = malloc(sizeof(ControlBlock) + size);
     ControlBlock* ctrl = (ControlBlock*)buffer;
-    new (ctrl) ControlBlock();
+
+    ::new (ctrl) ControlBlock();
     return ctrl + 1;
   }
+#ifdef NC_PLATFORM_WIN
+#  pragma warning(pop)
+#endif
 
-  void operator delete(void* p) { p = p; }
+  void operator delete(void* p) { UNUSED_VAR(p); }
 
   forceinline ControlBlock* _controlBlock() { return (ControlBlock*)(this) - 1; }
 
@@ -258,7 +285,7 @@ public:
   /**
    * Convert any object to string
    */
-  virtual sp<NcString> toString();
+  virtual StringSlice toString();
 
   virtual bool equals(NcObject* r) { return this == r; }
 
@@ -295,18 +322,24 @@ public:
   }
 
 protected:
-  NcObject() {}
-  NcObject(bool /*isStatic*/) {
-    ControlBlock* ctrl = _controlBlock();
-    ctrl->m_rc = INT_MAX;
+  template <class T, class... Types>
+  static sp<T> alloc(Types&&... args) {
+    return sp<T>::takeRaw(new T(std::forward<Types>(args)...));
   }
+
+protected:
   virtual ~NcObject() {}
 };
 
 template <typename T>
 forceinline T* retain(T* o) {
   if (o) o->_retain();
-  return (T*)o;
+  return o;
+}
+
+template <typename T>
+forceinline sp<T> retainToSp(T* p) {
+  return sp<T>::takeRaw(retain(p));
 }
 
 forceinline void release(NcObject* o) {

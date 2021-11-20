@@ -1,180 +1,238 @@
 [![Actions Status](https://github.com/kingsimba/nc-runtime/workflows/CMake/badge.svg)](https://github.com/kingsimba/nc-runtime/actions)
 
-# NC-Runtime <!-- omit in toc -->
+NC-Runtime <!-- omit in toc -->
+==========
 
-> **WARNING:** A work in progress
-
-- [Contents](#contents)
+- [Background](#background)
+- [String Class](#string-class)
+  - [Implmentation of StringSlice](#implmentation-of-stringslice)
+- [NcString](#ncstring)
   - [Smart Pointer](#smart-pointer)
-    - [Rules of using `sp`.](#rules-of-using-sp)
-  - [String Class](#string-class)
-  - [Foundation Classes: NcObject, NcArray, NcString, etc](#foundation-classes-ncobject-ncarray-ncstring-etc)
   - [StackOrHeapAllocator](#stackorheapallocator)
   - [ManualResetEvent](#manualresetevent)
   - [Many more good stuffs](#many-more-good-stuffs)
 - [Design Notes](#design-notes)
-  - [std::shared_ptr vs self-implemented smart pointer.](#stdshared_ptr-vs-self-implemented-smart-pointer)
-    - [The internal of shared_ptr](#the-internal-of-shared_ptr)
-    - [Try to use shared_ptr](#try-to-use-shared_ptr)
-    - [Things I like & dislike](#things-i-like--dislike)
-    - [Allow implicit conversion](#allow-implicit-conversion)
-    - [Makes all memory in one piece with `sp`](#makes-all-memory-in-one-piece-with-sp)
+  - [The internal of shared_ptr](#the-internal-of-shared_ptr)
+  - [Try to use shared_ptr](#try-to-use-shared_ptr)
+  - [Things I like & dislike about `std::shared_ptr<>`](#things-i-like--dislike-about-stdshared_ptr)
+  - [Makes all memory in one piece with `sp`](#makes-all-memory-in-one-piece-with-sp)
   - [`auto` keyword](#auto-keyword)
-  - [String literals](#string-literals)
   - [Log System](#log-system)
   - [Visual Studio Visualizer](#visual-studio-visualizer)
   - [Implement operator [] for `sp<NcArray>`](#implement-operator--for-spncarray)
   - [Closure(Lambda Functions)](#closurelambda-functions)
 
-# Contents
+# Background
 
-In my humble opinion, unlike other modern programming languages, C++ lacks some important infrastructures.
-Everyone have to invent their own wheel. And so am I.
+Unlike other modern programming languages, C++ lacks some important infrastructures.
+Everyone have to invent their own wheel.
+
+Since C++ 11, with `shared_ptr`, `thread`, `mutex` etc, the Standards bring some orders into the chaos. But I don't totally agree with their design.
 
 This project contains the methodology & wheels which I found useful.
 They may not be the best ideas. But I hope you may find some pieces useful.
 
-## Smart Pointer
 
-`std::shared_ptr` gives a good direction in automating memory management.
-But I'd like to offer a slightly different approach.
+# String Class
 
-The smart pointer `sp` and `wp` works in many ways like `std::shared_ptr` and `std::weak_ptr`.
+C++ did a very bad job with std::string. (If you don't believe me, does anyone remember how to split a `std::string` into pieces?) Because it's soo bad, almost every library (QT, abseil, OpenCV, MFC, etc) all invented their own ones.
 
-```cpp
-// get() and use_count() works the same as std::shared_ptr
-sp<NcData> data = NcData::allocWithBytes(buffer, len);
-EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
-EXPECT_EQ(data.use_count(), 1);
+In my opinion, string is so important and should have been hard-coded into the compiler! If so, literal string will be more efficient and there will no incentives for the chaos in almost every libraries.
 
-wp<NcString> w(str);	// strong/raw to weak
-auto s = w.lock(); 		// weak to strong
-```
-
-But they also bear important differences. Such as: The raw pointer and smart pointer can be freely converted to each other.
+Sadly, I'd have to invent my own wheel. I want a string class which is both intuitive and efficient.
+`StringSlice` is created just for that. It's always on stack and cheap to copy. Most of all, it's intuitive to use. (The name 'slice' is borrowed from Golang's slice concept.)
 
 ```cpp
-sp<NcString> p1 = NcString::allocWithCString("hello");
-NcString* raw = p1.get();  // sp -> raw
-sp<NcString> p2 = retain(raw);   // raw -> sp
+vector<StringSlice> piece = "hello_world"_s.split("_");
+pieces[0]; // "hello"
+pieces[1]; // "world"
+
+"hello_world"_s.startsWith("hello"); // true
+"hello_world"_s.endsWith("world"); // true
+"HELLO"_s.equalsCaseIncensitive("hello"); // true
+
+"hello"_s.slice(1, 3) //  "ell"
+"hello"_s.sliceFrom(2) //  "llo"
+
+"internationalization"_s.countSlice("tion") // 2
 ```
 
-It makes calling raw-pointer functions easier:
+StringSlice doesn't have `operator+` (which is the root of many bad code). I added `join` and `format`. They are better and faster.
 
 ```cpp
-void myFunction(NcString* str) // raw pointer
+std::vector<StringSlice> lines({"hello", "world", ""});
+"\n"_s.join(lines) // "hello\nworld\n"
 
-sp<NcString> s = NcString::allocWithCString("abc");
-myFunction(s); // implicitly conversion to raw pointer
-
-auto arr = NcArray<NcString>::allocWithObjects("123"_str, "234"_str, NULL);
-for(int i = 0; i < arr->Length(); i++) {
-   NcString* str = arr[i]; // implicitly convert to raw pointer
-}
+StringSlice::format("hello %s", "simba") // "hello world");
 ```
 
-And it allows to retake ownership from raw pointer.
+## Implmentation of StringSlice
 
-```cpp
-void SomeObject::setName(NcString* name) {
-   m_name = retain(name);  // retake ownership from raw pointer
-}
-```
+Unlike C string, which requires a `'\0'` ending. Unlike `std::string` which is mutable and allocated from heap. `StringSlice` is a simple struct, lives on stack, and immutable. It only contains a start pointer and a length.
 
-### Rules of using `sp`.
-
-- There are only two ways of using pointer: `Widget*` or `sp<Widget>`. There is not `const` variant.
-- Use raw pointer as much as possible(local variables, parameters etc), unless you want to take the ownership.
-- If you want to take ownership, make it explicit by calling `retain()`.
-
-```cpp
-class SomeClass
-{
- public:
-   SomeClass() {
-      sp<NcString> name = NcString::allocWithCString("hello"); // object creation, use `sp`
-      m_name = sp;   // transfer ownership, use `sp`
-   }
-
-   void setName(NcString* name) { // function parameter: use raw pointer
-      m_name = retain(name);  // explicitly take ownership
-   }
-
- private:
-   void processing() {
-      NcString* name = m_name; // local variable: use raw pointer
-      useName(name);
-   }
-
-   void useName(NcString* name) {   // function parameter: use raw pointer
-   }
-
- private:
-   sp<NcString> m_name;
-}
-```
-
-## String Class
-
-I want a string class which is both intuitive and efficient.
-
-`StringSlices` is always on stack. It only contains a `char*` and a `length`. There is no heap memory allocation. So it's very fast.
+So creating a subslice is very cheap(just advance the pointer and reassign the length). 
+Consider the following code, there is not a single `malloc()/free()` in it.
 
 ```cpp
 StringSlice slice = "hello---world"_s;
-vector<StringSlice> pieces = slice.split("---");
-EXPECT_TRUE(pieces[0].equals("hello"));
-EXPECT_TRUE(pieces[1].equals("world"));
+StringSlice pieces[3];
+int num = slice.splitWithLimit("---", pieces, countof(pieces));
+ASSERT_EQ(num, 2);
+EXPECT_TRUE(pieces[0] == "hello");
+EXPECT_TRUE(pieces[1] == "world");
 ```
 
-`NcString` is on heap. There is one `malloc()` for each string.
+
+
+Most of the time, StringSlice manages the memory safely.
+For example:
 
 ```cpp
-auto str = NcString::allocWithCString("hello---world");
+auto str1 = "hello world"_s; // use static memory
+auto str2 = StringSlice::format("hello %s", "world"); // allocate memory internally
+```
+
+But sometimes, you should be more careful.
+
+```cpp
+// `str1` takes ownership of the memory, and will call `free()` when it's not needed'
+char* buffer = json_dumps(jsonNode);
+auto str1 = StrinSlice::makeByTakingCString(buffer);
+
+char buffer[MAX_PATH];
+getcwd(buffer, MAX_PATH);
+// Careful: str2 will be invalid when `buffer` goes out of scope
+auto str2 = StringSlice::makeEphemeral(buffer);
+// `StringSlice::make()` will make a copy of the memory. It's safer, albeit slower.
+auto str3 = StringSlice::make(buffer);
+```
+
+# NcString
+
+`NcString` is on heap. It's derived from `NcObject`.
+For most cases, please use `StringSlice` instead of `NcString`.
+Use `NcString` only when you need an `NcObject` derived object.
+For example, when you want to put it into `NcArray<>` or `NcHashmap<>`.
+
+```cpp
+auto str1 = "hello---world"_str;
+auto str2 = NcString::allocWithCString("hello---world");
+
 // splitting a string will only create StringSlices. So it's very fast.
-auto slices = str.split("---");
+auto slices = str->split("---");
 EXPECT_EQ(str->retainCount(), 3); // because each slice holds a reference to the string
-EXPECT_TRUE(slices[0].equals("hello"));
-EXPECT_TRUE(slices[1].equals("world"));
+
+// can conver to StringSlice
+str->toSlice();
 ```
 
-Both `StringSlice` and `NcString` have rich set of functions, such as:
+The functions in `NcString` is the same as in `StringSlice`, such as  `join`', `format`, `startsWith`, `endsWith`, `split`, etc.
+
+## Smart Pointer
+
+`std::shared_ptr` gives a acceptable direction in automating memory management. I too think they should go directly in to the compiler, like what ObjectC++ did.
+
+Once again, disappointed, I created `sp` and `wp`. They are also compatible with `std::shared_ptr` and `std::weak_ptr`.
 
 ```cpp
-"freeman"_s.startsWith("free");
-"freeman"_s.endsWith("man");
-EXPECT_EQ("internationalization"_s.countSlice("tion"), 2);
-auto str = NcString::format("%s shall come", "The Day"); // The Day shall come
+// get() and use_count() works the same as std::shared_ptr
+sp<NcData> data = NcData::allocWithContentsOfFile("hello_world.txt");
+EXPECT_EQ(data->length(), 11);   // overload operator '->'
+EXPECT_EQ(data.use_count(), 1);
+
+// create sp
+sp<NcString> str = NcString::allocWithCString("hello");
+
+NcString* raw = str.get();         // strong -> raw
+sp<NcString> s2 = retainToSp(raw); // raw -> strong
+
+wp<NcString> w(str);           // strong -> weak
+sp<NcString> s = w.lock();     // weak -> strong
+if (s != nullptr)
+{
+    use(s);
+}
 ```
 
-## Foundation Classes: NcObject, NcArray, NcString, etc
+There are some differences with `std::shared_ptr`:
 
-I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
+1.  There is a base class `NcObject`. `sp<>` only works on it. While `std::shared_ptr<>` can work on any class.
 
-- Type identification
+    `NcObject` contains some common used methods. Such as `toString()`, `isKindOf()` and `equals()`.
+    They can be used to make fancy things like:
 
-  ```cpp
-  sp<NcObject> box = MyBox::alloc();
-  EXPECT_TRUE(box->isKindOf<MyBox>());
-  EXPECT_TRUE(box->isKindOf<NcObject>());
-  EXPECT_FALSE(box->isKindOf<NcString>());
-  ```
+    ```cpp
+    // ""_str is short for NcString::allocWithCString(const char* str);
+    auto arr = NcArray::allocWithObjects("hello"_str, "world"_str, NULL);
 
-- All objects can be converted in string.
+    // any object can be coverted to string
+    auto str = NcString::format("array %@ with length %d", arr, arr->length());
+    EXPECT_EQ(str, "array [\"hello\", \"world\"] with length 2");
+    ```
 
-  ```cpp
-  auto str = o->toString();
-  ```
+    ```cpp
+    // deep & generic comparison
+    auto array1 = NcArray::allocWithObjects(obj1, obj2, NULL);
+    auto array2 = NcArray::alloc();
+    array2->push(obj1);
+    array2->push(obj2);
+    array1->equals(array2); // should be true
+    ```
 
-- C style format can be extended to support any NcObject.
+    ```cpp
+    // type identification
+    sp<NcObject> box = MyBox::alloc();
+    EXPECT_TRUE(box->isKindOf<MyBox>());
+    EXPECT_TRUE(box->isKindOf<NcObject>());
+    EXPECT_FALSE(box->isKindOf<NcString>());
+    ```
+   
+2.  There is a `operator[]` in `sp`. It makes indexing into array easier
 
-  ```cpp
-  auto arr = NcArray<NcString>::alloc();
-  arr->addObject("Earth"_str);
-  arr->addObject("Mars"_str);
-  arr[1] = "Jupiter"_str;
-  EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
-  ```
+    ```cpp
+    auto arr = NcArray::allocWithObject(obj1, obj2, NULL);
+    printf(arr[0]->toString());
+    printf(arr[1]->toString());
+    ```
+
+3.  It supports manual reference counting through `retain()` and `release()`.
+    though their uses should be restricted (like when working with 3rd-party C API).
+
+    ```cpp
+    auto userData = UserData::alloc();
+    // retain() manually increase RC
+    SomeOldSdk_setUserData((void*)retain(userData.get())); 
+    SomeOldSdk_setDeleteCallback([](void* userdata) {
+        UserData* data = (UserData*)userdata;
+        release(data); // release() manually decrease RC
+    });
+    ```
+
+4.  The memory layout is more efficient for some objects.
+
+    Consider the following code:
+
+    ```cpp
+    auto str1 = std::make_shared<std::string>("hello");
+    ```
+
+    There are three memory blocks (all on heap) for str1:
+        
+    *   the control block used by `shared_ptr`
+    *   the string object
+    *   the contained string "hello"
+
+    `std::make_shared<>` smartly combine the first two blocks in one `malloc()`. 
+    But the contained string requires a second `malloc()`.
+
+    With `NcString`, all 3 blocks are created in one `malloc()`.
+    Please see the implementation for how it works.
+
+    ```cpp
+    auto str2 = NcString::allocWithCString("hello");
+    ```
+
+    The same optimization is used for `NcData`.
 
 ## StackOrHeapAllocator
 
@@ -238,11 +296,12 @@ EXPECT_GE(duration.ms(), 10);
 
 # Design Notes
 
-To be honest, I fall behind in terms of modern C++. Because I held a biased and negative attitude towards it and didn't spend much time to learn it. And in the New Years Days of 2021, I decide to rediscover modern C++. And see how things can be different if I use C++ 14.
+To be honest, I fall behind in terms of modern C++. Because I held a biased and negative attitude 
+towards it and didn't spend much time to learn it. 
+And in the New Years Days of 2021, I decide to rediscover modern C++. 
+And see how things can be different if I use C++ 14.
 
-## std::shared_ptr vs self-implemented smart pointer.
-
-### The internal of shared_ptr
+## The internal of shared_ptr
 
 Before discussing the pros-and-cons of both implementations, I dive into the internal of `std::shared_ptr`
 
@@ -259,7 +318,7 @@ Until I read from https://www.nextptr.com/tutorial/ta1358374985/shared_ptr-basic
 
 Later, I also learned there is `std::enabled_shared_from_this`. It can put the control block into the base object.
 
-### Try to use shared_ptr
+## Try to use shared_ptr
 
 So I think `std::shared_ptr` might be good enough for my need. And write something out of it:
 
@@ -305,44 +364,30 @@ TEST(NcObject, basic) {
 `auto pieces = "hello-world"_str->split("-")`.
 Each piece contains a strong reference to the original string.
 
-### Things I like & dislike
+## Things I like & dislike about `std::shared_ptr<>`
 
 Like:
 
 1. Strong/weak. It makes delegate design pattern more robust.
-2. Can put control block along with the controlled object.
+2. combine control block with the controlled object.
 
 Dislike:
 
 1. Constructors must be public. Some user may call delete or create the object on stack.
 2. Convert from raw pointer back to `shared_ptr` is inconvenient.
-3. Must call `.get()` to get raw pointer.
+3. Must call `.get()` to get raw pointer. (I changed my mind, I become neural on that.)
+4. There are too many usage variants
 
-I shall explain myself in the following sections.
+   ```cpp
+   void f(widget* );
+   void f(widget& );
+   void f(shared_ptr<widget> );
+   void f(const shared_ptr<widget>& );
+   ```
 
-### Allow implicit conversion
+   [Sutter’s Mill](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/) and [acel](https://stackoverflow.com/questions/3310737/should-we-pass-a-shared-ptr-by-reference-or-by-value) has some insights on that
 
-`std::shared_ptr` avoids implicit conversion, for a [good reason](https://www.informit.com/articles/article.aspx?p=31529&seqNum=7). You have to call `.get()` to get a raw pointer.
-
-But I think, for this reason(inconveniency to convert to raw pointer), it tends to be abused by unexperienced programmers.
-It pops up everywhere. And there are too many ways of using it:
-
-```cpp
-void f(widget* );
-void f(widget& );
-void f(shared_ptr<widget> );
-void f(const shared_ptr<widget>& );
-```
-
-About the correct rules for using `shared_ptr`, I agree with [Sutter’s Mill](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/) and [acel](https://stackoverflow.com/questions/3310737/should-we-pass-a-shared-ptr-by-reference-or-by-value)
-
-> - Guideline: Don’t pass a smart pointer as a function parameter unless you want to use or manipulate the smart pointer itself, such as to share or transfer ownership.
-> - Guideline: Express that a function will store and share ownership of a heap object using a by-value shared_ptr parameter.
-> - Guideline: Use a non-const shared_ptr& parameter only to modify the shared_ptr. Use a const shared_ptr& as a parameter only if you’re not sure whether or not you’ll take a copy and share ownership; otherwise use widget\* instead (or if not nullable, a widget&).
-
-So I derived my [rules of using `sp`](#rules-of-using-sp). I think it's more error-proof.
-
-### Makes all memory in one piece with `sp`
+## Makes all memory in one piece with `sp`
 
 With self-implemented control-block in NcObject. I can do some deep optimization, like appending the text directly after the NcString object.
 Thus creating the string with a single allocation.
@@ -361,7 +406,7 @@ But at the cost of making it harder to read or navigate:
 
 1. With VS2019, you have to hover the cursor on top of the variable to see its type.
 
-   > **NOTE:** Android Studio inserts gray text to mark the type
+   > **NOTE:** Android Studio and CLion inserts gray text to mark the type
    > behind the variable name, which is very nice.
    >
    > ```cpp
@@ -379,47 +424,6 @@ But at the cost of making it harder to read or navigate:
    ```
 
 But overall, I think it's worthwhile to use `auto`. Especially for complex types. But for basic types, I prefer to make the type explicit.
-
-## String literals
-
-C++11 support customized suffix for string literals.
-
-```cpp
-sp<NcString> operator""_str(const char* literalStr, size_t len);
-StringSlice operator""_s(const char* literalStr, size_t len);
-```
-
-This enables creating of literal NcString object or StringSlice.
-
-```cpp
-sp<NcString> str = "hello world"_str;
-StringSlice slice = "hello world"_s;
-```
-
-NcString object created in this way is considered "static".
-It has `retainCount()` at INT_MAX.
-Calling retain() or release() on it has no effect.
-With a global string manager, it's possible to make sure only one NcString object is created for each string literal.
-
-```cpp
-TEST(NcString, literal) {
-  sp<NcString> s1, s2;
-  for (int i = 0; i < 2; i++) {
-    sp<NcString> s = "hello world"_str;
-    if (i == 0)
-      s1 = s;
-    else
-      s2 = s;
-  }
-
-  // s1 is exactly the same as s2, because of the literal string manager.
-  EXPECT_EQ(s1.get(), s2.get());
-
-  auto s3 = "hello world"_s;
-  // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
-  EXPECT_EQ(s1.get(), s3.get());
-}
-```
 
 ## Log System
 
@@ -496,13 +500,10 @@ To support than:
 See https://www.cprogramming.com/c++11/c++11-lambda-closures.html.
 
 ```cpp
-auto v = NcArray<NcString>::alloc();
-v->addObject(NcString::allocWithCString("hello"));
-v->addObject(NcString::allocWithCString("world"));
+auto v = NcArray<NcString>::allocWithObjects("hello"_str, "world"_str, NULL);
 
-auto startWord = "w"_s;
-auto obj = v->findWithCondition([&](NcString* v) {
-   return v->startsWith(startWord);
+auto obj = v->findWithCondition([](NcString* v) {
+   return v->startsWith("w"_s);
 });
 ```
 

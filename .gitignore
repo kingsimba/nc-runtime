@@ -3,4 +3,5 @@
 /build
 /lib
 /3rd-party/*.zip
-
+.vs
+out

@@ -1,25 +1,26 @@
 #pragma once
 
-enum class LogLevel {
-  none,
-  trivial,
-  info,
-  warning,
-  error,
-  fatal
+enum class LogLevel
+{
+    none,
+    trivial,
+    info,
+    warning,
+    error,
+    fatal
 };
 
 extern LogLevel g_ncLogLevel;
 
-extern "C" {
+extern "C"
+{
 
-typedef void (*NcLogCallback)(const char* str, void* userdata);
+    typedef void (*NcLogCallback)(const char* str, void* userdata);
 
-void NcLog_setCallback(NcLogCallback callback, void* userdata);
-void NcLog_write(LogLevel level, const char* file, int line, const char* func, const char* format, ...);
+    void NcLog_setCallback(NcLogCallback callback, void* userdata);
+    void NcLog_write(LogLevel level, const char* file, int line, const char* func, const char* format, ...);
 
-void Dal_writeLog(const char* str); // (DAL = device adaption layer) device dependent implementation
-
+    void Dal_writeLog(const char* str); // (DAL = device adaption layer) device dependent implementation
 }
 
 // clang-format off

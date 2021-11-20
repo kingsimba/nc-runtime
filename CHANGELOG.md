@@ -1,5 +1,7 @@
 # Changelog
 
+- 2021-11-20 Greatly improved StringSlice. It replace NcString as the major player.
+- 2021-11-20 Avoid using "new" with NcObject::alloc().
 - 2021-03-29 Add NC_ASSERT()
 - 2021-03-24 Add `Some` and `noValue`.
 - 2021-03-24 Add NcFile & NcData.

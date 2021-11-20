@@ -1,6 +1,6 @@
 #pragma once
 
-#include "basic_types.h"
+#include "nc_types.h"
 #include "nc_string.h"
 
 template <typename T>
@@ -9,13 +9,13 @@ public:
   using ArrayElement = T;
 
 public:
-  static sp<NcArray<T>> alloc() { return new NcArray(); }
+  static sp<NcArray<T>> alloc() { return NcObject::alloc<NcArray<T>>(); }
 
   forceinline int capacity() { return (int)m_array.capacity(); }
   forceinline int size() { return (int)m_array.size(); }
   forceinline void reserve(int newCapacity) { return m_array.reserve(newCapacity); }
 
-  forceinline void addObject(T* obj) { this->m_array.push_back(retain(obj)); }
+  forceinline void addObject(const sp<T>& obj) { this->m_array.push_back(obj); }
   forceinline sp<T>& firstObject() { return this->m_array[0]; }
   forceinline sp<T>& lastObject() { return this->m_array[m_array.size() - 1]; }
   forceinline sp<T>& objectAtIndex(int i) { return this->m_array[i]; }
@@ -26,10 +26,10 @@ public:
 
   /**
    * Find an object
-   * 
+   *
    * @return
    *  return NULL if not found.
-   * 
+   *
    * @remarks
    * ```
    * auto v = NcArray<NcString>::alloc();
@@ -51,19 +51,18 @@ public:
   /*
    * return -1 if not found. It uses NcObject::equals() for comparison
    */
-  int indexOfObject(T* r) {
-    return indexOfObjectWithCondition([=](T* obj) { return obj == r || obj->equals(r); });
+  int indexOfObject(const sp<T>& r) {
+    return indexOfObjectWithCondition([=](T* obj) { return obj == r.get() || obj->equals(r.get()); });
   }
-  
-  template<typename Func>
+
+  template <typename Func>
   int indexOfObjectWithCondition(Func func) {
     int len = (int)m_array.size();
     for (int i = 0; i < len; i++)
-      if (func(m_array[i].get()))
-        return i;
+      if (func(m_array[i].get())) return i;
     return -1;
   }
 
 private:
-  std::vector< sp<T> > m_array;
+  std::vector<sp<T>> m_array;
 };
