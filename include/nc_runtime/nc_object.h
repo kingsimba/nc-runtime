@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nc_types.h"
+#include "string_slice.h"
 
 // An experimental implementation. It might be optimized in the future.
 // Keep watching https://github.com/kingsimba/nc-runtime for updates
@@ -323,7 +324,7 @@ public:
     /**
      * Convert any object to string
      */
-    virtual sp<NcString> toString();
+    virtual StringSlice toString();
 
     virtual bool equals(NcObject* r) { return this == r; }
 

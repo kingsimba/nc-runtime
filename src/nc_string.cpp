@@ -20,6 +20,14 @@ sp<NcString> NcString::allocWithBytes(const char* str, size_t len)
     return rtn;
 }
 
+sp<NcString> NcString::allocWithSlice(const StringSlice& slice)
+{
+    NcString* internalStr = slice.internalString();
+    if (internalStr != NULL && slice.length() == internalStr->length())
+        return retain(internalStr);
+    return NcString::allocWithBytes(slice.internalBytes(), slice.length());
+}
+
 sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
 {
     size_t totalLen = sizeof(NcString) + strLength + 1;
@@ -81,11 +89,11 @@ void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount,
         for (size_t i = 0; i < sliceCount; i++)
         {
             const StringSlice& s = slices[i];
-            memcpy(str + totalLen, s.cstr(), s.length());
+            memcpy(str + totalLen, s.internalBytes(), s.length());
             totalLen += s.length();
             if (i != sliceCount - 1)
             {
-                memcpy(str + totalLen, sep.cstr(), sep.length());
+                memcpy(str + totalLen, sep.internalBytes(), sep.length());
                 totalLen += sep.length();
             }
         }

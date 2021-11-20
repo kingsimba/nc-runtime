@@ -1,12 +1,13 @@
 #pragma once
 
 #include "nc_types.h"
+#include "nc_object.h"
 #include "string_slice.h"
 
 template <typename T>
 class NcArray;
 
-class NcString : public NcObject, public StringSlice
+class NcString : public NcObject
 {
 public:
     NcString() = default;
@@ -21,6 +22,8 @@ public:
      * Create a string by copying bytes. |str| could not ends with \0.
      */
     static sp<NcString> allocWithBytes(const char* str, size_t len);
+
+    static sp<NcString> allocWithSlice(const StringSlice& slice);
 
     /**
      * Create a string by taking the ownership of the memory.
@@ -80,14 +83,15 @@ public:
     forceinline const char* cstr() { return m_str; }
     forceinline int length() { return m_length; }
 
-    forceinline StringSlice subslice(int start, int length) { return this->toSlice().subslice(start, length); }
-    forceinline StringSlice subsliceInRange(Range range) { return this->toSlice().subsliceInRange(range); }
-    forceinline StringSlice subsliceFrom(int start) { return this->toSlice().subsliceFrom(start); }
+    forceinline StringSlice subslice(int start, int length) { return toSlice().subslice(start, length); }
+    forceinline StringSlice subsliceInRange(Range range) { return toSlice().subsliceInRange(range); }
+    forceinline StringSlice subsliceFrom(int start) { return toSlice().subsliceFrom(start); }
 
     //////////////////////////////////////////////////////////////////////////
     /// Operations
 
-    forceinline StringSlice toSlice() { return StringSlice(this); }
+    forceinline StringSlice toSlice() { return StringSlice::makeWithString(this); }
+    forceinline StringSlice toEphemeralSlice() { return StringSlice(m_str, m_length, NULL); }
 
     // Design Notes: overwrite functions in StringSlice. Because we have to keep the RC
     forceinline std::vector<StringSlice> split(const StringSlice& sep) { return this->toSlice().split(sep); }
@@ -97,13 +101,21 @@ public:
         return toSlice().splitWithLimit(sep, slicesOut, maxNum);
     }
 
-    forceinline sp<NcString> join(NcArray<NcString>* strs) { return NcString::allocByJoiningStrings(strs, *this); }
+    forceinline sp<NcString> join(NcArray<NcString>* strs)
+    {
+        return NcString::allocByJoiningStrings(strs, this->toSlice());
+    }
+
+    forceinline bool startsWith(const StringSlice& r) { return toEphemeralSlice().startsWith(r); }
+    forceinline bool endsWith(const StringSlice& r) { return toEphemeralSlice().endsWith(r); }
+
+    forceinline bool equalsCaseInsensitive(const StringSlice& r) { return toEphemeralSlice().equalsCaseInsensitive(r); }
 
     // from NcObject
-    virtual sp<NcString> toString() override { return sp<NcString>(this); }
+    virtual StringSlice toString() override { return this->toSlice(); }
     virtual bool equals(NcObject* r) override;
-    forceinline bool equals(const StringSlice& r) { return StringSlice::equals(r); }
-    forceinline bool equals(const char* r) { return StringSlice::equals(r); }
+    forceinline bool equals(const StringSlice& r) { return this->toEphemeralSlice().equals(r); }
+    forceinline bool equals(const char* r) { return this->toEphemeralSlice().equals(r); }
 
 protected:
     void initByTakingBytes(char* str, size_t len)
@@ -114,9 +126,18 @@ protected:
 
     void initByJoiningSlices(const StringSlice* slices, size_t count, const StringSlice& sep);
     void initByJoiningStrings(NcArray<NcString>* strs, const StringSlice& sep);
+
+private:
+    const char* m_str = NULL;
+    int m_length = 0;
 };
 
 forceinline sp<NcString> operator""_str(const char* literalStr, size_t len)
 {
     return NcString::allocWithBytes(literalStr, len);
+}
+
+forceinline bool operator==(NcString* str, const StringSlice& r)
+{
+    return str->equals(r);
 }

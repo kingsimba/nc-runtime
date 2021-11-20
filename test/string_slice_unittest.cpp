@@ -33,8 +33,8 @@ TEST(StringSlice, tokenize)
 {
     auto tokens = "Whoa! Fireworks!?"_s.tokenize(" ,?!");
     ASSERT_EQ(tokens.size(), 2);
-    ASSERT_STREQ(tokens[0].toString()->cstr(), "Whoa");
-    ASSERT_STREQ(tokens[1].toString()->cstr(), "Fireworks");
+    ASSERT_EQ(tokens[0], "Whoa");
+    ASSERT_EQ(tokens[1], "Fireworks");
 }
 
 //
@@ -51,10 +51,10 @@ TEST(StringSlice, tokenize)
 TEST(StringSlice, subslice)
 {
     auto s = StringSlice("To err is human, to forgive divine.");
-    EXPECT_STREQ(s.subsliceFrom(-7).toString()->cstr(), "divine.");
-    EXPECT_STREQ(s.subsliceFrom(3).toString()->cstr(), "err is human, to forgive divine.");
-    EXPECT_STREQ(s.subslice(10, 5).toString()->cstr(), "human");
-    EXPECT_STREQ(s.subsliceInRange(Range_make(10, 5)).toString()->cstr(), "human");
+    EXPECT_EQ(s.subsliceFrom(-7), "divine.");
+    EXPECT_EQ(s.subsliceFrom(3), "err is human, to forgive divine.");
+    EXPECT_EQ(s.subslice(10, 5), "human");
+    EXPECT_EQ(s.subsliceInRange(Range_make(10, 5)), "human");
 
     // count subslice
     EXPECT_EQ("hello world hello world hello"_s.countSlice("hello"), 3);
@@ -87,7 +87,7 @@ TEST(StringSlice, splitBug1)
     StringSlice slice;
     auto slices = s.split("-------"_s);
     ASSERT_EQ(slices.size(), 4);
-    EXPECT_STREQ(slices.back().toString()->cstr(), "Fireworks--");
+    EXPECT_EQ(slices.back(), "Fireworks--");
 }
 
 TEST(StringSlice, splitNonexistSep)
@@ -106,7 +106,7 @@ TEST(StringSlice, splitShouldKeepEmptySlices)
     StringSlice slice;
     auto slices = s.split(","_s);
     ASSERT_EQ(slices.size(), 4);
-    EXPECT_STREQ(slices.back().toString()->cstr(), "");
+    EXPECT_EQ(slices.back(), "");
 }
 
 TEST(StringSlice, find)
@@ -141,5 +141,5 @@ TEST(StringSlice, replace)
     auto str = "folder1/folder2/file.png"_s;
     auto pos = str.rfind('.');
     ASSERT_TRUE(pos != -1);
-    EXPECT_STREQ(str.replaceInRange(Range_make(pos, str.length() - pos), ".jpg").cstr(), "folder1/folder2/file.jpg");
+    EXPECT_EQ(str.replaceInRange(Range_make(pos, str.length() - pos), ".jpg"), "folder1/folder2/file.jpg");
 }

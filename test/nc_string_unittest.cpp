@@ -10,14 +10,14 @@ static int _calculateStringLength(NcString* str)
 TEST(NcString, basic)
 {
     sp<NcString> s = NcString::allocWithCString("hello");
-    EXPECT_STREQ(s->cstr(), "hello");
+    EXPECT_EQ(s, "hello"_s);
     EXPECT_EQ(s->length(), 5);
 
     // must call .get() to convert to ordinary pointer.
     EXPECT_EQ(_calculateStringLength(s), 5);
 
     s = NcString::allocWithBytes("cat litter", 10);
-    EXPECT_STREQ(s->cstr(), "cat litter");
+    EXPECT_EQ(s, "cat litter"_s);
     EXPECT_EQ(s->length(), 10);
 }
 
@@ -40,17 +40,17 @@ TEST(StringSlice, compare)
 TEST(NcString, join)
 {
     sp<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
-    EXPECT_STREQ(s->cstr(), "hello---world");
+    EXPECT_EQ(s, "hello---world");
     EXPECT_EQ(s->length(), 13);
 
     auto strs = NcArray<NcString>::alloc();
     strs->addObject("hello"_str);
     strs->addObject("world"_str);
     s = NcString::allocByJoiningStrings(strs, "---");
-    EXPECT_STREQ(s->cstr(), "hello---world");
+    EXPECT_EQ(s, "hello---world");
     EXPECT_EQ(s->length(), 13);
 
-    EXPECT_STREQ("==="_str->join(strs)->cstr(), "hello===world");
+    EXPECT_EQ("==="_str->join(strs), "hello===world");
 }
 
 TEST(NcString, toSlice)
@@ -64,7 +64,7 @@ TEST(NcString, split)
 {
     vector<StringSlice> slices = NcString::allocWithCString("hello---world")->split("---");
     auto s = NcString::allocByJoiningSlices(slices, " ");
-    EXPECT_STREQ(s->cstr(), "hello world");
+    EXPECT_EQ(s, "hello world");
     EXPECT_EQ(s->length(), 11);
 }
 
@@ -78,7 +78,7 @@ TEST(NcString, subslice)
 
 TEST(NcString, format)
 {
-    EXPECT_STREQ(NcString::format("%s shall come", "The Day")->cstr(), "The Day shall come");
-    EXPECT_STREQ(NcString::format("%d is small but %lld is large", 123, 12345678901234ll)->cstr(),
-                 "123 is small but 12345678901234 is large");
+    EXPECT_EQ(NcString::format("%s shall come", "The Day"), "The Day shall come");
+    EXPECT_EQ(NcString::format("%d is small but %lld is large", 123, 12345678901234ll),
+              "123 is small but 12345678901234 is large");
 }

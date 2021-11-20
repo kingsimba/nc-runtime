@@ -14,9 +14,9 @@ NcObject* NcObject::allocRawObjectWithSize(size_t size, bool zero_memory)
     return (NcObject*)(ctrl + 1);
 }
 
-sp<NcString> NcObject::toString()
+StringSlice NcObject::toString()
 {
     char buffer[64];
     snprintf(buffer, countof(buffer), "Object %zu", (size_t)this);
-    return NcString::allocWithCString(buffer);
+    return StringSlice::make(buffer);
 }

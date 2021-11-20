@@ -38,12 +38,12 @@ TEST(JsonNodeTest, example)
     o->remove("user.age");
     o->remove("document");
     auto str = o->dumpAsString();
-    EXPECT_STREQ(str.cstr(), R"({"user": {"name": "Alexander The Great"}})");
+    EXPECT_EQ(str, R"({"user": {"name": "Alexander The Great"}})"_s);
 
     // Add
     o["user"]->add("age", JsonNode::integer(22));
     str = o->dumpAsString();
-    EXPECT_STREQ(str.cstr(), R"({"user": {"name": "Alexander The Great", "age": 22}})");
+    EXPECT_EQ(str, R"({"user": {"name": "Alexander The Great", "age": 22}})"_s);
 }
 TEST(JsonNodeTest, basic)
 {
@@ -93,9 +93,9 @@ TEST(JsonNodeTest, nonexistFile)
     ASSERT_FALSE(v.hasValue());
 }
 
-static const char s_configJson[] =
+static const StringSlice s_configJson =
     "{\"user\":{\"name\":\"Alexander the Great\",\"titles\":[\"King of Macedon\",\"Hegemon of Hellenic "
-    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true,\"height\":1.8}}";
+    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true,\"height\":1.8}}"_s;
 
 TEST(JsonNodeTest, dumps)
 {
@@ -103,5 +103,5 @@ TEST(JsonNodeTest, dumps)
     ASSERT_TRUE(root.hasValue());
 
     auto json = root->dumpAsString(JSON_COMPACT);
-    EXPECT_STREQ(json.cstr(), s_configJson);
+    EXPECT_EQ(json, s_configJson);
 }

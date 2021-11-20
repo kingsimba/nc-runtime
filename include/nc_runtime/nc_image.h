@@ -38,7 +38,7 @@ public:
 
     static sp<NcImage> allocWithSize(Size size);
     static sp<NcImage> allocWithBytesNoCopy(Rgba8* bytes, Size size);
-    static sp<NcImage> allocWithFileName(const char* fileName);
+    static sp<NcImage> allocWithFileName(const StringSlice& fileName);
 
     Rgba8* mutablePixels() { return m_pixels; }
     const Rgba8* pixels() { return m_pixels; }
@@ -49,7 +49,7 @@ public:
 
 protected:
     bool initWithSize(Size size);
-    bool initWithFileName(const char* fileName);
+    bool initWithFileName(const StringSlice& fileName);
 
 protected:
     bool m_shouldFreePixels = false;
@@ -64,7 +64,7 @@ public:
     ~NcImageU8();
 
     static sp<NcImageU8> allocWithSize(Size size);
-    static sp<NcImageU8> allocWithFileName(const char* fileName);
+    static sp<NcImageU8> allocWithFileName(const StringSlice& fileName);
 
     // The image doesn't own the memory. The user must keep it valid.
     static sp<NcImageU8> allocWithBytesNoCopy(u8* bytes, Size size);
@@ -80,7 +80,7 @@ public:
 
 protected:
     bool initWithSize(Size size);
-    bool initWithFileName(const char* fileName);
+    bool initWithFileName(const StringSlice& fileName);
 
 protected:
     bool m_shouldFreePixels = false;

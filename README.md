@@ -173,7 +173,7 @@ I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They e
   arr->addObject("Earth"_str);
   arr->addObject("Mars"_str);
   arr[1] = "Jupiter"_str;
-  EXPECT_STREQ(NcString::format("Hello %@", arr)->cstr(), "Hello [\"Earth\", \"Jupiter\"]");
+  EXPECT_EQ(NcString::format("Hello %@", arr), "Hello [\"Earth\", \"Jupiter\"]");
   ```
 
 ## StackOrHeapAllocator

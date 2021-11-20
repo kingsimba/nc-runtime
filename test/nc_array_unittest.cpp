@@ -16,21 +16,21 @@ TEST(ArrayTest, basic)
         v->addObject(str);
         EXPECT_EQ(str->retainCount(), 3);
 
-        auto pieces = str->split(" ");
+        auto pieces = str->split(" "_s);
         EXPECT_EQ(str->retainCount(), 5); // +2 because slices holds reference to the string
         ASSERT_EQ(pieces.size(), 2);
         for (auto s : pieces)
         {
-            v->addObject(s.toString());
+            v->addObject(NcString::allocWithSlice(s));
         }
 
         EXPECT_EQ(v->firstObject().get(), str.get());
         EXPECT_EQ(v->lastObject().get(), v->objectAtIndex(v->size() - 1).get());
 
-        EXPECT_STREQ(v[0]->cstr(), "hello world");
-        EXPECT_STREQ(v[1]->cstr(), "hello world");
-        EXPECT_STREQ(v[2]->cstr(), "hello");
-        EXPECT_STREQ(v[3]->cstr(), "world");
+        EXPECT_EQ(v[0], "hello world");
+        EXPECT_EQ(v[1], "hello world");
+        EXPECT_EQ(v[2], "hello");
+        EXPECT_EQ(v[3], "world");
 
         perm = v[0]; // +1
         EXPECT_EQ(perm->retainCount(), 6);
@@ -38,7 +38,7 @@ TEST(ArrayTest, basic)
         // remove object
         v->removeObjectAtIndex(2);
         EXPECT_EQ(v->size(), 3);
-        EXPECT_STREQ(v[2]->cstr(), "world");
+        EXPECT_EQ(v[2], "world");
     }
 
     EXPECT_EQ(perm->retainCount(), 1);
@@ -54,7 +54,7 @@ TEST(ArrayTest, find)
     auto obj = v->findWithCondition([&](NcString* v) { return v->startsWith(startWord); });
 
     ASSERT_TRUE(obj != NULL);
-    EXPECT_STREQ(obj->cstr(), "world");
+    EXPECT_EQ(obj, "world");
 
     obj = v->findWithCondition([](NcString* v) { return v->startsWith("s"); });
 

@@ -12,10 +12,13 @@ bool NcImage::initWithSize(Size size)
     return true;
 }
 
-bool NcImage::initWithFileName(const char* fileName)
+bool NcImage::initWithFileName(const StringSlice& fileName)
 {
+    char fileNameBuffer[NC_MAX_PATH];
+    fileName.toCString(fileNameBuffer, NC_MAX_PATH);
+
     int w, h, channelsInFile;
-    Rgba8* buffer = (Rgba8*)stbi_load(fileName, &w, &h, &channelsInFile, 4);
+    Rgba8* buffer = (Rgba8*)stbi_load(fileNameBuffer, &w, &h, &channelsInFile, 4);
     if (buffer != NULL)
     {
         m_shouldFreePixels = true;
@@ -59,7 +62,7 @@ sp<NcImage> NcImage::allocWithBytesNoCopy(Rgba8* bytes, Size size)
     return o;
 }
 
-sp<NcImage> NcImage::allocWithFileName(const char* fileName)
+sp<NcImage> NcImage::allocWithFileName(const StringSlice& fileName)
 {
     sp<NcImage> o = alloc<NcImage>();
     if (!o->initWithFileName(fileName))
@@ -94,10 +97,13 @@ bool NcImageU8::initWithSize(Size size)
     return true;
 }
 
-bool NcImageU8::initWithFileName(const char* fileName)
+bool NcImageU8::initWithFileName(const StringSlice& fileName)
 {
+    char fileNameBuffer[NC_MAX_PATH];
+    fileName.toCString(fileNameBuffer, NC_MAX_PATH);
+
     int w, h, channelsInFile;
-    u8* buffer = (u8*)stbi_load(fileName, &w, &h, &channelsInFile, 1);
+    u8* buffer = (u8*)stbi_load(fileNameBuffer, &w, &h, &channelsInFile, 1);
     if (buffer != NULL)
     {
         m_shouldFreePixels = true;
@@ -140,7 +146,7 @@ sp<NcImageU8> NcImageU8::allocWithBytesNoCopy(u8* bytes, Size size)
     return o;
 }
 
-sp<NcImageU8> NcImageU8::allocWithFileName(const char* fileName)
+sp<NcImageU8> NcImageU8::allocWithFileName(const StringSlice& fileName)
 {
     sp<NcImageU8> o = alloc<NcImageU8>();
     if (!o->initWithFileName(fileName))

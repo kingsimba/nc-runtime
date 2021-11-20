@@ -1,3 +1,4 @@
+#include "..\include\nc_runtime\string_slice.h"
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_types.h"
 #include "nc_runtime/string_slice.h"
@@ -67,10 +68,10 @@ static const char* _strstr(const char* s1, const char* s1End, const char* s2, si
 
 StringSubsliceIter::StringSubsliceIter(const StringSlice& slice, const StringSlice& sep)
 {
-    m_str = m_strBegin = slice.cstr();
+    m_str = m_strBegin = slice.internalBytes();
     m_strEnd = m_str + slice.length();
     m_ncstring = retain(slice.internalString());
-    m_sep = sep.cstr();
+    m_sep = sep.internalBytes();
     m_sepLength = sep.length();
     m_foundSep = false;
 }
@@ -89,7 +90,7 @@ bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut)
 
     const char* newStr = _strstr(m_str, m_strEnd, m_sep, m_sepLength);
 
-    cOut->initWithString(m_str, (int)(newStr - m_str), m_ncstring);
+    *cOut = StringSlice(m_str, (int)(newStr - m_str), retain(m_ncstring));
     if (rangeOut != NULL)
         *rangeOut = Range_make((int)(m_str - m_strBegin), cOut->length());
 
@@ -112,12 +113,12 @@ StringSlice StringSlice::subsliceFrom(int start)
     if (start < 0)
     {
         assert(m_length + start >= 0);
-        return StringSlice(m_str + (m_length + start), -start, m_ncstring);
+        return StringSlice(m_str + (m_length + start), -start, retain(m_ncstring));
     }
     else
     {
         assert(start <= m_length);
-        return StringSlice(m_str + start, m_length - start, m_ncstring);
+        return StringSlice(m_str + start, m_length - start, retain(m_ncstring));
     }
 }
 
@@ -173,7 +174,7 @@ StringSlice StringSlice::replaceInRange(Range range, const StringSlice& replacem
     size_t loc = 0;
     memcpy(buffer, m_str, range.location);
     loc += range.location;
-    memcpy(buffer + loc, replacement.cstr(), replacement.length());
+    memcpy(buffer + loc, replacement.internalBytes(), replacement.length());
     loc += replacement.length();
     memcpy(buffer + loc, m_str + range.end(), (size_t)m_length - range.end());
     buffer[len] = '\0';
@@ -185,7 +186,7 @@ int StringSlice::countSlice(const StringSlice& target) const
     if (target.length() > m_length)
         return 0;
 
-    const char* t = target.cstr();
+    const char* t = target.internalBytes();
     int tLength = target.length();
     const char* s = m_str;
     const char* yEnd = m_str + m_length - tLength;
@@ -204,15 +205,6 @@ int StringSlice::countSlice(const StringSlice& target) const
     return count;
 }
 
-bool StringSlice::equalsCaseInsensitive(const char* r) const
-{
-#ifdef NC_OS_WIN
-    return m_length == (int)strlen(r) && _stricmp(m_str, r) == 0;
-#else
-    return m_length == (int)strlen(r) && strcasecmp(m_str, r) == 0;
-#endif
-}
-
 bool StringSlice::equalsCaseInsensitive(const StringSlice& r) const
 {
 #ifdef NC_OS_WIN
@@ -222,13 +214,27 @@ bool StringSlice::equalsCaseInsensitive(const StringSlice& r) const
 #endif
 }
 
+const StringSlice& StringSlice::operator=(const StringSlice& r)
+{
+    m_str = r.m_str;
+    m_length = r.m_length;
+
+    retain(r.m_ncstring);
+    release(m_ncstring);
+    m_ncstring = r.m_ncstring;
+    return *this;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
-StringSlice::StringSlice(NcString* str)
+StringSlice StringSlice::makeWithString(NcString* str)
 {
-    m_str = (char*)str->cstr();
-    m_length = str->length();
-    m_ncstring = retain(str);
+    return StringSlice(str->cstr(), str->length(), retain(str));
+}
+
+StringSlice::~StringSlice()
+{
+    release((NcObject*)m_ncstring);
 }
 
 StringSlice::StringSlice(const StringSlice& r) noexcept
@@ -271,14 +277,6 @@ StringSlice StringSlice::makeByTakingBytes(char* buffer, size_t size)
     return o;
 }
 
-void StringSlice::initWithString(const char* str, int len, NcString* ncstring)
-{
-    m_str = (char*)str;
-    m_length = len;
-    release(m_ncstring);
-    m_ncstring = retain(ncstring);
-}
-
 Range StringSlice::findFrom(int start, wchar32 code)
 {
     auto iter = this->subslice(start, m_length - start).iter();
@@ -310,6 +308,16 @@ int StringSlice::rfind(char c)
     return -1;
 }
 
+StringSlice StringSlice::subslice(int start, int length)
+{
+    return StringSlice(m_str + start, length, retain(m_ncstring));
+}
+
+StringSlice StringSlice::subsliceInRange(Range range)
+{
+    return StringSlice(m_str + range.location, range.length, retain(m_ncstring));
+}
+
 Range StringSlice::findSliceFrom(int start, const StringSlice& needle)
 {
     const char* strEnd = m_str + m_length;
@@ -320,13 +328,6 @@ Range StringSlice::findSliceFrom(int start, const StringSlice& needle)
     }
 
     return Range_make((int)(newStr - m_str), needle.m_length);
-}
-
-sp<NcString> StringSlice::toString()
-{
-    if (m_ncstring != NULL && m_length == m_ncstring->length())
-        return m_ncstring;
-    return NcString::allocWithBytes(m_str, m_length);
 }
 
 bool StringTokenIter::next(StringSlice* sliceOut, Range* rangeOut)
@@ -358,7 +359,7 @@ bool StringTokenIter::next(StringSlice* sliceOut, Range* rangeOut)
         }
     }
 
-    sliceOut->initWithString(firstNonSep, (int)(m_str - firstNonSep), m_ncstring);
+    *sliceOut = StringSlice(firstNonSep, (int)(m_str - firstNonSep), retain(m_ncstring));
     if (rangeOut != NULL)
         *rangeOut = Range_make((int)(firstNonSep - m_strBegin), sliceOut->length());
 

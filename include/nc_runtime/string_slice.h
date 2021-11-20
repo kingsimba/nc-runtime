@@ -1,6 +1,5 @@
 #pragma once
-
-#include "nc_object.h"
+#include <nc_runtime/nc_types.h>
 
 class NcString;
 class StringSlice;
@@ -108,11 +107,18 @@ public:
         m_length = 0;
         m_ncstring = NULL;
     }
+
     StringSlice(const StringSlice& r) noexcept;
 
-    static StringSlice make(const char* buffer); // create a copy of C string
+    // ephemeral string slice
+    forceinline StringSlice(const char* str);
+
+    static StringSlice make(const char* buffer);                   // create a copy of C string
+    static StringSlice makeEphemeral(const char* str);             // make NO copy of buffer
+    static StringSlice makeEphemeral(const char* str, size_t len); // make NO copy of buffer
     static StringSlice makeWithBytes(const char* buffer, size_t size);
     static StringSlice makeByTakingBytes(char* buffer, size_t size);
+    static StringSlice makeWithString(NcString* str);
 
     forceinline StringSlice(StringSlice&& r) noexcept
     {
@@ -121,32 +127,12 @@ public:
         m_ncstring = r.m_ncstring;
         r.m_ncstring = NULL;
     }
-    forceinline StringSlice(const char* str)
-    {
-        m_str = (char*)str;
-        m_length = (int)strlen(str);
-        m_ncstring = NULL;
-    }
-    forceinline StringSlice(const char* str, int len)
-    {
-        m_str = (char*)str;
-        m_length = len;
-        m_ncstring = NULL;
-    }
-    forceinline StringSlice(const char* str, int len, NcString* internalStr)
-    {
-        m_ncstring = NULL;
-        initWithString(str, len, internalStr);
-    };
-    StringSlice(NcString* str);
-    forceinline ~StringSlice() { release((NcObject*)m_ncstring); }
 
-    void initWithString(const char* str, int len, NcString* ncstring);
+    ~StringSlice();
 
     //////////////////////////////////////////////////////////////////////////
     // Accessors
 
-    forceinline const char* cstr() const { return m_str; }
     forceinline int length() const { return m_length; }
 
     // iterate Unicode points
@@ -186,9 +172,6 @@ public:
         str[m_length] = 0;
     }
 
-    // Create a standalone NcString
-    sp<NcString> toString();
-
     //////////////////////////////////////////////////////////////////////////
     // Search
 
@@ -212,11 +195,8 @@ public:
     /**
      * Create a subslice
      */
-    forceinline StringSlice subslice(int start, int length) { return StringSlice(m_str + start, length, m_ncstring); }
-    forceinline StringSlice subsliceInRange(Range range)
-    {
-        return StringSlice(m_str + range.location, range.length, m_ncstring);
-    }
+    StringSlice subslice(int start, int length);
+    StringSlice subsliceInRange(Range range);
 
     /**
      * Negative number means from the end. For example "hello".subsliceFrom(-3) == "llo"
@@ -266,24 +246,49 @@ public:
         return m_length == (int)strlen(r) && memcmp(m_str, r, m_length) == 0;
     }
 
-    bool equalsCaseInsensitive(const char* r) const;
     bool equalsCaseInsensitive(const StringSlice& r) const;
 
     //////////////////////////////////////////////////////////////////////////
     // private
 
+    // WARNING: it may not be null terminated
+    forceinline const char* internalBytes() const { return m_str; }
     forceinline NcString* internalString() const { return m_ncstring; }
-    forceinline const StringSlice& operator=(const StringSlice& r)
+    const StringSlice& operator=(const StringSlice& r);
+
+private:
+    forceinline StringSlice(const char* str, size_t len, NcString* ncstr)
+        : m_str(str), m_length((int)len), m_ncstring(ncstr)
     {
-        this->initWithString(r.m_str, r.m_length, r.m_ncstring);
-        return *this;
     }
+
+    friend class NcString;
+    friend class StringSubsliceIter;
+    friend class StringTokenIter;
 
 protected:
     const char* m_str;
     int m_length;
     NcString* m_ncstring;
 };
+
+// ephemeral string slice
+forceinline StringSlice::StringSlice(const char* str)
+{
+    m_str = str;
+    m_length = (int)strlen(str);
+    m_ncstring = NULL;
+}
+
+forceinline StringSlice StringSlice::makeEphemeral(const char* str)
+{
+    return StringSlice(str, strlen(str), NULL);
+}
+
+forceinline StringSlice StringSlice::makeEphemeral(const char* str, size_t len)
+{
+    return StringSlice(str, len, NULL);
+}
 
 forceinline bool operator==(const StringSlice& l, const StringSlice& r)
 {
@@ -292,7 +297,7 @@ forceinline bool operator==(const StringSlice& l, const StringSlice& r)
 
 inline StringCharIter::StringCharIter(const StringSlice& slice)
 {
-    m_str = slice.cstr();
+    m_str = slice.internalBytes();
     m_length = slice.length();
 }
 
@@ -308,5 +313,5 @@ inline int StringSlice::findFrom(int start, char c)
 
 inline StringSlice operator""_s(const char* literalStr, size_t len)
 {
-    return StringSlice(literalStr, (int)len);
+    return StringSlice::makeEphemeral(literalStr, len);
 }

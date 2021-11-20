@@ -8,6 +8,6 @@ TEST(NcFile, read)
     EXPECT_EQ(o->length(), 5);
     char buffer[10];
     ASSERT_EQ(o->read(buffer, 10), 5);
-    StringSlice str(buffer, 5);
+    auto str = StringSlice::makeEphemeral(buffer, 5);
     EXPECT_EQ(str, "hello");
 }
