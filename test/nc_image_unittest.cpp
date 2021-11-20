@@ -54,7 +54,7 @@ TEST_F(NcImageTest, basic)
     EXPECT_TRUE(o->saveAs("test_data/output/test.png"));
 
     auto loaded = NcImage::allocWithFileName("test_data/output/test.png");
-    ASSERT_TRUE(loaded != NULL);
+    ASSERT_TRUE(loaded != nullptr);
     EXPECT_EQ(loaded->size(), Size_make(16, 16));
     const Rgba8* pixels = loaded->pixels();
     EXPECT_EQ(pixels[0], Rgba8_make(255, 0, 0, 255));
@@ -68,7 +68,7 @@ TEST_F(NcImageTest, u8)
     EXPECT_TRUE(o->saveAs("test_data/output/test_greyscale.png"));
 
     auto loaded = NcImageU8::allocWithFileName("test_data/output/test_greyscale.png");
-    ASSERT_TRUE(loaded != NULL);
+    ASSERT_TRUE(loaded != nullptr);
     EXPECT_EQ(loaded->size(), Size_make(16, 16));
     const u8* pixels = loaded->pixels();
     EXPECT_EQ(pixels[0], 0);
@@ -101,7 +101,7 @@ TEST_F(NcImageTest, u16saveToU8)
     EXPECT_TRUE(o->saveAs("test_data/output/u8.png"));
 
     auto loaded = NcImageU8::allocWithFileName("test_data/output/u8.png");
-    ASSERT_TRUE(loaded != NULL);
+    ASSERT_TRUE(loaded != nullptr);
     EXPECT_EQ(loaded->size(), Size_make(16, 16));
     const u8* pixels = loaded->pixels();
     EXPECT_EQ(pixels[0], 0);
@@ -111,7 +111,7 @@ TEST_F(NcImageTest, u16saveToU8)
 TEST_F(NcImageTest, u16load)
 {
     auto loaded = NcImageU16::allocWithFileName("test_data/u16.png");
-    ASSERT_TRUE(loaded != NULL);
+    ASSERT_TRUE(loaded != nullptr);
     EXPECT_EQ(loaded->size(), Size_make(100, 100));
 }
 

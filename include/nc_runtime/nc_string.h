@@ -115,7 +115,6 @@ public:
     virtual StringSlice toString() override { return this->toSlice(); }
     virtual bool equals(NcObject* r) override;
     forceinline bool equals(const StringSlice& r) { return this->toEphemeralSlice().equals(r); }
-    forceinline bool equals(const char* r) { return this->toEphemeralSlice().equals(r); }
 
 protected:
     void initByTakingBytes(char* str, size_t len)
@@ -137,7 +136,12 @@ forceinline sp<NcString> operator""_str(const char* literalStr, size_t len)
     return NcString::allocWithBytes(literalStr, len);
 }
 
-forceinline bool operator==(NcString* str, const StringSlice& r)
+forceinline bool operator==(const sp<NcString>& str, const StringSlice& r)
 {
     return str->equals(r);
+}
+
+forceinline bool operator!=(const sp<NcString>& str, const StringSlice& r)
+{
+    return !str->equals(r);
 }

@@ -13,23 +13,23 @@ TEST(NcString, basic)
     EXPECT_EQ(s, "hello"_s);
     EXPECT_EQ(s->length(), 5);
 
-    // must call .get() to convert to ordinary pointer.
-    EXPECT_EQ(_calculateStringLength(s), 5);
+    // must call .get() to convert to dumb pointer.
+    EXPECT_EQ(_calculateStringLength(s.get()), 5);
 
     s = NcString::allocWithBytes("cat litter", 10);
     EXPECT_EQ(s, "cat litter"_s);
     EXPECT_EQ(s->length(), 10);
 }
 
-TEST(StringSlice, compare)
+TEST(NcString, compare)
 {
-    EXPECT_TRUE("blood"_str->equals("blood"_str));
-    EXPECT_FALSE("blood"_str->equals("bloom"_str));
+    EXPECT_TRUE("blood"_str == "blood"_str);
+    EXPECT_TRUE("blood"_str != "bloom"_str);
 
-    EXPECT_TRUE("blood"_str->equals("blood"));
-    EXPECT_FALSE("blood"_str->equals("bloom"));
-    EXPECT_TRUE("blood"_str->equals("blood"_s));
-    EXPECT_FALSE("blood"_str->equals("bloom"_s));
+    EXPECT_TRUE("blood"_str == "blood");
+    EXPECT_TRUE("blood"_str != "bloom");
+    EXPECT_TRUE("blood"_str == "blood"_s);
+    EXPECT_TRUE("blood"_str != "bloom"_s);
 
     EXPECT_TRUE("blood"_str->equalsCaseInsensitive("BLOOD"));
     EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"));
@@ -46,11 +46,11 @@ TEST(NcString, join)
     auto strs = NcArray<NcString>::alloc();
     strs->addObject("hello"_str);
     strs->addObject("world"_str);
-    s = NcString::allocByJoiningStrings(strs, "---");
+    s = NcString::allocByJoiningStrings(strs.get(), "---");
     EXPECT_EQ(s, "hello---world");
     EXPECT_EQ(s->length(), 13);
 
-    EXPECT_EQ("==="_str->join(strs), "hello===world");
+    EXPECT_EQ("==="_str->join(strs.get()), "hello===world");
 }
 
 TEST(NcString, toSlice)

@@ -42,7 +42,7 @@ TEST(CostmapInflator, officeArea)
 
     // real image of office area
     auto image = NcImageU8::allocWithFileName("test_data/costmap_original.png"_s);
-    ASSERT_TRUE(image != NULL);
+    ASSERT_TRUE(image != nullptr);
 
     CostmapInflatorParams params;
     params.costScalingFactor = 2;

@@ -51,11 +51,25 @@ wp<NcString> w(str);	// strong/raw to weak
 auto s = w.lock(); 		// weak to strong
 ```
 
-But they also bear important differences. Such as: The raw pointer and smart pointer can be freely converted to each other.
+But they also bear important differences. Such as:
+
+1. The smart point can be implicitly converted to raw pointer.
+2. It supports manual reference counting through `retain()` and `release()`. 
+   Though they should only be used in very rare cases(like when working with 3rd-party C API).
 
 ```cpp
-sp<NcString> p1 = NcString::allocWithCString("hello");
-NcString* raw = p1.get();  // sp -> raw
+const calculatePolygonArea(NcPolygon* polygon);
+
+void main()
+{
+    sp<NcPolygon> polygon = NcPolygon::allocWithPoints(points, count);
+    calculatePolygonArea(polygon); // sp -> raw implicitly. It will make code neater
+
+    NcPolygon p2 = NcPolygon::makeWithPointsNoCopy(points, count);
+    calculatePolygonArea(&p2); // work with object on stack
+}
+
+NcString* raw = p1.get();
 sp<NcString> p2 = retain(raw);   // raw -> sp
 ```
 

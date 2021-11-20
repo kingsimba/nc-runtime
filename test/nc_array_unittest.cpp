@@ -53,12 +53,12 @@ TEST(ArrayTest, find)
     auto startWord = "w"_s;
     auto obj = v->findWithCondition([&](NcString* v) { return v->startsWith(startWord); });
 
-    ASSERT_TRUE(obj != NULL);
+    ASSERT_TRUE(obj != nullptr);
     EXPECT_EQ(obj, "world");
 
     obj = v->findWithCondition([](NcString* v) { return v->startsWith("s"); });
 
-    ASSERT_TRUE(obj == NULL);
+    ASSERT_TRUE(obj == nullptr);
 
     EXPECT_EQ(v->indexOfObjectWithCondition([&](NcString* v) { return v->startsWith(startWord); }), 1);
     EXPECT_EQ(v->indexOfObjectWithCondition([&](NcString* v) { return v->startsWith("s"_s); }), -1);
