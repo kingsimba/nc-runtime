@@ -134,6 +134,7 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include="CHANGELOG.md" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

@@ -4,13 +4,14 @@ NC-Runtime <!-- omit in toc -->
 ==========
 
 - [Background](#background)
-- [String Class](#string-class)
+- [StringSlice](#stringslice)
   - [Implmentation of StringSlice](#implmentation-of-stringslice)
 - [NcString](#ncstring)
-  - [Smart Pointer](#smart-pointer)
-  - [StackOrHeapAllocator](#stackorheapallocator)
-  - [ManualResetEvent](#manualresetevent)
-  - [Many more good stuffs](#many-more-good-stuffs)
+- [Smart Pointer](#smart-pointer)
+- [StackOrHeapAllocator](#stackorheapallocator)
+- [ManualResetEvent](#manualresetevent)
+- [Many more good stuffs](#many-more-good-stuffs)
+- [Visual Studio Visualizer](#visual-studio-visualizer)
 - [Design Notes](#design-notes)
   - [The internal of shared_ptr](#the-internal-of-shared_ptr)
   - [Try to use shared_ptr](#try-to-use-shared_ptr)
@@ -18,7 +19,6 @@ NC-Runtime <!-- omit in toc -->
   - [Makes all memory in one piece with `sp`](#makes-all-memory-in-one-piece-with-sp)
   - [`auto` keyword](#auto-keyword)
   - [Log System](#log-system)
-  - [Visual Studio Visualizer](#visual-studio-visualizer)
   - [Implement operator [] for `sp<NcArray>`](#implement-operator--for-spncarray)
   - [Closure(Lambda Functions)](#closurelambda-functions)
 
@@ -33,7 +33,7 @@ This project contains the methodology & wheels which I found useful.
 They may not be the best ideas. But I hope you may find some pieces useful.
 
 
-# String Class
+# StringSlice
 
 C++ did a very bad job with std::string. (If you don't believe me, does anyone remember how to split a `std::string` into pieces?) Because it's soo bad, almost every library (QT, abseil, OpenCV, MFC, etc) all invented their own ones.
 
@@ -128,7 +128,7 @@ str->toSlice();
 
 The functions in `NcString` is the same as in `StringSlice`, such as  `join`', `format`, `startsWith`, `endsWith`, `split`, etc.
 
-## Smart Pointer
+# Smart Pointer
 
 `std::shared_ptr` gives a acceptable direction in automating memory management. I too think they should go directly in to the compiler, like what ObjectC++ did.
 
@@ -234,7 +234,7 @@ There are some differences with `std::shared_ptr`:
 
     The same optimization is used for `NcData`.
 
-## StackOrHeapAllocator
+# StackOrHeapAllocator
 
 In some functions, stack is enough for most cases. But occasionally, larger memory is required.
 
@@ -254,7 +254,7 @@ TEST(Stdlib, stackOrHeapAllocator) {
 
 All allocated memory will be freed when `allocator` goes out of scope.
 
-## ManualResetEvent
+# ManualResetEvent
 
 It simulate Win32 API `SetEvent()`. With C++11's `condition_variable` it's much easier.
 I learned it from https://stackoverflow.com/questions/1501111/boost-equivalent-of-manualresetevent
@@ -289,10 +289,18 @@ duration = TimeTick::now() - start;
 EXPECT_GE(duration.ms(), 10);
 ```
 
-## Many more good stuffs
+# Many more good stuffs
 
 - Log System
 - NcCache
+
+# Visual Studio Visualizer
+
+`nc-runtime.natvis` is used to improve the debugging experience in Visual Studio.
+
+Visualizer are included for `NcArray`, `sp`, `NcString`, `StringSlice` etc
+
+![](vs_visualizer/visualizer.png)
 
 # Design Notes
 
@@ -443,14 +451,6 @@ By default, the log messages will be written to Visual Studio Debugger(Windows) 
 console(Windows & Linux).
 But the default behavior can be overridden with NcLog_setCallback().
 
-## Visual Studio Visualizer
-
-`nc-runtime.natvis` is used to improve the debugging experience in Visual Studio.
-
-Visualizer are included for `NcArray`, `sp`, `NcString`, `StringSlice` etc
-
-![](vs_visualizer/visualizer.png)
-
 ## Implement operator [] for `sp<NcArray>`
 
 `sp<NcArray>` should work just like ordinary array:
@@ -513,3 +513,4 @@ The capture syntax is more convenient than the old `userData`:
 typedef bool(*ArrayFinder)(T* obj, void* userData);
 sp<T> findWithCondition(Array finder, void* userData);
 ```
+
