@@ -154,9 +154,21 @@ Consider the following code, there is not a single `malloc()/free()` in it.
 
 ```cpp
 StringSlice slice = "hello---world"_s;
-std::vector<StringSlice> pieces = slice.split("---");
+StringSlice pieces[3];
+int num = slice.splitWithLimit("---", pieces, countof(pieces));
+ASSERT_EQ(num, 2);
 EXPECT_TRUE(pieces[0] == "hello");
 EXPECT_TRUE(pieces[1] == "world");
+```
+
+StringSlice doesn't have `operator +`. I think it's a root of bad performance.
+But I added `join` and `format`. They are better and faster.
+
+```cpp
+std::vector<StringSlice> lines({"hello", "world", ""});
+EXPECT_EQ("\n"_s.join(lines), "hello\nworld\n");
+
+EXPECT_EQ(StringSlice::format("%s %s", "hello", "world"), "hello world");
 ```
 
 Most of the time, StringSlice manages the memory safely.

@@ -91,6 +91,11 @@ TEST(StringSlice, splitAndJoin)
 
         EXPECT_EQ("___"_s.join(pieces, 3), "hello___world___hello");
     }
+
+    {
+        std::vector<StringSlice> lines({"hello", "world", ""});
+        EXPECT_EQ("\n"_s.join(lines), "hello\nworld\n");
+    }
 }
 
 TEST(StringSlice, splitBug1)
