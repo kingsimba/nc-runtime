@@ -61,7 +61,7 @@ sp<NcString> NcString::formatVa(const char* format, va_list va)
     size_t len = vsnprintf(NULL, 0, format, va);
     char* buffer;
     auto o = NcString::allocButFillContentLater(len, &buffer);
-    vsnprintf(buffer, len + 1, format, va);
+    vsnprintf(buffer, len + 1, format, vaCopy);
     va_end(vaCopy);
     return o;
 }
