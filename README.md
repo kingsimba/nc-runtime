@@ -37,7 +37,7 @@ They may not be the best ideas. But I hope you may find some pieces useful.
 ## Smart Pointer
 
 `std::shared_ptr` gives a good direction in automating memory management.
-But I'd like to offer a slightly different approach.
+But I'd like to offer a slightly different implementation.
 
 The smart pointer `sp` and `wp` works in many ways like `std::shared_ptr` and `std::weak_ptr`.
 
@@ -47,106 +47,141 @@ sp<NcData> data = NcData::allocWithBytes(buffer, len);
 EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
 EXPECT_EQ(data.use_count(), 1);
 
-wp<NcString> w(str);	// strong/raw to weak
-auto s = w.lock(); 		// weak to strong
+wp<NcString> w(str);	// strong -> weak
+sp<NcString> s = w.lock(); 		// weak -> strong
 ```
 
-But they also bear important differences. Such as:
+But they also bear some differences:
 
-1. The smart point can be implicitly converted to raw pointer.
-2. It supports manual reference counting through `retain()` and `release()`. 
+1.  There is a base class `NcObject`. `sp<>` must work with it.
+
+    NcObject` contains some common used methods. Such as `toString()`, `isKindOf()` and `equals()`.
+    They can be used to make some fancy functions:
+
+    ```cpp
+    // ""_str is short for NcString::allocWithCString(const char* str);
+    auto arr = NcArray::allocWithObjects("hello"_str, "world"_str, NULL);
+    // anything object can be coverted to string
+    // str == array ["hello", "world"] with length 2
+    auto str = NcString::format("array %@ with length %d", arr, arr->length());
+    ```
+
+    ```cpp
+    // deep & generic comparison
+    auto array1 = NcArray::allocWithObjects(obj1, obj2, NULL);
+    auto array2 = NcArray::alloc();
+    array2->push(obj1);
+    array2->push(obj2);
+    array1->equals(array2); // should be true
+    ```
+
+    Type identification
+
+    ```cpp
+    sp<NcObject> box = MyBox::alloc();
+    EXPECT_TRUE(box->isKindOf<MyBox>());
+    EXPECT_TRUE(box->isKindOf<NcObject>());
+    EXPECT_FALSE(box->isKindOf<NcString>());
+    ```
+   
+2.  There is a `operator[]` in `sp`. It makes accessing of array easier
+
+    ```cpp
+    auto arr = NcArray::allocWithObject(obj1, obj2, NULL);
+    printf(arr[0]->toString());
+    printf(arr[1]->toString());
+    ```
+
+3. It supports manual reference counting through `retain()` and `release()`.
    Though they should only be used in very rare cases(like when working with 3rd-party C API).
 
-```cpp
-const calculatePolygonArea(NcPolygon* polygon);
 
-void main()
-{
-    sp<NcPolygon> polygon = NcPolygon::allocWithPoints(points, count);
-    calculatePolygonArea(polygon); // sp -> raw implicitly. It will make code neater
+    ```cpp
+    some_old_c_sdk_set_user_data(retain(raw)); // manually increase RC
 
-    NcPolygon p2 = NcPolygon::makeWithPointsNoCopy(points, count);
-    calculatePolygonArea(&p2); // work with object on stack
-}
+    some_old_c_sdk_set_delete_callback([](void* userdata) {
+        UserData* data = (UserData*)userdata;
+        release(data); // manually decrease RC
+    });
+    ```
 
-NcString* raw = p1.get();
-sp<NcString> p2 = retain(raw);   // raw -> sp
-```
+4. The memory layout is more efficient for some objects.
 
-It makes calling raw-pointer functions easier:
+    Consider the following code:
 
-```cpp
-void myFunction(NcString* str) // raw pointer
+    ```cpp
+    auto str1 = std::make_shared<std::string>("hello");
+    ```
 
-sp<NcString> s = NcString::allocWithCString("abc");
-myFunction(s); // implicitly conversion to raw pointer
+    There are three memory blocks (all on heap) for str1:
+        
+        *   the control block of `shared_ptr`
+        *   the string object
+        *   the contained string
 
-auto arr = NcArray<NcString>::allocWithObjects("123"_str, "234"_str, NULL);
-for(int i = 0; i < arr->Length(); i++) {
-   NcString* str = arr[i]; // implicitly convert to raw pointer
-}
-```
+    `std::make_shared` smartly combine the first two block in one `malloc()`. 
+    But the contained string requires a separate `malloc()`.
 
-And it allows to retake ownership from raw pointer.
+    With `NcString`, all 3 blocks are created in one `malloc()`.
+    Please see the implementation for how it works.
 
-```cpp
-void SomeObject::setName(NcString* name) {
-   m_name = retain(name);  // retake ownership from raw pointer
-}
-```
+    ```cpp
+    auto str2 = NcString::allocWithCString("hello");
+    ```
 
-### Rules of using `sp`.
+    The same optimization is used for `NcData`.
 
-- There are only two ways of using pointer: `Widget*` or `sp<Widget>`. There is not `const` variant.
-- Use raw pointer as much as possible(local variables, parameters etc), unless you want to take the ownership.
-- If you want to take ownership, make it explicit by calling `retain()`.
-
-```cpp
-class SomeClass
-{
- public:
-   SomeClass() {
-      sp<NcString> name = NcString::allocWithCString("hello"); // object creation, use `sp`
-      m_name = sp;   // transfer ownership, use `sp`
-   }
-
-   void setName(NcString* name) { // function parameter: use raw pointer
-      m_name = retain(name);  // explicitly take ownership
-   }
-
- private:
-   void processing() {
-      NcString* name = m_name; // local variable: use raw pointer
-      useName(name);
-   }
-
-   void useName(NcString* name) {   // function parameter: use raw pointer
-   }
-
- private:
-   sp<NcString> m_name;
-}
-```
 
 ## String Class
 
 I want a string class which is both intuitive and efficient.
+`StringSlice` is created just for that. It's always on stack and cheap to copy.
 
-`StringSlices` is always on stack. It only contains a `char*` and a `length`. There is no heap memory allocation. So it's very fast.
+Unlike C string, which requires a '\0' ending, `StringSlice` contains a start pointer and a length.
+So getting a substring is very cheap. 
+For example, there is not a single `malloc()/free()` in the following code
 
 ```cpp
 StringSlice slice = "hello---world"_s;
-vector<StringSlice> pieces = slice.split("---");
-EXPECT_TRUE(pieces[0].equals("hello"));
-EXPECT_TRUE(pieces[1].equals("world"));
+std::vector<StringSlice> pieces = slice.split("---");
+EXPECT_TRUE(pieces[0] == "hello");
+EXPECT_TRUE(pieces[1] == "world");
 ```
 
-`NcString` is on heap. There is one `malloc()` for each string.
+Most of the time, StringSlice manages the memory safely.
+For example:
+
+```cpp
+auto str1 = "hello world"_s; // use literal memory
+auto str2 = StringSlice::format("hello %s", "world"); // it allocate memory internally
+```
+
+But sometimes, you should be more careful.
+
+```cpp
+// `str1` takes ownership of the memory, and will call `free()` when it's not needed'
+char* buffer = json_dumps(jsonNode);
+auto str1 = StrinSlice::makeByTakingCString(buffer);
+
+char buffer[MAX_PATH];
+getcwd(buffer, MAX_PATH);
+// str2 will be invalid when `buffer` goes out of scope
+auto str2 = StringSlice::makeEphemeral(buffer);
+// str3 will make a copy of the memory. It's more safe, but slightly slower.
+auto str3 = StringSlice::make(buffer);
+```
+
+## NcString
+
+`sp<NcString>` is on heap. It's derived from NcObject.
+For most cases, please use StringSlice instead of NcString.
+Use it only when you need an NcObject derived object.
+For example, when you want to put it into `NcArray<>` or `NcHashmap<>`.
 
 ```cpp
 auto str = NcString::allocWithCString("hello---world");
 // splitting a string will only create StringSlices. So it's very fast.
-auto slices = str.split("---");
+auto slices = str->split("---");
 EXPECT_EQ(str->retainCount(), 3); // because each slice holds a reference to the string
 EXPECT_TRUE(slices[0].equals("hello"));
 EXPECT_TRUE(slices[1].equals("world"));
@@ -160,35 +195,6 @@ Both `StringSlice` and `NcString` have rich set of functions, such as:
 EXPECT_EQ("internationalization"_s.countSlice("tion"), 2);
 auto str = NcString::format("%s shall come", "The Day"); // The Day shall come
 ```
-
-## Foundation Classes: NcObject, NcArray, NcString, etc
-
-I want some foundation classes such as `NcObject`, `NcArray`, `NcString`. They enable things like:
-
-- Type identification
-
-  ```cpp
-  sp<NcObject> box = MyBox::alloc();
-  EXPECT_TRUE(box->isKindOf<MyBox>());
-  EXPECT_TRUE(box->isKindOf<NcObject>());
-  EXPECT_FALSE(box->isKindOf<NcString>());
-  ```
-
-- All objects can be converted in string.
-
-  ```cpp
-  auto str = o->toString();
-  ```
-
-- C style format can be extended to support any NcObject.
-
-  ```cpp
-  auto arr = NcArray<NcString>::alloc();
-  arr->addObject("Earth"_str);
-  arr->addObject("Mars"_str);
-  arr[1] = "Jupiter"_str;
-  EXPECT_EQ(NcString::format("Hello %@", arr), "Hello [\"Earth\", \"Jupiter\"]");
-  ```
 
 ## StackOrHeapAllocator
 
@@ -393,47 +399,6 @@ But at the cost of making it harder to read or navigate:
    ```
 
 But overall, I think it's worthwhile to use `auto`. Especially for complex types. But for basic types, I prefer to make the type explicit.
-
-## String literals
-
-C++11 support customized suffix for string literals.
-
-```cpp
-sp<NcString> operator""_str(const char* literalStr, size_t len);
-StringSlice operator""_s(const char* literalStr, size_t len);
-```
-
-This enables creating of literal NcString object or StringSlice.
-
-```cpp
-sp<NcString> str = "hello world"_str;
-StringSlice slice = "hello world"_s;
-```
-
-NcString object created in this way is considered "static".
-It has `retainCount()` at INT_MAX.
-Calling retain() or release() on it has no effect.
-With a global string manager, it's possible to make sure only one NcString object is created for each string literal.
-
-```cpp
-TEST(NcString, literal) {
-  sp<NcString> s1, s2;
-  for (int i = 0; i < 2; i++) {
-    sp<NcString> s = "hello world"_str;
-    if (i == 0)
-      s1 = s;
-    else
-      s2 = s;
-  }
-
-  // s1 is exactly the same as s2, because of the literal string manager.
-  EXPECT_EQ(s1.get(), s2.get());
-
-  auto s3 = "hello world"_s;
-  // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
-  EXPECT_EQ(s1.get(), s3.get());
-}
-```
 
 ## Log System
 
