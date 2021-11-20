@@ -84,7 +84,7 @@ public:
     forceinline int length() { return m_length; }
 
     forceinline StringSlice subslice(int start, int length) { return toSlice().subslice(start, length); }
-    forceinline StringSlice subsliceInRange(Range range) { return toSlice().subsliceInRange(range); }
+    forceinline StringSlice subslice(Range range) { return toSlice().subslice(range); }
     forceinline StringSlice subsliceFrom(int start) { return toSlice().subsliceFrom(start); }
 
     //////////////////////////////////////////////////////////////////////////

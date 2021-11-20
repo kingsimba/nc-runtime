@@ -2,17 +2,20 @@
 #include "nc_runtime/string_slice.h"
 #include "nc_runtime/nc_string.h"
 
-TEST(StringSlice, basic)
+TEST(StringSlice, compare)
 {
-    EXPECT_TRUE("blood"_s.equals("blood"));
-    EXPECT_FALSE("blood"_s.equals("blond"));
-    EXPECT_TRUE("blood"_s.equals("blood"_s));
-    EXPECT_FALSE("blood"_s.equals("blond"_s));
+    EXPECT_TRUE("blood"_s == "blood"_s);
+    EXPECT_TRUE("blood"_s != "bloom"_s);
+
+    EXPECT_TRUE("blood"_s == "blood");
+    EXPECT_TRUE("blood"_s != "bloom");
+    EXPECT_TRUE("blood" == "blood"_s);
+    EXPECT_TRUE("bloom" != "blood"_s);
 
     EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"));
-    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOND"));
+    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"));
     EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"_s));
-    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOND"_s));
+    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"_s));
 }
 
 TEST(StringSlice, iter)
@@ -54,7 +57,7 @@ TEST(StringSlice, subslice)
     EXPECT_EQ(s.subsliceFrom(-7), "divine.");
     EXPECT_EQ(s.subsliceFrom(3), "err is human, to forgive divine.");
     EXPECT_EQ(s.subslice(10, 5), "human");
-    EXPECT_EQ(s.subsliceInRange(Range_make(10, 5)), "human");
+    EXPECT_EQ(s.subslice(Range(10, 5)), "human");
 
     // count subslice
     EXPECT_EQ("hello world hello world hello"_s.countSlice("hello"), 3);
@@ -69,15 +72,17 @@ TEST(StringSlice, split)
     {
         auto pieces = s.split("分隔符 ");
         ASSERT_EQ(pieces.size(), 3);
-        EXPECT_TRUE(pieces[0].equals("You should name a "));
-        EXPECT_TRUE(pieces[1].equals("variable with the same care "));
-        EXPECT_TRUE(pieces[2].equals("as you are naming your first born child."));
+        EXPECT_EQ(pieces[0], "You should name a ");
+        EXPECT_EQ(pieces[1], "variable with the same care ");
+        EXPECT_EQ(pieces[2], "as you are naming your first born child.");
     }
 
     {
         StringSlice pieces[3];
-        EXPECT_EQ(StringSlice("hello--world--hello--world").splitWithLimit("--", pieces, countof(pieces)), 3);
-        EXPECT_TRUE(pieces[1].equals("world"));
+        EXPECT_EQ("hello--world--hello--world"_s.splitWithLimit("--", pieces, countof(pieces)), 3);
+        EXPECT_EQ(pieces[0], "hello");
+        EXPECT_EQ(pieces[1], "world");
+        EXPECT_EQ(pieces[0], "hello");
     }
 }
 
@@ -96,7 +101,7 @@ TEST(StringSlice, splitNonexistSep)
     auto s = "hello world"_s;
     auto pieces = s.split("non-exist");
     ASSERT_EQ(pieces.size(), 1);
-    EXPECT_TRUE(pieces[0].length() == s.length());
+    EXPECT_EQ(pieces[0], s);
 }
 
 TEST(StringSlice, splitShouldKeepEmptySlices)
@@ -112,8 +117,8 @@ TEST(StringSlice, splitShouldKeepEmptySlices)
 TEST(StringSlice, find)
 {
     auto s = "hello 世界"_s;
-    EXPECT_EQ(s.find(U'世'), Range_make(6, 3));
-    EXPECT_EQ(s.find(U'界'), Range_make(9, 3));
+    EXPECT_EQ(s.find(U'世'), Range(6, 3));
+    EXPECT_EQ(s.find(U'界'), Range(9, 3));
 
     EXPECT_EQ(s.find('l'), 2);
     EXPECT_EQ(s.rfind('l'), 3);
@@ -141,21 +146,5 @@ TEST(StringSlice, replace)
     auto str = "folder1/folder2/file.png"_s;
     auto pos = str.rfind('.');
     ASSERT_TRUE(pos != -1);
-    EXPECT_EQ(str.replaceInRange(Range_make(pos, str.length() - pos), ".jpg"), "folder1/folder2/file.jpg");
-}
-
-TEST(StringSlice, compare)
-{
-    EXPECT_TRUE("blood"_s == "blood"_s);
-    EXPECT_TRUE("blood"_s != "bloom"_s);
-
-    EXPECT_TRUE("blood"_s == "blood");
-    EXPECT_TRUE("blood"_s != "bloom");
-    EXPECT_TRUE("blood" == "blood"_s);
-    EXPECT_TRUE("bloom" != "blood"_s);
-
-    EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"));
-    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"));
-    EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"_s));
-    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"_s));
+    EXPECT_EQ(str.replaceInRange(Range(pos, str.length() - pos), ".jpg"), "folder1/folder2/file.jpg");
 }

@@ -136,13 +136,6 @@ public:
         return o;
     }
 
-    static forceinline sp<T> retainRaw(T* p)
-    {
-        sp<T> o;
-        o.m_ptr = retain(p);
-        return o;
-    }
-
     sp<T>& operator=(const sp<T>& p)
     {
         release(m_ptr);
@@ -198,7 +191,7 @@ template <class T1, class T2>
 sp<T1> static_pointer_cast(const sp<T2>& r) noexcept
 {
     T1* derived = static_cast<T1*>(r.get());
-    return sp<T1>::retainRaw(derived);
+    return retainToSp(derived);
 }
 
 /**
@@ -408,6 +401,12 @@ forceinline T* retain(T* o)
     if (o)
         o->_retain();
     return o;
+}
+
+template <typename T>
+forceinline sp<T> retainToSp(T* p)
+{
+    return sp<T>::takeRaw(retain(p));
 }
 
 forceinline void release(NcObject* o)

@@ -196,7 +196,7 @@ public:
      * Create a subslice
      */
     StringSlice subslice(int start, int length);
-    StringSlice subsliceInRange(Range range);
+    StringSlice subslice(Range range);
 
     /**
      * Negative number means from the end. For example "hello".subsliceFrom(-3) == "llo"
@@ -211,7 +211,11 @@ public:
     std::vector<StringSlice> split(const StringSlice& sep);
 
     /**
-     * A fast on stack version. return the number of slices actually created
+     * Split a string into at most N pieces
+     *
+     * split "hello--world" with "--" will produce ["hello", "world"]
+     *
+     * @return the number of slices returned
      */
     int splitWithLimit(const StringSlice& sep, StringSlice* slicesOut, int maxNum);
 

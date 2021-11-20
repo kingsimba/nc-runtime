@@ -92,7 +92,7 @@ bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut)
 
     *cOut = StringSlice(m_str, (int)(newStr - m_str), retain(m_ncstring));
     if (rangeOut != NULL)
-        *rangeOut = Range_make((int)(m_str - m_strBegin), cOut->length());
+        *rangeOut = Range((int)(m_str - m_strBegin), cOut->length());
 
     if (newStr != m_strEnd)
     {
@@ -287,7 +287,7 @@ Range StringSlice::findFrom(int start, wchar32 code)
     {
         if (c == code)
         {
-            return Range_make(start + totalBytes, consumedBytes);
+            return Range(start + totalBytes, consumedBytes);
         }
         totalBytes += consumedBytes;
     }
@@ -313,7 +313,7 @@ StringSlice StringSlice::subslice(int start, int length)
     return StringSlice(m_str + start, length, retain(m_ncstring));
 }
 
-StringSlice StringSlice::subsliceInRange(Range range)
+StringSlice StringSlice::subslice(Range range)
 {
     return StringSlice(m_str + range.location, range.length, retain(m_ncstring));
 }
@@ -327,7 +327,7 @@ Range StringSlice::findSliceFrom(int start, const StringSlice& needle)
         return invalidRange;
     }
 
-    return Range_make((int)(newStr - m_str), needle.m_length);
+    return Range((int)(newStr - m_str), needle.m_length);
 }
 
 bool StringTokenIter::next(StringSlice* sliceOut, Range* rangeOut)
@@ -361,7 +361,7 @@ bool StringTokenIter::next(StringSlice* sliceOut, Range* rangeOut)
 
     *sliceOut = StringSlice(firstNonSep, (int)(m_str - firstNonSep), retain(m_ncstring));
     if (rangeOut != NULL)
-        *rangeOut = Range_make((int)(firstNonSep - m_strBegin), sliceOut->length());
+        *rangeOut = Range((int)(firstNonSep - m_strBegin), sliceOut->length());
 
     return true;
 }

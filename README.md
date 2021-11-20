@@ -43,27 +43,38 @@ The smart pointer `sp` and `wp` works in many ways like `std::shared_ptr` and `s
 
 ```cpp
 // get() and use_count() works the same as std::shared_ptr
-sp<NcData> data = NcData::allocWithBytes(buffer, len);
-EXPECT_EQ(data.get()->length(), data->length());   // overload operator '->'
+sp<NcData> data = NcData::allocWithBytes("hello", 5);
+EXPECT_EQ(data->length(), 5);   // overload operator '->'
 EXPECT_EQ(data.use_count(), 1);
+
+// create sp
+sp<NcString> str = NcString::allocWithCString("hello");
+
+NcString* raw = str.get();  // strong -> raw
+sp<NcString> s2 = retainToSp(raw); // raw -> strong
 
 wp<NcString> w(str);	// strong -> weak
 sp<NcString> s = w.lock(); 		// weak -> strong
+if (s != nullptr)
+{
+    use(s);
+}
 ```
 
 But they also bear some differences:
 
-1.  There is a base class `NcObject`. `sp<>` must work with it.
+1.  There is a base class `NcObject`. `sp<>` only works on it.
 
-    NcObject` contains some common used methods. Such as `toString()`, `isKindOf()` and `equals()`.
-    They can be used to make some fancy functions:
+    `NcObject` contains some common used methods. Such as `toString()`, `isKindOf()` and `equals()`.
+    They can be used to make fancy things like:
 
     ```cpp
     // ""_str is short for NcString::allocWithCString(const char* str);
     auto arr = NcArray::allocWithObjects("hello"_str, "world"_str, NULL);
-    // anything object can be coverted to string
-    // str == array ["hello", "world"] with length 2
+
+    // any object can be coverted to string
     auto str = NcString::format("array %@ with length %d", arr, arr->length());
+    EXPECT_EQ(str, "array [\"hello\", \"world\"] with length 2");
     ```
 
     ```cpp
@@ -75,16 +86,15 @@ But they also bear some differences:
     array1->equals(array2); // should be true
     ```
 
-    Type identification
-
     ```cpp
+    // type identification
     sp<NcObject> box = MyBox::alloc();
     EXPECT_TRUE(box->isKindOf<MyBox>());
     EXPECT_TRUE(box->isKindOf<NcObject>());
     EXPECT_FALSE(box->isKindOf<NcString>());
     ```
    
-2.  There is a `operator[]` in `sp`. It makes accessing of array easier
+2.  There is a `operator[]` in `sp`. It makes indexing into array easier
 
     ```cpp
     auto arr = NcArray::allocWithObject(obj1, obj2, NULL);
@@ -92,20 +102,19 @@ But they also bear some differences:
     printf(arr[1]->toString());
     ```
 
-3. It supports manual reference counting through `retain()` and `release()`.
-   Though they should only be used in very rare cases(like when working with 3rd-party C API).
-
+3.  It supports manual reference counting through `retain()` and `release()`.
+    though their uses should be restricted(like when working with 3rd-party C API).
 
     ```cpp
-    some_old_c_sdk_set_user_data(retain(raw)); // manually increase RC
-
-    some_old_c_sdk_set_delete_callback([](void* userdata) {
+    auto userData = UserData::alloc()
+    SomeOldSdk_setUserData((void*)retain(userData.get())); // manually increase RC
+    SomeOldSdk_setDeleteCallback([](void* userdata) {
         UserData* data = (UserData*)userdata;
         release(data); // manually decrease RC
     });
     ```
 
-4. The memory layout is more efficient for some objects.
+4.  The memory layout is more efficient for some objects.
 
     Consider the following code:
 
@@ -115,9 +124,9 @@ But they also bear some differences:
 
     There are three memory blocks (all on heap) for str1:
         
-        *   the control block of `shared_ptr`
+        *   the control block used by `shared_ptr`
         *   the string object
-        *   the contained string
+        *   the contained string "hello"
 
     `std::make_shared` smartly combine the first two block in one `malloc()`. 
     But the contained string requires a separate `malloc()`.
@@ -137,9 +146,11 @@ But they also bear some differences:
 I want a string class which is both intuitive and efficient.
 `StringSlice` is created just for that. It's always on stack and cheap to copy.
 
+> **Notes:** The name 'slice' is borrowed from Golang's slice concept.
+
 Unlike C string, which requires a '\0' ending, `StringSlice` contains a start pointer and a length.
-So getting a substring is very cheap. 
-For example, there is not a single `malloc()/free()` in the following code
+So creating a subslice is very cheap(just advance the pointer and reassign the length). 
+Consider the following code, there is not a single `malloc()/free()` in it.
 
 ```cpp
 StringSlice slice = "hello---world"_s;
@@ -165,21 +176,21 @@ auto str1 = StrinSlice::makeByTakingCString(buffer);
 
 char buffer[MAX_PATH];
 getcwd(buffer, MAX_PATH);
-// str2 will be invalid when `buffer` goes out of scope
+// Careful: str2 will be invalid when `buffer` goes out of scope
 auto str2 = StringSlice::makeEphemeral(buffer);
-// str3 will make a copy of the memory. It's more safe, but slightly slower.
+// `StringSlice::make()` will make a copy of the memory. It's safer, albeit slower.
 auto str3 = StringSlice::make(buffer);
 ```
 
 ## NcString
 
-`sp<NcString>` is on heap. It's derived from NcObject.
-For most cases, please use StringSlice instead of NcString.
-Use it only when you need an NcObject derived object.
+`NcString` is on heap. It's derived from NcObject.
+For most cases, please use `StringSlice` instead of `NcString`.
+Use `NcString` only when you need an `NcObject` derived object.
 For example, when you want to put it into `NcArray<>` or `NcHashmap<>`.
 
 ```cpp
-auto str = NcString::allocWithCString("hello---world");
+auto str = "hello---world"_str;
 // splitting a string will only create StringSlices. So it's very fast.
 auto slices = str->split("---");
 EXPECT_EQ(str->retainCount(), 3); // because each slice holds a reference to the string
@@ -258,7 +269,10 @@ EXPECT_GE(duration.ms(), 10);
 
 # Design Notes
 
-To be honest, I fall behind in terms of modern C++. Because I held a biased and negative attitude towards it and didn't spend much time to learn it. And in the New Years Days of 2021, I decide to rediscover modern C++. And see how things can be different if I use C++ 14.
+To be honest, I fall behind in terms of modern C++. Because I held a biased and negative attitude 
+towards it and didn't spend much time to learn it. 
+And in the New Years Days of 2021, I decide to rediscover modern C++. 
+And see how things can be different if I use C++ 14.
 
 ## std::shared_ptr vs self-implemented smart pointer.
 

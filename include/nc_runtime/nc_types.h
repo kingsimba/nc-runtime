@@ -160,6 +160,9 @@ inline bool operator!=(Rgba8 l, Rgba8 r)
 
 struct Range
 {
+    Range() = default;
+    Range(int location_, int length_) : location(location_), length(length_) {}
+
     int location;
     int length;
     forceinline int end() { return this->location + this->length; }
