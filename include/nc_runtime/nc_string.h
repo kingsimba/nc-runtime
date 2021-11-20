@@ -145,3 +145,13 @@ forceinline bool operator!=(const sp<NcString>& str, const StringSlice& r)
 {
     return !str->equals(r);
 }
+
+forceinline bool operator==(const StringSlice& r, const sp<NcString>& str)
+{
+    return str->equals(r);
+}
+
+forceinline bool operator!=(const StringSlice& r, const sp<NcString>& str)
+{
+    return !str->equals(r);
+}

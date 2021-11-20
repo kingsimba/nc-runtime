@@ -28,8 +28,10 @@ TEST(NcString, compare)
 
     EXPECT_TRUE("blood"_str == "blood");
     EXPECT_TRUE("blood"_str != "bloom");
-    EXPECT_TRUE("blood"_str == "blood"_s);
-    EXPECT_TRUE("blood"_str != "bloom"_s);
+    EXPECT_TRUE("blood" == "blood"_str);
+    EXPECT_TRUE("bloom" != "blood"_str);
+    EXPECT_TRUE("blood"_s == "blood"_str);
+    EXPECT_TRUE("bloom"_s != "blood"_str);
 
     EXPECT_TRUE("blood"_str->equalsCaseInsensitive("BLOOD"));
     EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"));

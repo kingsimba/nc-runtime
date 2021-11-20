@@ -291,6 +291,11 @@ forceinline bool operator==(const StringSlice& l, const StringSlice& r)
     return l.equals(r);
 }
 
+forceinline bool operator!=(const StringSlice& l, const StringSlice& r)
+{
+    return !l.equals(r);
+}
+
 inline StringCharIter::StringCharIter(const StringSlice& slice)
 {
     m_str = slice.internalBytes();

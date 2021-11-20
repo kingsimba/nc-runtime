@@ -143,3 +143,19 @@ TEST(StringSlice, replace)
     ASSERT_TRUE(pos != -1);
     EXPECT_EQ(str.replaceInRange(Range_make(pos, str.length() - pos), ".jpg"), "folder1/folder2/file.jpg");
 }
+
+TEST(StringSlice, compare)
+{
+    EXPECT_TRUE("blood"_s == "blood"_s);
+    EXPECT_TRUE("blood"_s != "bloom"_s);
+
+    EXPECT_TRUE("blood"_s == "blood");
+    EXPECT_TRUE("blood"_s != "bloom");
+    EXPECT_TRUE("blood" == "blood"_s);
+    EXPECT_TRUE("bloom" != "blood"_s);
+
+    EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"));
+    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"));
+    EXPECT_TRUE("blood"_s.equalsCaseInsensitive("BLOOD"_s));
+    EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"_s));
+}
