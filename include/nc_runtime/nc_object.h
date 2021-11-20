@@ -108,7 +108,7 @@ class sp
 {
 public:
     forceinline sp() { m_ptr = NULL; }
-    forceinline sp(T* p) { m_ptr = p; }
+    forceinline sp(nullptr_t) { m_ptr = NULL; }
     forceinline sp(const sp<T>& p)
     {
         m_ptr = p.get();
@@ -128,6 +128,20 @@ public:
         r.m_ptr = NULL;
     }
     ~sp() { release(m_ptr); }
+
+    static forceinline sp<T> takeRaw(T* p)
+    {
+        sp<T> o;
+        o.m_ptr = p;
+        return o;
+    }
+
+    static forceinline sp<T> retainRaw(T* p)
+    {
+        sp<T> o;
+        o.m_ptr = retain(p);
+        return o;
+    }
 
     sp<T>& operator=(const sp<T>& p)
     {
@@ -184,7 +198,7 @@ template <class T1, class T2>
 sp<T1> static_pointer_cast(const sp<T2>& r) noexcept
 {
     T1* derived = static_cast<T1*>(r.get());
-    return sp<T1>(retain(derived));
+    return sp<T1>::retainRaw(derived);
 }
 
 /**
@@ -267,7 +281,7 @@ public:
 
         ControlBlock* ctrl = m_ptr->_controlBlock();
         if (ctrl->lockStrong())
-            return sp<T>(m_ptr);
+            return sp<T>::takeRaw(m_ptr);
         else
             return NULL;
     }
@@ -376,7 +390,7 @@ protected:
     template <class T, class... Types>
     static sp<T> alloc(Types&&... args)
     {
-        return new T(std::forward<Types>(args)...);
+        return sp<T>::takeRaw(new T(std::forward<Types>(args)...));
     }
 
 protected:
@@ -393,7 +407,7 @@ forceinline T* retain(T* o)
 {
     if (o)
         o->_retain();
-    return (T*)o;
+    return o;
 }
 
 forceinline void release(NcObject* o)

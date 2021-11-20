@@ -24,7 +24,7 @@ sp<NcString> NcString::allocWithSlice(const StringSlice& slice)
 {
     NcString* internalStr = slice.internalString();
     if (internalStr != NULL && slice.length() == internalStr->length())
-        return retain(internalStr);
+        return sp<NcString>::retainRaw(internalStr);
     return NcString::allocWithBytes(slice.internalBytes(), slice.length());
 }
 
@@ -37,7 +37,7 @@ sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
     o->m_str = buffer;
     o->m_length = (int)strLength;
     *strOut = buffer;
-    return o;
+    return sp<NcString>::takeRaw(o);
 }
 
 sp<NcString> NcString::format(const char* format, ...)
