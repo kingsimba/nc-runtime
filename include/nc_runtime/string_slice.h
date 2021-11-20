@@ -113,6 +113,7 @@ public:
     // ephemeral string slice
     forceinline StringSlice(const char* str);
 
+    static StringSlice format(const char* format, ...);
     static StringSlice make(const char* buffer);                   // create a copy of C string
     static StringSlice makeEphemeral(const char* str);             // make NO copy of buffer
     static StringSlice makeEphemeral(const char* str, size_t len); // make NO copy of buffer
@@ -211,7 +212,7 @@ public:
     std::vector<StringSlice> split(const StringSlice& sep);
 
     /**
-     * Split a string into at most N pieces
+     * Split a string into at most `maxNum` pieces
      *
      * split "hello--world" with "--" will produce ["hello", "world"]
      *
@@ -237,6 +238,9 @@ public:
      * Count the occurrences of target string
      */
     int countSlice(const StringSlice& target) const;
+
+    StringSlice join(const std::vector<StringSlice>& slices);
+    StringSlice join(StringSlice* slices, size_t sliceCount);
 
     //////////////////////////////////////////////////////////////////////////
     // Equals

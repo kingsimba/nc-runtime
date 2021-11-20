@@ -54,6 +54,18 @@ sp<NcString> NcString::format(const char* format, ...)
     return o;
 }
 
+sp<NcString> NcString::formatVa(const char* format, va_list va)
+{
+    va_list vaCopy;
+    va_copy(vaCopy, va);
+    size_t len = vsnprintf(NULL, 0, format, va);
+    char* buffer;
+    auto o = NcString::allocButFillContentLater(len, &buffer);
+    vsnprintf(buffer, len + 1, format, va);
+    va_end(vaCopy);
+    return o;
+}
+
 bool NcString::equals(NcObject* r)
 {
     if (this == r)

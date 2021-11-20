@@ -76,6 +76,7 @@ public:
     }
 
     static sp<NcString> format(const char* format, ...);
+    static sp<NcString> formatVa(const char* format, va_list va);
 
     //////////////////////////////////////////////////////////////////////////
     /// Accessors

@@ -18,6 +18,11 @@ TEST(StringSlice, compare)
     EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"_s));
 }
 
+TEST(StringSlice, format)
+{
+    EXPECT_EQ(StringSlice::format("%s %s", "hello", "world"), "hello world");
+}
+
 TEST(StringSlice, iter)
 {
     auto iter = "To err is human, to forgive divine."_s.iterForSplitting(" ");
@@ -65,7 +70,7 @@ TEST(StringSlice, subslice)
     EXPECT_EQ("hello"_s.countSlice("hello world"), 0);
 }
 
-TEST(StringSlice, split)
+TEST(StringSlice, splitAndJoin)
 {
     auto s = StringSlice("You should name a 分隔符 variable with the same care 分隔符 as you are "
                          "naming your first born child.");
@@ -83,6 +88,8 @@ TEST(StringSlice, split)
         EXPECT_EQ(pieces[0], "hello");
         EXPECT_EQ(pieces[1], "world");
         EXPECT_EQ(pieces[0], "hello");
+
+        EXPECT_EQ("___"_s.join(pieces, 3), "hello___world___hello");
     }
 }
 

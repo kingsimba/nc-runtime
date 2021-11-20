@@ -19,12 +19,9 @@ public:
 
     inline void retain()
     {
-        if (m_rc != INT_MAX)
-        {
-            m_lock.lock();
-            m_rc++;
-            m_lock.unlock();
-        }
+        m_lock.lock();
+        m_rc++;
+        m_lock.unlock();
     }
 
     struct Action
@@ -36,14 +33,11 @@ public:
     inline Action release()
     {
         Action rtn = {false, false};
-        if (m_rc != INT_MAX)
-        {
-            m_lock.lock();
-            rtn.freeObject = m_rc == 1;
-            rtn.freeMemory = m_rc == 1 && m_wc == 0;
-            m_rc--;
-            m_lock.unlock();
-        }
+        m_lock.lock();
+        rtn.freeObject = m_rc == 1;
+        rtn.freeMemory = m_rc == 1 && m_wc == 0;
+        m_rc--;
+        m_lock.unlock();
         return rtn;
     }
 
@@ -67,19 +61,16 @@ public:
     forceinline bool lockStrong()
     {
         bool succ = true;
-        if (m_rc != INT_MAX)
+        m_lock.lock();
+        if (m_rc != 0)
         {
-            m_lock.lock();
-            if (m_rc != 0)
-            {
-                m_rc++;
-            }
-            else
-            {
-                succ = false;
-            }
-            m_lock.unlock();
+            m_rc++;
         }
+        else
+        {
+            succ = false;
+        }
+        m_lock.unlock();
 
         return succ;
     }
@@ -387,11 +378,6 @@ protected:
     }
 
 protected:
-    NcObject(bool /*isStatic*/)
-    {
-        ControlBlock* ctrl = _controlBlock();
-        ctrl->m_rc = INT_MAX;
-    }
     virtual ~NcObject() {}
 };
 

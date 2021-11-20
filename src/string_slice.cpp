@@ -4,6 +4,7 @@
 #include "nc_runtime/string_slice.h"
 #include "jansson/utf.h"
 #include "nc_runtime/nc_string.h"
+#include <stdarg.h>
 
 bool StringCharIter::next(wchar32* cOut, int* consumedBytesOut)
 {
@@ -230,6 +231,27 @@ const StringSlice& StringSlice::operator=(const StringSlice& r)
 StringSlice StringSlice::makeWithString(NcString* str)
 {
     return StringSlice(str->cstr(), str->length(), retain(str));
+}
+
+StringSlice StringSlice::format(const char* format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    auto str = NcString::formatVa(format, va);
+    va_end(va);
+    return StringSlice::makeWithString(str.get());
+}
+
+StringSlice StringSlice::join(const std::vector<StringSlice>& slices)
+{
+    auto str = NcString::allocByJoiningSlices(slices, *this);
+    return StringSlice::makeWithString(str.get());
+}
+
+StringSlice StringSlice::join(StringSlice* slices, size_t sliceCount)
+{
+    auto str = NcString::allocByJoiningSlices(slices, sliceCount, *this);
+    return StringSlice::makeWithString(str.get());
 }
 
 StringSlice::~StringSlice()
