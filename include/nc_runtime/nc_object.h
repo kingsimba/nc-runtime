@@ -182,7 +182,7 @@ template <class T1, class T2>
 sp<T1> static_pointer_cast(const sp<T2>& r) noexcept
 {
     T1* derived = static_cast<T1*>(r.get());
-    return retainToSp(derived);
+    return retainAsSp(derived);
 }
 
 /**
@@ -390,7 +390,7 @@ forceinline T* retain(T* o)
 }
 
 template <typename T>
-forceinline sp<T> retainToSp(T* p)
+forceinline sp<T> retainAsSp(T* p)
 {
     return sp<T>::takeRaw(retain(p));
 }

@@ -123,7 +123,7 @@ TEST(NcObject, retainReleaseSmartPointer)
     // retain. This is unnecessary(should use box2 = box).
     // But still, we support manual RC
     MyBox* rawBox = box.get();
-    sp<MyBox> box2 = retainToSp(rawBox);
+    sp<MyBox> box2 = retainAsSp(rawBox);
 
     // ERROR: This will not increase RC. So it's an error.
     // sp<MyBox> box2 = box.get();

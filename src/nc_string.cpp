@@ -24,7 +24,7 @@ sp<NcString> NcString::allocWithSlice(const StringSlice& slice)
 {
     NcString* internalStr = slice.internalString();
     if (internalStr != NULL && slice.length() == internalStr->length())
-        return retainToSp(internalStr);
+        return retainAsSp(internalStr);
     return NcString::allocWithBytes(slice.internalBytes(), slice.length());
 }
 

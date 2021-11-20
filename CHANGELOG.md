@@ -1,5 +1,12 @@
 # Changelog
 
+- 2021-11-20 Major improves on `StringSlice`, `sp<T>`
+		
+  - StringSlice become the major player, instead of NcString.
+  - Add `join`, `format`, etc in StringSlice.
+  - Disallow implict conversion from `sp<T>` to raw pointer. Use `get()` exclusively.
+  - Disallow implict conversion from raw pointer to `sp<T>`. Use `retainAsSp()`.
+
 - 2021-11-15 Support JSON modification with`JsonNode::remove()`, `JsonNode::add()`, `JsonNode::object()`, `JsonNode::integer()`, `JsonNode::real()` etc.
 - 2021-11-15 Improve `NcObject::alloc()`.
 - 2021-11-08 Add `NC_DEPRECATED`
