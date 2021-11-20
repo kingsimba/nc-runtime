@@ -14,7 +14,6 @@ extern LogLevel g_ncLogLevel;
 
 extern "C"
 {
-
     typedef void (*NcLogCallback)(const char* str, void* userdata);
 
     void NcLog_setCallback(NcLogCallback callback, void* userdata);
