@@ -1,10 +1,9 @@
 # Changelog
 
 - 2021-11-20 Major improves on `StringSlice`, `sp<T>`
-		
+
   - StringSlice become the major player, instead of NcString.
   - Add `join`, `format`, etc in StringSlice.
-  - Disallow implict conversion from `sp<T>` to raw pointer. Use `get()` exclusively.
   - Disallow implict conversion from raw pointer to `sp<T>`. Use `retainAsSp()`.
 
 - 2021-11-15 Support JSON modification with`JsonNode::remove()`, `JsonNode::add()`, `JsonNode::object()`, `JsonNode::integer()`, `JsonNode::real()` etc.
@@ -44,7 +43,7 @@
 - 2021-03-05 Fix bug in copying of wp.
 - 2021-03-05 Fix bug in global strings.
 - 2021-02-28 Add wp, equivalent of std::weak_ptr.
-- 2021-02-18 Add Thread::sleep(). Make TimeTick a class. 
+- 2021-02-18 Add Thread::sleep(). Make TimeTick a class.
 - 2021-02-18 Change the implementation of `sp<NcArray>`'s operator[].
 - 2021-02-18 Add `synchroized()` and `ManualResetEvent`.
 - 2021-02-17 Add NcArray::findWithCondition(), indexOfObject(), indexOfObjectWithCondition()

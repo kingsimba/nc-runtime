@@ -156,8 +156,6 @@ public:
     forceinline T* get() const { return m_ptr; }
     forceinline T* operator->() const { return m_ptr; }
 
-    forceinline operator bool() const { return m_ptr != nullptr; }
-
     forceinline bool operator==(const sp<T>& r) const
     {
         return m_ptr == r.m_ptr || (m_ptr != NULL && r.m_ptr != NULL && m_ptr->equals(r.m_ptr));
@@ -166,8 +164,18 @@ public:
     {
         return m_ptr != r.m_ptr && (m_ptr == NULL || r.m_ptr == NULL || !m_ptr->equals(r.m_ptr));
     }
+
+    forceinline operator bool() const { return m_ptr != nullptr; }
     forceinline bool operator==(std::nullptr_t) const { return m_ptr == NULL; }
     forceinline bool operator!=(std::nullptr_t) const { return m_ptr != NULL; }
+
+    /**
+     * Implicit conversion to T*.
+     *
+     * Usually, implicit conversion is not a good idea. https://www.informit.com/articles/article.aspx?p=31529&seqNum=7
+     * But I still want it, because it allows for comparison (ptr == NULL) or calling C function with raw pointer.
+     */
+    forceinline operator T*() const { return m_ptr; }
 
     /**
      * For accessing array element(If it's an array)
