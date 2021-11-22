@@ -99,7 +99,7 @@ class sp
 {
 public:
     forceinline sp() { m_ptr = NULL; }
-    forceinline sp(nullptr_t) { m_ptr = NULL; }
+    forceinline sp(std::nullptr_t) { m_ptr = NULL; }
     forceinline sp(const sp<T>& p)
     {
         m_ptr = p.get();
@@ -166,8 +166,8 @@ public:
     {
         return m_ptr != r.m_ptr && (m_ptr == NULL || r.m_ptr == NULL || !m_ptr->equals(r.m_ptr));
     }
-    forceinline bool operator==(nullptr_t) const { return m_ptr == NULL; }
-    forceinline bool operator!=(nullptr_t) const { return m_ptr != NULL; }
+    forceinline bool operator==(std::nullptr_t) const { return m_ptr == NULL; }
+    forceinline bool operator!=(std::nullptr_t) const { return m_ptr != NULL; }
 
     /**
      * For accessing array element(If it's an array)

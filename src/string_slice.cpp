@@ -1,8 +1,7 @@
-#include "..\include\nc_runtime\string_slice.h"
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/nc_types.h"
 #include "nc_runtime/string_slice.h"
-#include "jansson/utf.h"
+#include "../3rd-party/include/jansson/utf.h"
 #include "nc_runtime/nc_string.h"
 #include <stdarg.h>
 
