@@ -8,54 +8,6 @@
 
 using namespace std;
 
-// create one NcString object for each literal string
-class GlobalStringManager
-{
-public:
-    sp<NcString> addString(const char* cstr, size_t len)
-    {
-        static mutex s_mutex;
-
-        sp<NcString> str;
-
-        s_mutex.lock();
-        auto iter = m_map.find((size_t)cstr);
-        if (iter == m_map.end())
-        {
-            str = NcString::allocWithLiteralCString(cstr, len);
-            m_map.insert(iter, std::make_pair((size_t)cstr, str));
-        }
-        else
-        {
-            str = iter->second;
-        }
-        s_mutex.unlock();
-
-        return str;
-    }
-
-    ~GlobalStringManager()
-    {
-        auto iter = m_map.begin();
-        while (iter != m_map.end())
-        {
-            NcObject* obj = iter->second;
-            obj->_deleteThis();
-            iter++;
-        }
-    }
-
-private:
-    unordered_map<size_t, NcString*> m_map;
-};
-
-static GlobalStringManager g_stringManager;
-
-sp<NcString> operator"" _str(const char* literalStr, size_t len)
-{
-    return g_stringManager.addString(literalStr, len);
-}
-
 //////////////////////////////////////////////////////////////////////////
 // NcString
 
@@ -68,6 +20,14 @@ sp<NcString> NcString::allocWithBytes(const char* str, size_t len)
     return rtn;
 }
 
+sp<NcString> NcString::allocWithSlice(const StringSlice& slice)
+{
+    NcString* internalStr = slice.internalString();
+    if (internalStr != NULL && slice.length() == internalStr->length())
+        return retainAsSp(internalStr);
+    return NcString::allocWithBytes(slice.internalBytes(), slice.length());
+}
+
 sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
 {
     size_t totalLen = sizeof(NcString) + strLength + 1;
@@ -76,9 +36,8 @@ sp<NcString> NcString::allocButFillContentLater(size_t strLength, char** strOut)
     char* buffer = (char*)(o + 1);
     o->m_str = buffer;
     o->m_length = (int)strLength;
-    o->m_shouldFree = false;
     *strOut = buffer;
-    return o;
+    return sp<NcString>::takeRaw(o);
 }
 
 sp<NcString> NcString::format(const char* format, ...)
@@ -95,6 +54,18 @@ sp<NcString> NcString::format(const char* format, ...)
     return o;
 }
 
+sp<NcString> NcString::formatVa(const char* format, va_list va)
+{
+    va_list vaCopy;
+    va_copy(vaCopy, va);
+    size_t len = vsnprintf(NULL, 0, format, va);
+    char* buffer;
+    auto o = NcString::allocButFillContentLater(len, &buffer);
+    vsnprintf(buffer, len + 1, format, vaCopy);
+    va_end(vaCopy);
+    return o;
+}
+
 bool NcString::equals(NcObject* r)
 {
     if (this == r)
@@ -105,14 +76,6 @@ bool NcString::equals(NcObject* r)
         return m_length == rstr->m_length && memcmp(m_str, rstr->m_str, m_length) == 0;
     }
     return false;
-}
-
-NcString::~NcString()
-{
-    if (m_shouldFree)
-    {
-        free((char*)m_str);
-    }
 }
 
 void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount, const StringSlice& sep)
@@ -138,11 +101,11 @@ void NcString::initByJoiningSlices(const StringSlice* slices, size_t sliceCount,
         for (size_t i = 0; i < sliceCount; i++)
         {
             const StringSlice& s = slices[i];
-            memcpy(str + totalLen, s.bytes(), s.length());
+            memcpy(str + totalLen, s.internalBytes(), s.length());
             totalLen += s.length();
             if (i != sliceCount - 1)
             {
-                memcpy(str + totalLen, sep.bytes(), sep.length());
+                memcpy(str + totalLen, sep.internalBytes(), sep.length());
                 totalLen += sep.length();
             }
         }

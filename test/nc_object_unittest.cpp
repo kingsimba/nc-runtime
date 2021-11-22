@@ -61,7 +61,7 @@ TEST(NcObject, weak)
     // reset strong, weak will expire
     box2.reset();
     box = w.lock();
-    EXPECT_TRUE(box == NULL);
+    EXPECT_TRUE(box == nullptr);
 }
 
 TEST(NcObject, rcAndCast)
@@ -94,10 +94,10 @@ TEST(NcObject, rcAndCast)
 TEST(NcObject, copyNULL)
 {
     sp<MyBox> box;
-    EXPECT_TRUE(box == NULL);
+    EXPECT_TRUE(box == nullptr);
 
     sp<MyBox> box2(box);
-    EXPECT_TRUE(box2 == NULL);
+    EXPECT_TRUE(box2 == nullptr);
 }
 
 TEST(NcObject, compare)
@@ -105,11 +105,11 @@ TEST(NcObject, compare)
     auto box = MyBox::alloc();
     EXPECT_EQ(box->retainCount(), 1);
 
-    EXPECT_TRUE(box != NULL);
+    EXPECT_TRUE(box != nullptr);
 
     box.reset();
 
-    EXPECT_TRUE(box == NULL);
+    EXPECT_TRUE(box == nullptr);
 }
 
 TEST(NcObject, retainReleaseSmartPointer)
@@ -118,19 +118,20 @@ TEST(NcObject, retainReleaseSmartPointer)
     auto box = MyBox::alloc();
     EXPECT_EQ(box->retainCount(), 1);
 
-    EXPECT_TRUE(box != NULL);
+    EXPECT_TRUE(box != nullptr);
 
     // retain. This is unnecessary(should use box2 = box).
-    // But still, we support it to prevent error.
-    sp<MyBox> box2 = retain<MyBox>(box);
+    // But still, we support manual RC
+    MyBox* rawBox = box.get();
+    sp<MyBox> box2 = retainAsSp(rawBox);
 
     // ERROR: This will not increase RC. So it's an error.
     // sp<MyBox> box2 = box.get();
 
     box.reset();
 
-    EXPECT_TRUE(box == NULL);
-    EXPECT_TRUE(box2 != NULL);
+    EXPECT_TRUE(box == nullptr);
+    EXPECT_TRUE(box2 != nullptr);
     EXPECT_EQ(box2->retainCount(), 1);
 }
 

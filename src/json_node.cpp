@@ -172,10 +172,9 @@ int JsonNode::arraySize()
     return 0;
 }
 
-sp<NcString> JsonNode::dumpAsString(size_t flags /*= 0*/)
+StringSlice JsonNode::dumpAsString(size_t flags /*= 0*/)
 {
     char* buffer = json_dumps(m_root, flags);
-    auto str = NcString::allocWithCString(buffer);
-    free(buffer);
+    auto str = StringSlice::makeByTakingBytes(buffer, strlen(buffer));
     return str;
 }

@@ -2,6 +2,7 @@
 
 #include "vector2.h"
 #include "nc_object.h"
+#include "string_slice.h"
 
 class NcImageBase : public NcObject
 {
@@ -17,7 +18,7 @@ public:
     inline Vector2 origin() { return m_origin; }
     inline void setOrigin(Vector2 origin) { m_origin = origin; }
 
-    virtual bool saveAs(NcString* fileName) = 0;
+    virtual bool saveAs(const StringSlice& fileName) = 0;
 
 protected:
     NcImageBase() = default;
@@ -37,33 +38,33 @@ public:
 
     static sp<NcImage> allocWithSize(Size size);
     static sp<NcImage> allocWithBytesNoCopy(Rgba8* bytes, Size size);
-    static sp<NcImage> allocWithFileName(const char* fileName);
+    static sp<NcImage> allocWithFileName(const StringSlice& fileName);
 
     Rgba8* mutablePixels() { return m_pixels; }
     const Rgba8* pixels() { return m_pixels; }
 
     void clear(Rgba8 color);
 
-    bool saveAs(NcString* fileName) override;
+    bool saveAs(const StringSlice& fileName) override;
 
 protected:
     bool initWithSize(Size size);
-    bool initWithFileName(const char* fileName);
+    bool initWithFileName(const StringSlice& fileName);
 
 protected:
     bool m_shouldFreePixels = false;
     Rgba8* m_pixels = NULL;
 };
 
-// Grayscale image
 class NcImageU8 : public NcImageBase
+// Grayscale image
 {
 public:
     NcImageU8() = default;
     ~NcImageU8();
 
     static sp<NcImageU8> allocWithSize(Size size);
-    static sp<NcImageU8> allocWithFileName(const char* fileName);
+    static sp<NcImageU8> allocWithFileName(const StringSlice& fileName);
 
     // The image doesn't own the memory. The user must keep it valid.
     static sp<NcImageU8> allocWithBytesNoCopy(u8* bytes, Size size);
@@ -75,11 +76,11 @@ public:
 
     void clear(u8 color);
 
-    bool saveAs(NcString* fileName) override;
+    bool saveAs(const StringSlice& fileName) override;
 
 protected:
     bool initWithSize(Size size);
-    bool initWithFileName(const char* fileName);
+    bool initWithFileName(const StringSlice& fileName);
 
 protected:
     bool m_shouldFreePixels = false;
@@ -106,7 +107,7 @@ public:
 
     void clear(u16 color);
 
-    bool saveAs(NcString* fileName) override;
+    bool saveAs(const StringSlice& fileName) override;
 
     void normalize();
 

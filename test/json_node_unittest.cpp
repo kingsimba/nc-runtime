@@ -1,7 +1,7 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/json_node.h"
 
-TEST(JsonSettingLoaderTest, example)
+TEST(JsonNodeTest, example)
 {
     auto o = JsonNode::instanceWithCString(R"(
     {
@@ -38,14 +38,14 @@ TEST(JsonSettingLoaderTest, example)
     o->remove("user.age");
     o->remove("document");
     auto str = o->dumpAsString();
-    EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great"}})");
+    EXPECT_EQ(str, R"({"user": {"name": "Alexander The Great"}})"_s);
 
     // Add
     o["user"]->add("age", JsonNode::integer(22));
     str = o->dumpAsString();
-    EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great", "age": 22}})");
+    EXPECT_EQ(str, R"({"user": {"name": "Alexander The Great", "age": 22}})"_s);
 }
-TEST(JsonSettingLoaderTest, basic)
+TEST(JsonNodeTest, basic)
 {
     auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root.hasValue());
@@ -85,7 +85,7 @@ TEST(JsonSettingLoaderTest, basic)
     EXPECT_FALSE(root["user.age"]->isFalse());
 }
 
-TEST(JsonSettingLoaderTest, nonexistFile)
+TEST(JsonNodeTest, nonexistFile)
 {
     auto root = JsonNode::instanceWithContentsOfFile("non-exist.json");
     EXPECT_FALSE(root.hasValue());
@@ -93,15 +93,15 @@ TEST(JsonSettingLoaderTest, nonexistFile)
     ASSERT_FALSE(v.hasValue());
 }
 
-static const char s_configJson[] =
+static const StringSlice s_configJson =
     "{\"user\":{\"name\":\"Alexander the Great\",\"titles\":[\"King of Macedon\",\"Hegemon of Hellenic "
-    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true,\"height\":1.8}}";
+    "League\",\"Pharaoh of Egypt\",\"King of Persia\",\"Lord of Asia\"],\"age\":32,\"forward\":true,\"height\":1.8}}"_s;
 
-TEST(JsonSettingLoaderTest, dumps)
+TEST(JsonNodeTest, dumps)
 {
     auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root.hasValue());
 
-    sp<NcString> json = root->dumpAsString(JSON_COMPACT);
-    EXPECT_STREQ(json->cstr(), s_configJson);
+    auto json = root->dumpAsString(JSON_COMPACT);
+    EXPECT_EQ(json, s_configJson);
 }

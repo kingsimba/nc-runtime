@@ -16,7 +16,7 @@ public:
     forceinline int size() { return (int)m_array.size(); }
     forceinline void reserve(int newCapacity) { return m_array.reserve(newCapacity); }
 
-    forceinline void addObject(T* obj) { this->m_array.push_back(retain(obj)); }
+    forceinline void addObject(const sp<T>& obj) { this->m_array.push_back(obj); }
     forceinline sp<T>& firstObject() { return this->m_array[0]; }
     forceinline sp<T>& lastObject() { return this->m_array[m_array.size() - 1]; }
     forceinline sp<T>& objectAtIndex(int i) { return this->m_array[i]; }
@@ -55,9 +55,9 @@ public:
     /*
      * return -1 if not found. It uses NcObject::equals() for comparison
      */
-    int indexOfObject(T* r)
+    int indexOfObject(const sp<T>& r)
     {
-        return indexOfObjectWithCondition([=](T* obj) { return obj == r || obj->equals(r); });
+        return indexOfObjectWithCondition([=](T* obj) { return obj == r.get() || obj->equals(r.get()); });
     }
 
     template <typename Func>

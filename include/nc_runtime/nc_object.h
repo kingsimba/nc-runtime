@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nc_types.h"
+#include "string_slice.h"
 
 // An experimental implementation. It might be optimized in the future.
 // Keep watching https://github.com/kingsimba/nc-runtime for updates
@@ -18,12 +19,9 @@ public:
 
     inline void retain()
     {
-        if (m_rc != INT_MAX)
-        {
-            m_lock.lock();
-            m_rc++;
-            m_lock.unlock();
-        }
+        m_lock.lock();
+        m_rc++;
+        m_lock.unlock();
     }
 
     struct Action
@@ -35,14 +33,11 @@ public:
     inline Action release()
     {
         Action rtn = {false, false};
-        if (m_rc != INT_MAX)
-        {
-            m_lock.lock();
-            rtn.freeObject = m_rc == 1;
-            rtn.freeMemory = m_rc == 1 && m_wc == 0;
-            m_rc--;
-            m_lock.unlock();
-        }
+        m_lock.lock();
+        rtn.freeObject = m_rc == 1;
+        rtn.freeMemory = m_rc == 1 && m_wc == 0;
+        m_rc--;
+        m_lock.unlock();
         return rtn;
     }
 
@@ -66,19 +61,16 @@ public:
     forceinline bool lockStrong()
     {
         bool succ = true;
-        if (m_rc != INT_MAX)
+        m_lock.lock();
+        if (m_rc != 0)
         {
-            m_lock.lock();
-            if (m_rc != 0)
-            {
-                m_rc++;
-            }
-            else
-            {
-                succ = false;
-            }
-            m_lock.unlock();
+            m_rc++;
         }
+        else
+        {
+            succ = false;
+        }
+        m_lock.unlock();
 
         return succ;
     }
@@ -107,7 +99,7 @@ class sp
 {
 public:
     forceinline sp() { m_ptr = NULL; }
-    forceinline sp(T* p) { m_ptr = p; }
+    forceinline sp(std::nullptr_t) { m_ptr = NULL; }
     forceinline sp(const sp<T>& p)
     {
         m_ptr = p.get();
@@ -127,6 +119,13 @@ public:
         r.m_ptr = NULL;
     }
     ~sp() { release(m_ptr); }
+
+    static forceinline sp<T> takeRaw(T* p)
+    {
+        sp<T> o;
+        o.m_ptr = p;
+        return o;
+    }
 
     sp<T>& operator=(const sp<T>& p)
     {
@@ -157,6 +156,19 @@ public:
     forceinline T* get() const { return m_ptr; }
     forceinline T* operator->() const { return m_ptr; }
 
+    forceinline bool operator==(const sp<T>& r) const
+    {
+        return m_ptr == r.m_ptr || (m_ptr != NULL && r.m_ptr != NULL && m_ptr->equals(r.m_ptr));
+    }
+    forceinline bool operator!=(const sp<T>& r) const
+    {
+        return m_ptr != r.m_ptr && (m_ptr == NULL || r.m_ptr == NULL || !m_ptr->equals(r.m_ptr));
+    }
+
+    forceinline operator bool() const { return m_ptr != nullptr; }
+    forceinline bool operator==(std::nullptr_t) const { return m_ptr == NULL; }
+    forceinline bool operator!=(std::nullptr_t) const { return m_ptr != NULL; }
+
     /**
      * Implicit conversion to T*.
      *
@@ -178,7 +190,7 @@ template <class T1, class T2>
 sp<T1> static_pointer_cast(const sp<T2>& r) noexcept
 {
     T1* derived = static_cast<T1*>(r.get());
-    return sp<T1>(retain(derived));
+    return retainAsSp(derived);
 }
 
 /**
@@ -261,7 +273,7 @@ public:
 
         ControlBlock* ctrl = m_ptr->_controlBlock();
         if (ctrl->lockStrong())
-            return sp<T>(m_ptr);
+            return sp<T>::takeRaw(m_ptr);
         else
             return NULL;
     }
@@ -323,7 +335,7 @@ public:
     /**
      * Convert any object to string
      */
-    virtual sp<NcString> toString();
+    virtual StringSlice toString();
 
     virtual bool equals(NcObject* r) { return this == r; }
 
@@ -370,15 +382,10 @@ protected:
     template <class T, class... Types>
     static sp<T> alloc(Types&&... args)
     {
-        return new T(std::forward<Types>(args)...);
+        return sp<T>::takeRaw(new T(std::forward<Types>(args)...));
     }
 
 protected:
-    NcObject(bool /*isStatic*/)
-    {
-        ControlBlock* ctrl = _controlBlock();
-        ctrl->m_rc = INT_MAX;
-    }
     virtual ~NcObject() {}
 };
 
@@ -387,7 +394,13 @@ forceinline T* retain(T* o)
 {
     if (o)
         o->_retain();
-    return (T*)o;
+    return o;
+}
+
+template <typename T>
+forceinline sp<T> retainAsSp(T* p)
+{
+    return sp<T>::takeRaw(retain(p));
 }
 
 forceinline void release(NcObject* o)

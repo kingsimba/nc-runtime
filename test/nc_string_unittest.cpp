@@ -10,30 +10,28 @@ static int _calculateStringLength(NcString* str)
 TEST(NcString, basic)
 {
     sp<NcString> s = NcString::allocWithCString("hello");
-    EXPECT_STREQ(s->cstr(), "hello");
+    EXPECT_EQ(s, "hello"_s);
     EXPECT_EQ(s->length(), 5);
 
-    // must call .get() to convert to ordinary pointer.
-    EXPECT_EQ(_calculateStringLength(s), 5);
+    // must call .get() to convert to dumb pointer.
+    EXPECT_EQ(_calculateStringLength(s.get()), 5);
 
     s = NcString::allocWithBytes("cat litter", 10);
-    EXPECT_STREQ(s->cstr(), "cat litter");
+    EXPECT_EQ(s, "cat litter"_s);
     EXPECT_EQ(s->length(), 10);
-
-    s = NcString::allocWithSlice(StringSlice("dog food"));
-    EXPECT_STREQ(s->cstr(), "dog food");
-    EXPECT_EQ(s->length(), 8);
 }
 
-TEST(StringSlice, compare)
+TEST(NcString, compare)
 {
-    EXPECT_TRUE("blood"_str->equals("blood"_str));
-    EXPECT_FALSE("blood"_str->equals("bloom"_str));
+    EXPECT_TRUE("blood"_str == "blood"_str);
+    EXPECT_TRUE("blood"_str != "bloom"_str);
 
-    EXPECT_TRUE("blood"_str->equals("blood"));
-    EXPECT_FALSE("blood"_str->equals("bloom"));
-    EXPECT_TRUE("blood"_str->equals("blood"_s));
-    EXPECT_FALSE("blood"_str->equals("bloom"_s));
+    EXPECT_TRUE("blood"_str == "blood");
+    EXPECT_TRUE("blood"_str != "bloom");
+    EXPECT_TRUE("blood" == "blood"_str);
+    EXPECT_TRUE("bloom" != "blood"_str);
+    EXPECT_TRUE("blood"_s == "blood"_str);
+    EXPECT_TRUE("bloom"_s != "blood"_str);
 
     EXPECT_TRUE("blood"_str->equalsCaseInsensitive("BLOOD"));
     EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"));
@@ -41,46 +39,20 @@ TEST(StringSlice, compare)
     EXPECT_FALSE("blood"_str->equalsCaseInsensitive("BLOOM"_s));
 }
 
-TEST(NcString, literal)
-{
-    sp<NcString> s1, s2;
-    for (int i = 0; i < 2; i++)
-    {
-        sp<NcString> s = "hello world"_str;
-        if (i == 0)
-            s1 = s;
-        else
-            s2 = s;
-    }
-
-    // s1 is exactly the same as s2, because of the literal string manager.
-    EXPECT_EQ(s1.get(), s2.get());
-
-    // Calling retain() or release() has no effect
-    EXPECT_EQ(s1->retainCount(), INT_MAX);
-    EXPECT_EQ(retain<NcString>(s1)->retainCount(), INT_MAX);
-    release(s1.get());
-    EXPECT_EQ(s1->retainCount(), INT_MAX);
-
-    auto s3 = "hello world"_str;
-    // for s1 == s3, it must be compiled with /GF(enable string pool) for Visual Studio
-    EXPECT_EQ(s1.get(), s3.get());
-}
-
 TEST(NcString, join)
 {
     sp<NcString> s = NcString::allocByJoiningSlices(vector<StringSlice>{"hello", "world"}, "---");
-    EXPECT_STREQ(s->cstr(), "hello---world");
+    EXPECT_EQ(s, "hello---world");
     EXPECT_EQ(s->length(), 13);
 
     auto strs = NcArray<NcString>::alloc();
     strs->addObject("hello"_str);
     strs->addObject("world"_str);
-    s = NcString::allocByJoiningStrings(strs, "---");
-    EXPECT_STREQ(s->cstr(), "hello---world");
+    s = NcString::allocByJoiningStrings(strs.get(), "---");
+    EXPECT_EQ(s, "hello---world");
     EXPECT_EQ(s->length(), 13);
 
-    EXPECT_STREQ("==="_str->join(strs)->cstr(), "hello===world");
+    EXPECT_EQ("==="_str->join(strs.get()), "hello===world");
 }
 
 TEST(NcString, toSlice)
@@ -94,7 +66,7 @@ TEST(NcString, split)
 {
     vector<StringSlice> slices = NcString::allocWithCString("hello---world")->split("---");
     auto s = NcString::allocByJoiningSlices(slices, " ");
-    EXPECT_STREQ(s->cstr(), "hello world");
+    EXPECT_EQ(s, "hello world");
     EXPECT_EQ(s->length(), 11);
 }
 
@@ -108,7 +80,7 @@ TEST(NcString, subslice)
 
 TEST(NcString, format)
 {
-    EXPECT_STREQ(NcString::format("%s shall come", "The Day")->cstr(), "The Day shall come");
-    EXPECT_STREQ(NcString::format("%d is small but %lld is large", 123, 12345678901234ll)->cstr(),
-                 "123 is small but 12345678901234 is large");
+    EXPECT_EQ(NcString::format("%s shall come", "The Day"), "The Day shall come");
+    EXPECT_EQ(NcString::format("%d is small but %lld is large", 123, 12345678901234ll),
+              "123 is small but 12345678901234 is large");
 }

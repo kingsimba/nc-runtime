@@ -45,6 +45,8 @@
 #    define NC_DEPRECATED __attribute__((deprecated))
 #endif
 
+#define NC_MAX_PATH 512
+
 // single precision
 #define NC_TWO_PI 6.2831853f // 2 * pi
 #define NC_PI 3.14159265f    // pi
@@ -158,6 +160,9 @@ inline bool operator!=(Rgba8 l, Rgba8 r)
 
 struct Range
 {
+    Range() = default;
+    Range(int location_, int length_) : location(location_), length(length_) {}
+
     int location;
     int length;
     forceinline int end() { return this->location + this->length; }
@@ -232,10 +237,6 @@ private:
     bool m_hasValue;
     T m_value;
 };
-
-//////////////////////////////////////////////////////////////////////////
-
-class NcString;
 
 //////////////////////////////////////////////////////////////////////////
 
