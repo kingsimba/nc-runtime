@@ -2,7 +2,7 @@
 #include "nc_runtime/json_node.h"
 #include "nc_runtime/nc_string.h"
 
-Some<JsonNode> JsonNode::instanceWithContentsOfFile(const char* file)
+Some<JsonNode> JsonNode::makeWithContentsOfFile(const char* file)
 {
     json_error_t err;
     json_t* root = json_load_file(file, 0, &err);
@@ -18,10 +18,16 @@ Some<JsonNode> JsonNode::instanceWithContentsOfFile(const char* file)
     return node;
 }
 
-Some<JsonNode> JsonNode::instanceWithCString(const char* buffer)
+Some<JsonNode> JsonNode::makeWithCString(const char* buffer)
+{
+    auto slice = StringSlice::makeEphemeral(buffer);
+    return makeWithStringSlice(slice);
+}
+
+Some<JsonNode> JsonNode::makeWithStringSlice(const StringSlice& r)
 {
     json_error_t err;
-    json_t* root = json_loads(buffer, 0, &err);
+    json_t* root = json_loadb(r.internalBytes(), r.length(), 0, &err);
     if (root == nullptr)
     {
         NC_LOG_ERROR("Failed to load JsonConfig from buffer.");
@@ -32,6 +38,16 @@ Some<JsonNode> JsonNode::instanceWithCString(const char* buffer)
     json_decref(root);
 
     return node;
+}
+
+NC_DEPRECATED Some<JsonNode> JsonNode::instanceWithContentsOfFile(const char* file)
+{
+    return makeWithContentsOfFile(file);
+}
+
+NC_DEPRECATED Some<JsonNode> JsonNode::instanceWithCString(const char* buffer)
+{
+    return makeWithCString(buffer);
 }
 
 void JsonNode::add(const char* key, const JsonNode& node)

@@ -3,7 +3,7 @@
 
 TEST(JsonNodeTest, example)
 {
-    auto o = JsonNode::instanceWithCString(R"(
+    auto o = JsonNode::makeWithCString(R"(
     {
         "user": {
             "name": "Alexander The Great",
@@ -47,7 +47,7 @@ TEST(JsonNodeTest, example)
 }
 TEST(JsonNodeTest, basic)
 {
-    auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
+    auto root = JsonNode::makeWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root.hasValue());
 
     auto name = root["user.name"]->asString();
@@ -87,7 +87,7 @@ TEST(JsonNodeTest, basic)
 
 TEST(JsonNodeTest, nonexistFile)
 {
-    auto root = JsonNode::instanceWithContentsOfFile("non-exist.json");
+    auto root = JsonNode::makeWithContentsOfFile("non-exist.json");
     EXPECT_FALSE(root.hasValue());
     auto v = root["lua.main"]->asString();
     ASSERT_FALSE(v.hasValue());
@@ -99,7 +99,7 @@ static const StringSlice s_configJson =
 
 TEST(JsonNodeTest, dumps)
 {
-    auto root = JsonNode::instanceWithContentsOfFile("test_data/config.json");
+    auto root = JsonNode::makeWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root.hasValue());
 
     auto json = root->dumpAsString(JSON_COMPACT);

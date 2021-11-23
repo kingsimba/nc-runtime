@@ -35,8 +35,12 @@
 class JsonNode
 {
 public:
-    static Some<JsonNode> instanceWithContentsOfFile(const char* file);
-    static Some<JsonNode> instanceWithCString(const char* buffer);
+    static Some<JsonNode> makeWithContentsOfFile(const char* file);
+    static Some<JsonNode> makeWithCString(const char* buffer);
+    static Some<JsonNode> makeWithStringSlice(const StringSlice& r);
+
+    NC_DEPRECATED static Some<JsonNode> instanceWithContentsOfFile(const char* file); // please use makeWithXxx()
+    NC_DEPRECATED static Some<JsonNode> instanceWithCString(const char* buffer);      // please use makeWithXxx()
 
     JsonNode() = default;
     JsonNode(json_t* root) : m_root(json_incref(root)) {}
