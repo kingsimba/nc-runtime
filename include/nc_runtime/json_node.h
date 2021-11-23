@@ -61,10 +61,10 @@ public:
         o.m_root = json_real(v);
         return o;
     }
-    static JsonNode string(const char* v)
+    static JsonNode string(const StringSlice& v)
     {
         JsonNode o;
-        o.m_root = json_string(v);
+        o.m_root = json_stringn(v.internalBytes(), v.length());
         return o;
     }
     static JsonNode boolean(bool v)
