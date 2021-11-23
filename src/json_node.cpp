@@ -1,21 +1,15 @@
 #include "stdafx_nc_runtime.h"
 #include "nc_runtime/json_node.h"
 #include "nc_runtime/nc_string.h"
+#include "nc_runtime/nc_data.h"
 
-Some<JsonNode> JsonNode::makeWithContentsOfFile(const char* file)
+Some<JsonNode> JsonNode::makeWithContentsOfFile(const StringSlice& file)
 {
-    json_error_t err;
-    json_t* root = json_load_file(file, 0, &err);
-    if (root == nullptr)
-    {
-        NC_LOG_ERROR("Failed to load JsonConfig %s.", file);
+    auto data = NcData::allocWithContentsOfFile(file);
+    if (data == nullptr)
         return noValue;
-    }
 
-    auto node = JsonNode(root);
-    json_decref(root);
-
-    return node;
+    return makeWithStringSlice(StringSlice::makeEphemeral((char*)data->bytes(), data->length()));
 }
 
 Some<JsonNode> JsonNode::makeWithCString(const char* buffer)
