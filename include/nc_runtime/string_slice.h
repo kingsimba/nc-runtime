@@ -109,7 +109,7 @@ public:
     }
 
     StringSlice(const StringSlice& r) noexcept;
-    StringSlice(const std::string& r) noexcept;
+    explicit StringSlice(const std::string& r) noexcept;
 
     // ephemeral string slice
     forceinline StringSlice(const char* str);

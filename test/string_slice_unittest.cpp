@@ -166,8 +166,12 @@ TEST(StringSlice, conversion)
     // conversion with std::string
     StringSlice str(std::string("infuriate")); // constructor from string
     EXPECT_EQ(str, "infuriate");
+
     str = std::string("enrage"); // copy from string
     EXPECT_EQ(str, "enrage");
-    std::string stdString = str; // convert to string
+    std::string stdString = (std::string)str; // convert to string
     EXPECT_EQ(str, "enrage");
+
+    auto convert = [](const StringSlice& str) { UNUSED_VAR(str); };
+    convert((StringSlice)std::string("enrage"));
 }
