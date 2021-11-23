@@ -160,3 +160,14 @@ TEST(StringSlice, replace)
     ASSERT_TRUE(pos != -1);
     EXPECT_EQ(str.replaceInRange(Range(pos, str.length() - pos), ".jpg"), "folder1/folder2/file.jpg");
 }
+
+TEST(StringSlice, conversion)
+{
+    // conversion with std::string
+    StringSlice str(std::string("infuriate")); // constructor from string
+    EXPECT_EQ(str, "infuriate");
+    str = std::string("enrage"); // copy from string
+    EXPECT_EQ(str, "enrage");
+    std::string stdString = str; // convert to string
+    EXPECT_EQ(str, "enrage");
+}

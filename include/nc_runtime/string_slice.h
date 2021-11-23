@@ -109,6 +109,7 @@ public:
     }
 
     StringSlice(const StringSlice& r) noexcept;
+    StringSlice(const std::string& r) noexcept;
 
     // ephemeral string slice
     forceinline StringSlice(const char* str);
@@ -160,6 +161,9 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     // Conversions
+
+    const StringSlice& operator=(const std::string& r);
+    forceinline operator std::string() const { return std::string(m_str, m_length); }
 
     // copy to C string
     forceinline void toCString(char* str, size_t max_len) const

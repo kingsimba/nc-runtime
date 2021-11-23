@@ -265,6 +265,14 @@ StringSlice::StringSlice(const StringSlice& r) noexcept
     m_ncstring = retain(r.m_ncstring);
 }
 
+StringSlice::StringSlice(const std::string& r) noexcept
+{
+    sp<NcString> str = NcString::allocWithBytes(r.c_str(), r.length());
+    m_ncstring = retain(str.get());
+    m_str = str->cstr();
+    m_length = str->length();
+}
+
 StringSlice StringSlice::make(const char* buffer)
 {
     StringSlice o;
@@ -337,6 +345,16 @@ StringSlice StringSlice::subslice(int start, int length)
 StringSlice StringSlice::subslice(Range range)
 {
     return StringSlice(m_str + range.location, range.length, retain(m_ncstring));
+}
+
+const StringSlice& StringSlice::operator=(const std::string& r)
+{
+    sp<NcString> str = NcString::allocWithBytes(r.c_str(), r.length());
+    release(m_ncstring);
+    m_ncstring = retain(str.get());
+    m_str = str->cstr();
+    m_length = str->length();
+    return *this;
 }
 
 Range StringSlice::findSliceFrom(int start, const StringSlice& needle)

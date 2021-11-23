@@ -1,5 +1,6 @@
 # Changelog
 
+- 2011-11-24 Support conversion between std::string and StringSlice.
 - 2021-11-20 Major improves on `StringSlice`, `sp<T>`
 
   - StringSlice become the major player, instead of NcString.
