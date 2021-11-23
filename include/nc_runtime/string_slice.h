@@ -184,6 +184,12 @@ public:
     forceinline Range findSlice(const StringSlice& needle) { return findSliceFrom(0, needle); }
     Range findSliceFrom(int start, const StringSlice& needle);
 
+    typedef bool (*FindCharFunc)(u8 code);
+
+    // Find with condition. Return -1 if not found
+    forceinline int findWithCondition(FindCharFunc isFound) { return findWithConditionFrom(0, isFound); }
+    int findWithConditionFrom(int from, FindCharFunc isFound);
+
     // Find Unicode character
     forceinline Range find(wchar32 code) { return findFrom(0, code); }
     Range findFrom(int start, wchar32 code);
@@ -193,9 +199,17 @@ public:
     forceinline int find(char c) { return findFrom(0, c); }
     int findFrom(int start, char c);
     int rfind(char c);
+    int rfindWithCondition(FindCharFunc isFound);
 
     //////////////////////////////////////////////////////////////////////////
     // Actions
+
+    /**
+     * Trim
+     */
+    StringSlice trim();
+    StringSlice trimStart();
+    StringSlice trimEnd();
 
     /**
      * Create a subslice
@@ -319,6 +333,16 @@ inline int StringSlice::findFrom(int start, char c)
     for (const char* p = m_str + start; *p; p++)
     {
         if (*p == c)
+            return (int)(p - m_str);
+    }
+    return -1;
+}
+
+inline int StringSlice::findWithConditionFrom(int start, FindCharFunc isFound)
+{
+    for (const char* p = m_str + start; *p; p++)
+    {
+        if (isFound(*p))
             return (int)(p - m_str);
     }
     return -1;

@@ -135,6 +135,8 @@ TEST(StringSlice, find)
     EXPECT_EQ(s.find('l'), 2);
     EXPECT_EQ(s.rfind('l'), 3);
     EXPECT_EQ(s.find('t'), -1);
+
+    EXPECT_EQ(s.findWithCondition([](u8 c) { return c == 'l' || c == 'o'; }), 2);
 }
 
 TEST(StringSlice, startsEndsWith)
@@ -174,4 +176,15 @@ TEST(StringSlice, conversion)
 
     auto convert = [](const StringSlice& str) { UNUSED_VAR(str); };
     convert((StringSlice)std::string("enrage"));
+}
+
+TEST(StringSlice, trim)
+{
+    EXPECT_EQ("   \r\n\tHello\r\n\t   \t"_s.trim(), "Hello"_s);
+    EXPECT_EQ("   \r\n\tHello"_s.trim(), "Hello"_s);
+    EXPECT_EQ("Hello\r\n\t   \t"_s.trim(), "Hello"_s);
+    EXPECT_EQ("Hello"_s.trim(), "Hello"_s);
+
+    EXPECT_EQ("   \r\n\tHello\r\n\t   \t"_s.trimStart(), "Hello\r\n\t   \t"_s);
+    EXPECT_EQ("   \r\n\tHello\r\n\t   \t"_s.trimEnd(), "   \r\n\tHello"_s);
 }

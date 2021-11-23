@@ -35,7 +35,7 @@
 class JsonNode
 {
 public:
-    static Some<JsonNode> makeWithContentsOfFile(const StringSlice& file);
+    static Some<JsonNode> makeWithContentsOfFile(const StringSlice& filename);
     static Some<JsonNode> makeWithCString(const char* buffer);
     static Some<JsonNode> makeWithStringSlice(const StringSlice& r);
 

@@ -1,5 +1,6 @@
 # Changelog
 
+- 2011-11-24 Add StringSlice::trim(), trimStart(), trimEnd().
 - 2011-11-24 Support conversion between std::string and StringSlice.
 - 2021-11-20 Major improves on `StringSlice`, `sp<T>`
 

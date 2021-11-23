@@ -337,6 +337,51 @@ int StringSlice::rfind(char c)
     return -1;
 }
 
+int StringSlice::rfindWithCondition(FindCharFunc isFound)
+{
+    for (int i = m_length - 1; i >= 0; i--)
+    {
+        if (isFound(m_str[i]))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+StringSlice StringSlice::trim()
+{
+    auto isFound = [](u8 c) { return c != ' ' && c != '\t' && c != '\r' && c != '\n'; };
+    int pos = findWithCondition(isFound);
+    int rpos = rfindWithCondition(isFound);
+
+    if (pos == -1)
+        pos = 0;
+    if (rpos == -1)
+        rpos = m_length - 1;
+
+    return subslice(pos, rpos - pos + 1);
+}
+
+StringSlice StringSlice::trimStart()
+{
+    auto isFound = [](u8 c) { return c != ' ' && c != '\t' && c != '\r' && c != '\n'; };
+    int pos = findWithCondition(isFound);
+
+    return subslice(pos, m_length - pos);
+}
+
+StringSlice StringSlice::trimEnd()
+{
+    auto isFound = [](u8 c) { return c != ' ' && c != '\t' && c != '\r' && c != '\n'; };
+    int rpos = rfindWithCondition(isFound);
+    if (rpos == -1)
+        rpos = m_length - 1;
+
+    return subslice(0, rpos + 1);
+}
+
 StringSlice StringSlice::subslice(int start, int length)
 {
     return StringSlice(m_str + start, length, retain(m_ncstring));
