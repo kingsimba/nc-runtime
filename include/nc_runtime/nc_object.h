@@ -415,3 +415,27 @@ forceinline void release(sp<T>& o)
 {
     o->ERROR_should_not_call_release_on_smart_pointer();
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Please don't use it. It's not finished
+template <typename T>
+class NcSingletonWIP : public NcObject
+{
+public:
+    static sp<T> sharedInstance()
+    {
+        sp<T> o = s_sharedInstance.lock();
+        if (o == nullptr)
+        {
+            o = NcObject::alloc<T>();
+            s_sharedInstance = o;
+        }
+        return o;
+    }
+
+private:
+    static wp<T> s_sharedInstance;
+};
+
+template <typename T>
+wp<T> NcSingletonWIP<T>::s_sharedInstance;
