@@ -29,8 +29,8 @@
  *   // Delete
  *   o->remove("user.age");
  *   o->remove("document");
- *   auto str = o->dumpAsString();
- *   EXPECT_STREQ(str->cstr(), R"({"user": {"name": "Alexander The Great"}})");
+ *   auto str = o->dump();
+ *   EXPECT_EQ(str, R"({"user": {"name": "Alexander The Great"}})");
  */
 class JsonNode
 {
@@ -119,7 +119,8 @@ public:
      * Returns the JSON representation of json as a string, or NULL on error.
      * The return value must be freed by the caller using free().
      */
-    StringSlice dumpAsString(size_t flags = 0);
+    StringSlice dump(size_t flags = 0);
+    sp<NcString> dumpAsString(size_t flags = 0);
 
     void operator=(const JsonNode& r)
     {
