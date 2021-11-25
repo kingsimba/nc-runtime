@@ -185,6 +185,10 @@ TEST(StringSlice, trim)
     EXPECT_EQ("Hello\r\n\t   \t"_s.trim(), "Hello"_s);
     EXPECT_EQ("Hello"_s.trim(), "Hello"_s);
 
+    EXPECT_EQ("    \t    "_s.trim(), "");
+
     EXPECT_EQ("   \r\n\tHello\r\n\t   \t"_s.trimStart(), "Hello\r\n\t   \t"_s);
+    EXPECT_EQ("Hello"_s.trimStart(), "Hello");
     EXPECT_EQ("   \r\n\tHello\r\n\t   \t"_s.trimEnd(), "   \r\n\tHello"_s);
+    EXPECT_EQ("Hello"_s.trimEnd(), "Hello");
 }

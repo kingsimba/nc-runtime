@@ -356,6 +356,9 @@ StringSlice StringSlice::trim()
     int pos = findWithCondition(isFound);
     int rpos = rfindWithCondition(isFound);
 
+    if (pos == -1 && rpos == -1)
+        return ""_s;
+
     if (pos == -1)
         pos = 0;
     if (rpos == -1)
