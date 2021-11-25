@@ -121,6 +121,7 @@ public:
     static StringSlice makeWithBytes(const char* buffer, size_t size);
     static StringSlice makeByTakingBytes(char* buffer, size_t size);
     static StringSlice makeWithString(NcString* str);
+    static Some<StringSlice> makeWithContentsOfFile(const StringSlice& filename);
 
     forceinline StringSlice(StringSlice&& r) noexcept
     {

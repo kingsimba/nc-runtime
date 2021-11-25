@@ -1,5 +1,6 @@
 # Changelog
 
+- 2011-11-25 Add StringSlice::makeWithContentsOfFile().
 - 2011-11-25 Fix bug in StringSlice::trim().
 - 2011-11-24 Add StringSlice::trim(), trimStart(), trimEnd().
 - 2011-11-24 Support conversion between std::string and StringSlice.

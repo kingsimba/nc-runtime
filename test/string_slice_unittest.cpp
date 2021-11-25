@@ -192,3 +192,13 @@ TEST(StringSlice, trim)
     EXPECT_EQ("   \r\n\tHello\r\n\t   \t"_s.trimEnd(), "   \r\n\tHello"_s);
     EXPECT_EQ("Hello"_s.trimEnd(), "Hello");
 }
+
+TEST(StringSlice, fromFile)
+{
+    auto s = StringSlice::makeWithContentsOfFile("non-exist");
+    EXPECT_FALSE(s.hasValue());
+
+    s = StringSlice::makeWithContentsOfFile("test_data/config.json");
+    EXPECT_TRUE(s.hasValue());
+    EXPECT_TRUE(s.value().length() != 0);
+}

@@ -3,6 +3,7 @@
 #include "nc_runtime/string_slice.h"
 #include "../3rd-party/include/jansson/utf.h"
 #include "nc_runtime/nc_string.h"
+#include "nc_runtime/nc_data.h"
 #include <stdarg.h>
 
 bool StringCharIter::next(wchar32* cOut, int* consumedBytesOut)
@@ -230,6 +231,16 @@ const StringSlice& StringSlice::operator=(const StringSlice& r)
 StringSlice StringSlice::makeWithString(NcString* str)
 {
     return StringSlice(str->cstr(), str->length(), retain(str));
+}
+
+Some<StringSlice> StringSlice::makeWithContentsOfFile(const StringSlice& filename)
+{
+    auto data = NcData::allocWithContentsOfFile(filename);
+    if (data == nullptr)
+        return noValue;
+
+    // TODO: Assume UTF-8 without BOM
+    return StringSlice::makeWithBytes((const char*)data->bytes(), data->length());
 }
 
 StringSlice StringSlice::format(const char* format, ...)
