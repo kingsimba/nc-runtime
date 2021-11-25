@@ -63,3 +63,8 @@ std::ostream& operator<<(std::ostream& os, const nc::Pose2& c)
     sprintf(buffer, "Pose2(%f, %f, %f)", c.pos.x, c.pos.y, c.ori);
     return os << buffer;
 }
+
+std::ostream& operator<<(std::ostream& os, const StringSlice& c)
+{
+    return os << std::string(c);
+}
