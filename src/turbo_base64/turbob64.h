@@ -32,7 +32,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 #ifndef _TURBOB64_H_
 #define _TURBOB64_H_
+
+#include "nc_runtime/nc_types.h"
+
+#ifdef NC_OS_UNIX
+#    pragma GCC diagnostic ignored "-Wc++11-narrowing"
+#    pragma GCC diagnostic ignored "-Wsign-compare"
+#    pragma GCC diagnostic ignored "-Wunused-const-variable"
+#endif
+
 #ifdef __cplusplus
+
 extern "C"
 {
 #endif
