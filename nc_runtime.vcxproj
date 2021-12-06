@@ -75,6 +75,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\base64.cpp" />
+    <ClCompile Include="src\turbo_base64\turbob64c.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="src\turbo_base64\turbob64d.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClInclude Include="include\nc_runtime\base64.h" />
     <ClInclude Include="include\nc_runtime\costmap_inflator.h" />
     <ClInclude Include="include\nc_runtime\json_node.h" />
     <ClInclude Include="include\nc_runtime\mutex.h" />
@@ -130,6 +140,9 @@
     <ClCompile Include="3rd-party\src\jansson\utf.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="src\turbo_base64\conf.h" />
+    <ClInclude Include="src\turbo_base64\turbob64.h" />
+    <ClInclude Include="src\turbo_base64\turbob64_.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

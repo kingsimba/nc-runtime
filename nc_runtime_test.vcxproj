@@ -88,6 +88,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="test\base64_unittest.cpp" />
     <ClCompile Include="test\costmap_inflator_unittest.cpp" />
     <ClCompile Include="test\json_node_unittest.cpp" />
     <ClCompile Include="test\main.cpp" />
