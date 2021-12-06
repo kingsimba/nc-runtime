@@ -58,6 +58,9 @@
     <ClCompile Include="test\nc_polyline_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="test\base64_unittest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

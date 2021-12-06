@@ -61,6 +61,15 @@
     <ClCompile Include="src\nc_polyline.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\turbo_base64\turbob64c.c">
+      <Filter>src\turbo_base64</Filter>
+    </ClCompile>
+    <ClCompile Include="src\turbo_base64\turbob64d.c">
+      <Filter>src\turbo_base64</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base64.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -156,6 +165,18 @@
     <ClInclude Include="include\nc_runtime\state_machine.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="src\turbo_base64\turbob64.h">
+      <Filter>src\turbo_base64</Filter>
+    </ClInclude>
+    <ClInclude Include="src\turbo_base64\turbob64_.h">
+      <Filter>src\turbo_base64</Filter>
+    </ClInclude>
+    <ClInclude Include="src\turbo_base64\conf.h">
+      <Filter>src\turbo_base64</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\base64.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -163,6 +184,9 @@
     </Filter>
     <Filter Include="inc">
       <UniqueIdentifier>{FF9B530A-B11B-38B7-909A-3B4DEFF00FD5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\turbo_base64">
+      <UniqueIdentifier>{51771a28-4abe-409a-985d-d89edb8dfd9d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

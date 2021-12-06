@@ -1,9 +1,10 @@
 # Changelog
 
-- 2011-11-25 Add StringSlice::makeWithContentsOfFile().
-- 2011-11-25 Fix bug in StringSlice::trim().
-- 2011-11-24 Add StringSlice::trim(), trimStart(), trimEnd().
-- 2011-11-24 Support conversion between std::string and StringSlice.
+- 2021-12-06 Add Base64.
+- 2021-11-25 Add StringSlice::makeWithContentsOfFile().
+- 2021-11-25 Fix bug in StringSlice::trim().
+- 2021-11-24 Add StringSlice::trim(), trimStart(), trimEnd().
+- 2021-11-24 Support conversion between std::string and StringSlice.
 - 2021-11-20 Major improves on `StringSlice`, `sp<T>`
 
   - StringSlice become the major player, instead of NcString.
