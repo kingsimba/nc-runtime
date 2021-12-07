@@ -61,10 +61,10 @@
     <ClCompile Include="src\nc_polyline.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\turbo_base64\turbob64c.c">
+    <ClCompile Include="src\turbo_base64\turbob64c.cpp">
       <Filter>src\turbo_base64</Filter>
     </ClCompile>
-    <ClCompile Include="src\turbo_base64\turbob64d.c">
+    <ClCompile Include="src\turbo_base64\turbob64d.cpp">
       <Filter>src\turbo_base64</Filter>
     </ClCompile>
     <ClCompile Include="src\base64.cpp">
