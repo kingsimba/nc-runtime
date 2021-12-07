@@ -61,3 +61,15 @@ inline void raytraceLine(ActionType at, int width, int x0, int y0, int x1, int y
     int errorX = absDy / 2;
     bresenham2D(at, absDy, absDx, errorX, offsetDy, offsetDx, offset);
 }
+
+template <class PixelType>
+class Marker
+{
+public:
+    Marker(PixelType* pixels, PixelType color) : m_pixels(pixels), m_color(color) {}
+    inline void operator()(int offset) { m_pixels[offset] = m_color; }
+
+private:
+    PixelType* m_pixels;
+    PixelType m_color;
+};
