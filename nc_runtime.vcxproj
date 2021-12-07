@@ -86,6 +86,7 @@
     </ClCompile>
     <ClInclude Include="include\nc_runtime\base64.h" />
     <ClInclude Include="include\nc_runtime\costmap_inflator.h" />
+    <ClInclude Include="include\nc_runtime\image_painter.h" />
     <ClInclude Include="include\nc_runtime\json_node.h" />
     <ClInclude Include="include\nc_runtime\mutex.h" />
     <ClInclude Include="include\nc_runtime\nc_argparse.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="include\nc_runtime\vector2i.h" />
     <ClInclude Include="include\nc_runtime\vector3.h" />
     <ClInclude Include="include\nc_runtime\vector3i.h" />
+    <ClInclude Include="include\nc_runtime\_raytrace.h" />
     <ClInclude Include="include\nc_runtime\_rect.h" />
     <ClInclude Include="include\nc_runtime\_rectf.h" />
     <ClInclude Include="src\costmap_inflator_imple.h" />

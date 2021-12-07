@@ -63,6 +63,8 @@ public:
     NcImageU8() = default;
     ~NcImageU8();
 
+    typedef u8 PixelType;
+
     static sp<NcImageU8> allocWithSize(Size size);
     static sp<NcImageU8> allocWithFileName(const StringSlice& fileName);
 
