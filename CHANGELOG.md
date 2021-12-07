@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-12-07 Add `ImagePainter::line()`.
 - 2021-12-06 Add Base64.
 - 2021-11-25 Add StringSlice::makeWithContentsOfFile().
 - 2021-11-25 Fix bug in StringSlice::trim().
