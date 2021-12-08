@@ -20,17 +20,22 @@ struct CostmapInflatorParams
     float costScalingFactor = 2;
 };
 
+typedef CostValue (*CustomInflationFunc)(float distance, const CostmapInflatorParams& params);
+
 class CostmapInflatorImple;
 
 class CostmapInflator : public NcObject
 {
 public:
-    CostmapInflator(const CostmapInflatorParams& params);
+    CostmapInflator(const CostmapInflatorParams& params, CustomInflationFunc func = nullptr);
     ~CostmapInflator();
 
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
 
     void inflateInplace(NcImageU8* img, Rect region);
+
+    /** Default value:: CostValue::obstacle */
+    void setSeed(CostValue seed);
 
 private:
     std::unique_ptr<CostmapInflatorImple> m_imple;
