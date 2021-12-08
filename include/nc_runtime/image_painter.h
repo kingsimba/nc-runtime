@@ -1,5 +1,6 @@
 #pragma once
 
+#include "vector2i.h"
 #include "_raytrace.h"
 
 template <typename ImageType>
@@ -10,7 +11,7 @@ public:
 
     typedef typename ImageType::PixelType PixelType;
 
-    void line(Vector2i from, Vector2i to, PixelType color)
+    void line(nc::Vector2i from, nc::Vector2i to, PixelType color)
     {
         Marker<PixelType> m(m_image->mutablePixels(), color);
         raytraceLine(m, m_image->width(), from.x, from.y, to.x, to.y);
