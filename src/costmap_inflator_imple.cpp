@@ -4,9 +4,11 @@
 
 #define ARRAY_AT(arr, x, y) arr[m_cacheLineWidth * (y) + (x)]
 
-CostmapInflatorImple::CostmapInflatorImple(const CostmapInflatorParams& params)
+CostmapInflatorImple::CostmapInflatorImple(const CostmapInflatorParams& params, CustomInflationFunc func)
 {
+    m_seed = CostValue::obstacle;
     m_params = params;
+    m_customInflationFunc = func;
     init();
 }
 
@@ -43,7 +45,7 @@ void CostmapInflatorImple::inflateInplace(NcImageU8* img, Rect region)
     {
         for (int x = region.left; x < region.right; x++)
         {
-            if (pixels[y * size.width + x] == (u8)CostValue::obstacle)
+            if (pixels[y * size.width + x] == (u8)m_seed)
             {
                 obsBin.emplace_back(CellData{y * size.width + x, x, y, x, y});
             }
@@ -93,7 +95,8 @@ void CostmapInflatorImple::inflateInplace(NcImageU8* img, Rect region)
             int dy = abs(cell.y - cell.srcY);
             CostValue cost = ARRAY_AT(m_cachedCosts, dx, dy);
             CostValue oldCost = (CostValue)pixels[cell.y * size.width + cell.x];
-            if (oldCost == CostValue::noInfo && (cost >= CostValue::inflatedObstacle))
+            if (m_customInflationFunc != nullptr
+                || (oldCost == CostValue::noInfo && (cost >= CostValue::inflatedObstacle)))
                 outputPixels[cell.index] = (u8)cost;
             else
                 outputPixels[cell.index] = (u8)std::max(oldCost, cost);
@@ -122,13 +125,28 @@ void CostmapInflatorImple::init()
     m_cachedCosts = new CostValue[m_cacheLineWidth * m_cacheLineWidth];
     m_cachedDistances = new float[m_cacheLineWidth * m_cacheLineWidth];
 
-    for (int y = 0; y <= m_cellInflationRadius + 1; ++y)
+    if (m_customInflationFunc == nullptr)
     {
-        for (int x = 0; x <= m_cellInflationRadius + 1; ++x)
+        for (int y = 0; y <= m_cellInflationRadius + 1; ++y)
         {
-            float distance = hypotf((float)x, (float)y);
-            ARRAY_AT(m_cachedDistances, x, y) = distance;
-            ARRAY_AT(m_cachedCosts, x, y) = computeCost(distance);
+            for (int x = 0; x <= m_cellInflationRadius + 1; ++x)
+            {
+                float distance = hypotf((float)x, (float)y);
+                ARRAY_AT(m_cachedDistances, x, y) = distance;
+                ARRAY_AT(m_cachedCosts, x, y) = computeCost(distance);
+            }
+        }
+    }
+    else
+    {
+        for (int y = 0; y <= m_cellInflationRadius + 1; ++y)
+        {
+            for (int x = 0; x <= m_cellInflationRadius + 1; ++x)
+            {
+                float distance = hypotf((float)x, (float)y);
+                ARRAY_AT(m_cachedDistances, x, y) = distance;
+                ARRAY_AT(m_cachedCosts, x, y) = (*m_customInflationFunc)(distance, m_params);
+            }
         }
     }
 }
@@ -160,9 +178,9 @@ CostValue CostmapInflatorImple::computeCost(float distance)
 
 //////////////////////////////////////////////////////////////////////////
 
-CostmapInflator::CostmapInflator(const CostmapInflatorParams& params)
+CostmapInflator::CostmapInflator(const CostmapInflatorParams& params, CustomInflationFunc func)
 {
-    m_imple = std::make_unique<CostmapInflatorImple>(params);
+    m_imple = std::make_unique<CostmapInflatorImple>(params, func);
 }
 
 CostmapInflator::~CostmapInflator()
@@ -177,4 +195,9 @@ sp<NcImageU8> CostmapInflator::inflate(NcImageU8* inputImg, Rect region)
 void CostmapInflator::inflateInplace(NcImageU8* img, Rect region)
 {
     m_imple->inflateInplace(img, region);
+}
+
+void CostmapInflator::setSeed(CostValue seed)
+{
+    m_imple->setSeed(seed);
 }

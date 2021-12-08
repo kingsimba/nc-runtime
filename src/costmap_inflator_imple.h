@@ -20,8 +20,10 @@ class CostmapInflatorImple
     };
 
 public:
-    CostmapInflatorImple(const CostmapInflatorParams& params);
+    CostmapInflatorImple(const CostmapInflatorParams& params, CustomInflationFunc func);
     ~CostmapInflatorImple();
+
+    void setSeed(CostValue seed) { m_seed = seed; }
 
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
     void inflateInplace(NcImageU8* img, Rect region);
@@ -30,9 +32,11 @@ private:
     void init();
     void cleanup();
     CostValue computeCost(float distance);
+    CustomInflationFunc m_customInflationFunc;
 
     std::map<float, std::vector<CellData>> m_inflationCells;
 
+    CostValue m_seed;
     CostmapInflatorParams m_params;
     int m_cellInflationRadius;
     int m_cachedInflationRadius;
