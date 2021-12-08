@@ -26,14 +26,17 @@ static inline int sign(int x)
 }
 
 /**
- * @brief  Raytrace a line and apply some action at each step
- * @param  at The action to take... a functor
- * @param  x0 The starting x coordinate
- * @param  y0 The starting y coordinate
- * @param  x1 The ending x coordinate
- * @param  y1 The ending y coordinate
- * @param  maxLength The maximum desired length of the segment... allows you to not go all the way to the
- * endpoint
+ *  @brief  Raytrace a line and apply some action at each step
+ *  @param [in] at
+ *      The action to take... a functor
+ *  @param [in] x0
+ *      The starting x coordinate
+ *  @param [in] y0
+ *      The starting y coordinate
+ *  @param [in] x1
+ *      The ending x coordinate
+ *  @param [in] y1
+ *      The ending y coordinate
  */
 template <class ActionType>
 inline void raytraceLine(ActionType at, int width, int x0, int y0, int x1, int y1)
