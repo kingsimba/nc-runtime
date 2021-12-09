@@ -91,7 +91,7 @@ bool StringSubsliceIter::next(StringSlice* cOut, Range* rangeOut)
 
     const char* newStr = _strstr(m_str, m_strEnd, m_sep, m_sepLength);
 
-    *cOut = StringSlice(m_str, (int)(newStr - m_str), retain(m_ncstring));
+    *cOut = StringSlice(m_str, (int)(newStr - m_str), false, retain(m_ncstring));
     if (rangeOut != NULL)
         *rangeOut = Range((int)(m_str - m_strBegin), cOut->length());
 
@@ -114,12 +114,12 @@ StringSlice StringSlice::subsliceFrom(int start)
     if (start < 0)
     {
         assert(m_length + start >= 0);
-        return StringSlice(m_str + (m_length + start), -start, retain(m_ncstring));
+        return StringSlice(m_str + ((size_t)m_length + start), -start, m_hasZeroEnd, retain(m_ncstring));
     }
     else
     {
         assert(start <= m_length);
-        return StringSlice(m_str + start, m_length - start, retain(m_ncstring));
+        return StringSlice(m_str + start, (size_t)m_length - start, m_hasZeroEnd, retain(m_ncstring));
     }
 }
 
@@ -219,6 +219,7 @@ const StringSlice& StringSlice::operator=(const StringSlice& r)
 {
     m_str = r.m_str;
     m_length = r.m_length;
+    m_hasZeroEnd = r.m_hasZeroEnd;
 
     retain(r.m_ncstring);
     release(m_ncstring);
@@ -230,7 +231,7 @@ const StringSlice& StringSlice::operator=(const StringSlice& r)
 
 StringSlice StringSlice::makeWithString(NcString* str)
 {
-    return StringSlice(str->cstr(), str->length(), retain(str));
+    return StringSlice(str->cstr(), str->length(), true, retain(str));
 }
 
 Some<StringSlice> StringSlice::makeWithContentsOfFile(const StringSlice& filename)
@@ -273,6 +274,7 @@ StringSlice::StringSlice(const StringSlice& r) noexcept
 {
     m_str = r.m_str;
     m_length = r.m_length;
+    m_hasZeroEnd = r.m_hasZeroEnd;
     m_ncstring = retain(r.m_ncstring);
 }
 
@@ -282,6 +284,7 @@ StringSlice::StringSlice(const std::string& r) noexcept
     m_ncstring = retain(str.get());
     m_str = str->cstr();
     m_length = str->length();
+    m_hasZeroEnd = true;
 }
 
 StringSlice StringSlice::make(const char* buffer)
@@ -291,6 +294,7 @@ StringSlice StringSlice::make(const char* buffer)
     o.m_ncstring = retain(str.get());
     o.m_str = str->cstr();
     o.m_length = str->length();
+    o.m_hasZeroEnd = true;
 
     return o;
 }
@@ -299,22 +303,7 @@ StringSlice StringSlice::makeWithBytes(const char* buffer, size_t size)
 {
     StringSlice o;
     sp<NcString> str = NcString::allocWithBytes(buffer, size);
-    o.m_ncstring = retain(str.get());
-    o.m_str = str->cstr();
-    o.m_length = str->length();
-
-    return o;
-}
-
-StringSlice StringSlice::makeByTakingBytes(char* buffer, size_t size)
-{
-    StringSlice o;
-    sp<NcString> str = NcString::allocByTakingBytes(buffer, size);
-    o.m_ncstring = retain(str.get());
-    o.m_str = buffer;
-    o.m_length = (int)size;
-
-    return o;
+    return StringSlice::makeWithString(str);
 }
 
 Range StringSlice::findFrom(int start, wchar32 code)
@@ -398,12 +387,13 @@ StringSlice StringSlice::trimEnd()
 
 StringSlice StringSlice::subslice(int start, int length)
 {
-    return StringSlice(m_str + start, length, retain(m_ncstring));
+    return StringSlice(m_str + start, length, m_hasZeroEnd && start + length == m_length, retain(m_ncstring));
 }
 
 StringSlice StringSlice::subslice(Range range)
 {
-    return StringSlice(m_str + range.location, range.length, retain(m_ncstring));
+    return StringSlice(m_str + range.location, range.length, m_hasZeroEnd && range.location + range.length == m_length,
+                       retain(m_ncstring));
 }
 
 const StringSlice& StringSlice::operator=(const std::string& r)
@@ -413,7 +403,21 @@ const StringSlice& StringSlice::operator=(const std::string& r)
     m_ncstring = retain(str.get());
     m_str = str->cstr();
     m_length = str->length();
+    m_hasZeroEnd = true;
     return *this;
+}
+
+const char* StringSlice::cstr() const
+{
+    if (m_hasZeroEnd)
+        return m_str;
+    else if (m_str == NULL)
+        return "";
+    else
+    {
+        *(StringSlice*)this = StringSlice::makeWithBytes(m_str, m_length);
+        return m_str;
+    }
 }
 
 Range StringSlice::findSliceFrom(int start, const StringSlice& needle)
@@ -457,7 +461,7 @@ bool StringTokenIter::next(StringSlice* sliceOut, Range* rangeOut)
         }
     }
 
-    *sliceOut = StringSlice(firstNonSep, (int)(m_str - firstNonSep), retain(m_ncstring));
+    *sliceOut = StringSlice(firstNonSep, (int)(m_str - firstNonSep), false, retain(m_ncstring));
     if (rangeOut != NULL)
         *rangeOut = Range((int)(firstNonSep - m_strBegin), sliceOut->length());
 

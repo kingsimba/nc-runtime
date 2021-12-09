@@ -15,10 +15,7 @@ sp<NcFile> NcFile::alloc(const StringSlice& fileName, FileOpenFlag flags)
     }
     strcat(mode, "b");
 
-    char cstr[NC_MAX_PATH];
-    fileName.toCString(cstr, NC_MAX_PATH);
-
-    FILE* fp = fopen(cstr, mode);
+    FILE* fp = fopen(fileName.cstr(), mode);
     if (fp == NULL)
         return NULL;
 

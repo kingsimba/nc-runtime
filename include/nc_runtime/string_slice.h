@@ -105,6 +105,7 @@ public:
     {
         m_str = NULL;
         m_length = 0;
+        m_hasZeroEnd = false;
         m_ncstring = NULL;
     }
 
@@ -115,11 +116,12 @@ public:
     forceinline StringSlice(const char* str);
 
     static StringSlice format(const char* format, ...);
-    static StringSlice make(const char* buffer);                   // create a copy of C string
-    static StringSlice makeEphemeral(const char* str);             // make NO copy of buffer
-    static StringSlice makeEphemeral(const char* str, size_t len); // make NO copy of buffer
+    static StringSlice make(const char* buffer);       // create a copy of C string
+    static StringSlice makeEphemeral(const char* str); // make NO copy of buffer
+    static StringSlice makeEphemeralWithCString(const char* str,
+                                                size_t len); // make NO copy of buffer, str must ends with \0
     static StringSlice makeWithBytes(const char* buffer, size_t size);
-    static StringSlice makeByTakingBytes(char* buffer, size_t size);
+    static StringSlice makeEphemeralWithBytes(const char* str, size_t len); // make NO copy of buffer
     static StringSlice makeWithString(NcString* str);
     static Some<StringSlice> makeWithContentsOfFile(const StringSlice& filename);
 
@@ -127,6 +129,7 @@ public:
     {
         m_str = r.m_str;
         m_length = r.m_length;
+        m_hasZeroEnd = r.m_hasZeroEnd;
         m_ncstring = r.m_ncstring;
         r.m_ncstring = NULL;
     }
@@ -163,11 +166,19 @@ public:
     //////////////////////////////////////////////////////////////////////////
     // Conversions
 
+    // from std::string
     const StringSlice& operator=(const std::string& r);
+
+    // to std::string
     forceinline operator std::string() const { return std::string(m_str, m_length); }
 
+    // to C string.
+    // WARNING: This might be very slow. Because if the slice's internal memory doesn't ends with \0,
+    //          it will have to make a full copy.
+    const char* cstr() const;
+
     // copy to C string
-    forceinline void toCString(char* str, size_t max_len) const
+    NC_DEPRECATED void toCString(char* str, size_t max_len) const
     {
         if (max_len < (size_t)m_length + 1)
         {
@@ -277,11 +288,12 @@ public:
     // WARNING: it may not be null terminated
     forceinline const char* internalBytes() const { return m_str; }
     forceinline NcString* internalString() const { return m_ncstring; }
+    forceinline bool _zeroEnded() const { return m_hasZeroEnd; }
     const StringSlice& operator=(const StringSlice& r);
 
 private:
-    forceinline StringSlice(const char* str, size_t len, NcString* ncstr)
-        : m_str(str), m_length((int)len), m_ncstring(ncstr)
+    forceinline StringSlice(const char* str, size_t len, bool hasZeroEnd, NcString* ncstr)
+        : m_str(str), m_length((int)len), m_hasZeroEnd(hasZeroEnd), m_ncstring(ncstr)
     {
     }
 
@@ -292,6 +304,7 @@ private:
 protected:
     const char* m_str;
     int m_length;
+    bool m_hasZeroEnd;
     NcString* m_ncstring;
 };
 
@@ -300,17 +313,23 @@ forceinline StringSlice::StringSlice(const char* str)
 {
     m_str = str;
     m_length = (int)strlen(str);
+    m_hasZeroEnd = true;
     m_ncstring = NULL;
 }
 
 forceinline StringSlice StringSlice::makeEphemeral(const char* str)
 {
-    return StringSlice(str, strlen(str), NULL);
+    return StringSlice(str, strlen(str), true, NULL);
 }
 
-forceinline StringSlice StringSlice::makeEphemeral(const char* str, size_t len)
+forceinline StringSlice StringSlice::makeEphemeralWithCString(const char* str, size_t len)
 {
-    return StringSlice(str, len, NULL);
+    return StringSlice(str, len, true, NULL);
+}
+
+forceinline StringSlice StringSlice::makeEphemeralWithBytes(const char* str, size_t len)
+{
+    return StringSlice(str, len, false, NULL);
 }
 
 forceinline bool operator==(const StringSlice& l, const StringSlice& r)
@@ -351,5 +370,5 @@ inline int StringSlice::findWithConditionFrom(int start, FindCharFunc isFound)
 
 inline StringSlice operator""_s(const char* literalStr, size_t len)
 {
-    return StringSlice::makeEphemeral(literalStr, len);
+    return StringSlice::makeEphemeralWithCString(literalStr, len);
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+- 2021-12-09 Add `StringSlice::cstr()`. 
+
+  `cstr()` may make a copy of the memory if it's not '\0' ended.
+  Deprecate StringSlice::toCString().
+
 - 2021-12-08 RCSS-813 related:
 
   - Add `ImagePainter::line()`.

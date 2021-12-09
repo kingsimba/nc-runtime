@@ -202,3 +202,33 @@ TEST(StringSlice, fromFile)
     EXPECT_TRUE(s.hasValue());
     EXPECT_TRUE(s.value().length() != 0);
 }
+
+TEST(StringSlice, zeroEnd)
+{
+    EXPECT_TRUE("abc"_s._zeroEnded());
+    EXPECT_TRUE(StringSlice::make("abc")._zeroEnded());
+    EXPECT_TRUE(StringSlice::makeEphemeral("abc")._zeroEnded());
+    EXPECT_TRUE(StringSlice::makeEphemeralWithCString("abc", 3)._zeroEnded());
+    EXPECT_FALSE(StringSlice::makeEphemeralWithBytes("abc", 3)._zeroEnded());
+    EXPECT_TRUE(StringSlice::makeWithBytes("abc", 3)._zeroEnded());
+    EXPECT_TRUE(StringSlice::makeWithString("abc"_str)._zeroEnded());
+    EXPECT_TRUE("abc"_s.subsliceFrom(2)._zeroEnded());
+    EXPECT_TRUE("abc"_s.subsliceFrom(-2)._zeroEnded());
+    EXPECT_FALSE("abc"_s.subslice(0, 2)._zeroEnded());
+    EXPECT_TRUE("abc"_s.subslice(1, 2)._zeroEnded());
+
+    auto hello = "hello"_s;
+    {
+        auto slice = hello.subslice(1, 2);
+        EXPECT_TRUE(slice.internalBytes() == hello.internalBytes() + 1);
+        slice.cstr(); // use cstr() will create a new copy(\0 ended)
+        EXPECT_TRUE(slice.internalBytes() != hello.internalBytes() + 1);
+    }
+
+    {
+        auto slice = hello.subsliceFrom(1);
+        EXPECT_TRUE(slice.internalBytes() == hello.internalBytes() + 1);
+        slice.cstr(); // will NOT create a new copy
+        EXPECT_TRUE(slice.internalBytes() == hello.internalBytes() + 1);
+    }
+}

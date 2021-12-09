@@ -9,7 +9,7 @@ Some<JsonNode> JsonNode::makeWithContentsOfFile(const StringSlice& file)
     if (data == nullptr)
         return noValue;
 
-    return makeWithStringSlice(StringSlice::makeEphemeral((char*)data->bytes(), data->length()));
+    return makeWithStringSlice(StringSlice::makeEphemeralWithBytes((char*)data->bytes(), data->length()));
 }
 
 Some<JsonNode> JsonNode::makeWithCString(const char* buffer)
@@ -185,7 +185,7 @@ int JsonNode::arraySize()
 StringSlice JsonNode::dump(size_t flags /*= 0*/)
 {
     char* buffer = json_dumps(m_root, flags);
-    auto str = StringSlice::makeByTakingBytes(buffer, strlen(buffer));
+    auto str = NcString::allocByTakingBytes(buffer, strlen(buffer))->toSlice();
     return str;
 }
 

@@ -92,7 +92,7 @@ public:
     /// Operations
 
     forceinline StringSlice toSlice() { return StringSlice::makeWithString(this); }
-    forceinline StringSlice toEphemeralSlice() { return StringSlice(m_str, m_length, NULL); }
+    forceinline StringSlice toEphemeralSlice() { return StringSlice(m_str, m_length, true, NULL); }
 
     // Design Notes: overwrite functions in StringSlice. Because we have to keep the RC
     forceinline std::vector<StringSlice> split(const StringSlice& sep) { return this->toSlice().split(sep); }
