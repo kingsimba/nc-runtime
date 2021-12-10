@@ -35,16 +35,13 @@
 class JsonNode
 {
 public:
-    static Some<JsonNode> makeWithContentsOfFile(const StringSlice& filename);
-    static Some<JsonNode> makeWithCString(const char* buffer);
-    static Some<JsonNode> makeWithStringSlice(const StringSlice& r);
-
-    NC_DEPRECATED static Some<JsonNode> instanceWithContentsOfFile(const char* file); // please use makeWithXxx()
-    NC_DEPRECATED static Some<JsonNode> instanceWithCString(const char* buffer);      // please use makeWithXxx()
+    static JsonNode makeWithContentsOfFile(const StringSlice& filename);
+    static JsonNode makeWithCString(const char* buffer);
+    static JsonNode makeWithStringSlice(const StringSlice& r);
 
     JsonNode() = default;
-    JsonNode(json_t* root) : m_root(json_incref(root)) {}
-    JsonNode(JsonNode&& r)
+    JsonNode(std::nullptr_t){};
+    JsonNode(JsonNode&& r) noexcept
     {
         m_root = r.m_root;
         r.m_root = nullptr;
@@ -90,9 +87,9 @@ public:
     // Operations
     void add(const char* key, const JsonNode& node);
     bool remove(const char* key);
-    Some<JsonNode> nodeForKey(const char* key);
-    Some<JsonNode> operator[](const char* key);
-    Some<JsonNode> operator[](int index);
+    JsonNode nodeForKey(const char* key);
+    JsonNode operator[](const char* key);
+    JsonNode operator[](int index);
 
     //////////////////////////////////////////////////////////////////////////
     // Value
@@ -101,33 +98,37 @@ public:
     Some<u32> asU32();
     Some<const char*> asString();
     Some<float> asFloat();
-
     Some<bool> asBool();
-    forceinline bool isTrue()
-    {
-        auto v = asBool();
-        return v.hasValue() && v.value();
-    }
-    forceinline bool isFalse()
-    {
-        Some<bool> v = asBool();
-        return v.hasValue() && !v.value();
-    }
+    JsonNode asArray();
+    int arraySize();
+
+    forceinline bool isTrue() { return json_is_true(m_root); }
+    forceinline bool isFalse() { return json_is_false(m_root); }
+    forceinline bool isNull() { return json_is_null(m_root); }
+
     forceinline bool operator!=(std::nullptr_t) const { return m_root != nullptr; }
     forceinline bool operator==(std::nullptr_t) const { return m_root == nullptr; }
 
-    Some<JsonNode> asArray();
-    int arraySize();
-
     //////////////////////////////////////////////////////////////////////////
     // Other
-    json_t* rawNode() { return m_root; }
 
     /**
-     * Returns the JSON representation of json as a string, or NULL on error.
-     * The return value must be freed by the caller using free().
+     * Returns the JSON representation as a string.
+     * @remarks
+     *     Only object and array can be dumped.
+     * @return
+     *     Return empty string on error.
      */
     StringSlice dump(size_t flags = 0);
+
+    /**
+     * Returns the JSON representation as a string.
+     *
+     * @remarks
+     *     Only object and array can be dumped.
+     * @return
+     *     Return `nullptr` on error.
+     */
     sp<NcString> dumpAsString(size_t flags = 0);
 
     void operator=(const JsonNode& r)
@@ -137,31 +138,9 @@ public:
     }
 
 private:
+    JsonNode(json_t* root) : m_root(json_incref(root)) {}
     json_t* _nodeForKey(const char* key);
 
 private:
     json_t* m_root = nullptr;
-};
-
-template <>
-class Some<JsonNode>
-{
-public:
-    forceinline Some(const NoValueType& v) : m_hasValue(false) { UNUSED_VAR(v); }
-    forceinline Some(const JsonNode& v) : m_hasValue(true), m_value(v) {}
-    forceinline Some(const JsonNode&& v) : m_hasValue(true), m_value(std::move(v)) {}
-
-    forceinline bool hasValue() { return m_hasValue; }
-    const JsonNode& value() const { return m_value; }
-
-    forceinline const JsonNode& Or(const JsonNode& r) { return m_hasValue ? m_value : r; }
-
-    JsonNode* operator->() { return &m_value; }
-
-    Some<JsonNode> operator[](const char* key) { return m_value[key]; }
-    Some<JsonNode> operator[](int index) { return m_value[index]; }
-
-protected:
-    bool m_hasValue;
-    JsonNode m_value;
 };

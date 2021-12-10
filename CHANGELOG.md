@@ -1,6 +1,11 @@
 # Changelog
 
-- 2021-12-10 Improve JsonNode. Add `JsonNode::nullObject()` and comparision with `nullptr`.
+- 2021-12-10 Improve JsonNode. Remove `Some<JsonNode>` etc. |api-break|
+
+  - Remove `Some<JsonNode>`. JsonNode itself can be compared with `nullptr`.
+  - Add `JsonNode::nullObject()`. It is a valid json node and totally different from `nullptr`.
+  - Fix bug in JsonNode::dump().
+
 - 2021-12-09 Add `StringSlice::cstr()`. 
 
   `cstr()` may make a copy of the memory if it's not '\0' ended.
