@@ -47,9 +47,6 @@ TEST(JsonNodeTest, example)
 }
 TEST(JsonNodeTest, basic)
 {
-    auto nullObject = JsonNode::nullObject();
-    EXPECT_TRUE(nullObject == nullptr);
-
     auto root = JsonNode::makeWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root != nullptr);
 
@@ -86,6 +83,9 @@ TEST(JsonNodeTest, basic)
     EXPECT_FALSE(root["user.nonexist"].isFalse());
     EXPECT_FALSE(root["user.age"].isTrue());
     EXPECT_FALSE(root["user.age"].isFalse());
+
+    EXPECT_TRUE(JsonNode::nullObject() != nullptr);
+    EXPECT_TRUE(JsonNode::nullObject().isNull());
 }
 
 TEST(JsonNodeTest, nonexistFile)

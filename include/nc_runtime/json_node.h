@@ -14,17 +14,17 @@
  *       "document": {
  *       }
  *   })");
- *   EXPECT_TRUE(o.hasValue());
+ *   EXPECT_TRUE(o != nullptr);
  *
- *   auto name = o["user.name"]->asString();
+ *   auto name = o["user.name"].asString();
  *   ASSERT_TRUE(name.hasValue());
  *   EXPECT_STREQ(name.value(), "Alexander The Great");
  *
- *   auto age = o["user.age"]->asInt();
+ *   auto age = o["user.age"].asInt();
  *   ASSERT_TRUE(age.hasValue());
  *   EXPECT_EQ(age.value(), 38);
  *
- *   EXPECT_STREQ(o["user.nonexist"]->asString().Or("Tony"), "Tony");
+ *   EXPECT_STREQ(o["user.nonexist"].asString().Or("Tony"), "Tony");
  *
  *   // Delete
  *   o->remove("user.age");
@@ -81,7 +81,12 @@ public:
         o.m_root = json_object();
         return o;
     }
-    static JsonNode nullObject() { return JsonNode(); }
+    static JsonNode nullObject()
+    {
+        JsonNode o;
+        o.m_root = json_null();
+        return o;
+    }
 
     //////////////////////////////////////////////////////////////////////////
     // Operations
