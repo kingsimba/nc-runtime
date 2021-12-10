@@ -44,6 +44,11 @@ public:
 
     JsonNode() = default;
     JsonNode(json_t* root) : m_root(json_incref(root)) {}
+    JsonNode(JsonNode&& r)
+    {
+        m_root = r.m_root;
+        r.m_root = nullptr;
+    }
     JsonNode(const JsonNode& r) { m_root = json_incref(r.m_root); }
     ~JsonNode() { json_decref(m_root); }
 
@@ -79,6 +84,7 @@ public:
         o.m_root = json_object();
         return o;
     }
+    static JsonNode nullObject() { return JsonNode(); }
 
     //////////////////////////////////////////////////////////////////////////
     // Operations
@@ -107,6 +113,8 @@ public:
         Some<bool> v = asBool();
         return v.hasValue() && !v.value();
     }
+    forceinline bool operator!=(std::nullptr_t) const { return m_root != nullptr; }
+    forceinline bool operator==(std::nullptr_t) const { return m_root == nullptr; }
 
     Some<JsonNode> asArray();
     int arraySize();
@@ -144,6 +152,7 @@ public:
     forceinline Some(const JsonNode&& v) : m_hasValue(true), m_value(std::move(v)) {}
 
     forceinline bool hasValue() { return m_hasValue; }
+    const JsonNode& value() const { return m_value; }
 
     forceinline const JsonNode& Or(const JsonNode& r) { return m_hasValue ? m_value : r; }
 

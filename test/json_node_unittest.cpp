@@ -47,8 +47,12 @@ TEST(JsonNodeTest, example)
 }
 TEST(JsonNodeTest, basic)
 {
+    auto nullObject = JsonNode::nullObject();
+    EXPECT_TRUE(nullObject == nullptr);
+
     auto root = JsonNode::makeWithContentsOfFile("test_data/config.json");
     ASSERT_TRUE(root.hasValue());
+    EXPECT_TRUE(root.value() != nullptr);
 
     auto name = root["user.name"]->asString();
     ASSERT_TRUE(name.hasValue());

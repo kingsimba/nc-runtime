@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-12-10 Improve JsonNode. Add `JsonNode::nullObject()` and comparision with `nullptr`.
 - 2021-12-09 Add `StringSlice::cstr()`. 
 
   `cstr()` may make a copy of the memory if it's not '\0' ended.
