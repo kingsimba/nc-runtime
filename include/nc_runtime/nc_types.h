@@ -31,6 +31,7 @@
 #    pragma warning(disable : 4714) // warning C4714: function marked as __forceinline not inlined
 #else
 #    define forceinline inline
+#    pragma GCC diagnostic ignored "-Wpedantic" // warning: ISO C++ prohibits anonymous structs [-Wpedantic]
 #endif
 
 #if defined(_M_X64) || defined(__amd64__) || defined(__LP64__) || defined(__x86_64__)
