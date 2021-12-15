@@ -15,6 +15,7 @@ NcPolyline::NcPolyline(const nc::Vector2* points, int count, bool closed)
     size_t bufferSize = sizeof(nc::Vector2) * count;
     m_points = (nc::Vector2*)malloc(bufferSize);
     m_closed = closed;
+    m_shouldFree = true;
     memcpy(m_points, points, bufferSize);
     m_pointCount = count;
 }
