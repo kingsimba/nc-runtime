@@ -225,6 +225,7 @@ template <typename T>
 class Some
 {
 public:
+    forceinline Some() : m_hasValue(false) { }
     forceinline Some(const NoValueType& v) : m_hasValue(false) { UNUSED_VAR(v); }
     forceinline Some(const T& v) : m_hasValue(true), m_value(v) {}
     forceinline Some(const T&& v) : m_hasValue(true), m_value(std::move(v)) {}

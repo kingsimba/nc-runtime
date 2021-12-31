@@ -27,7 +27,10 @@ TEST(Stdlib, TimeTick)
 
 TEST(Stdlib, someInt)
 {
-    auto v = Some<int>(5);
+    Some<int> v;
+    EXPECT_FALSE(v.hasValue());
+
+    v = Some<int>(5);
     EXPECT_TRUE(v.hasValue());
     EXPECT_EQ(v.value(), 5);
     EXPECT_EQ(v.value(), 5);

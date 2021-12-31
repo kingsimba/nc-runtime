@@ -1,5 +1,6 @@
 # Changelog
 
+- 2021-12-31 Add default constructor for `Some<T>`.
 - 2021-12-10 Improve JsonNode. Remove `Some<JsonNode>` etc. |api-break|
 
   - Remove `Some<JsonNode>`. JsonNode itself can be compared with `nullptr`.
