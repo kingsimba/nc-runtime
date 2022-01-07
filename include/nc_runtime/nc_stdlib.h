@@ -54,6 +54,31 @@ struct TimeDuration
     i64 __duration = 0;
 };
 
+forceinline bool operator==(const TimeDuration& l, const TimeDuration& r)
+{
+    return l.__duration == r.__duration;
+}
+forceinline bool operator!=(const TimeDuration& l, const TimeDuration& r)
+{
+    return l.__duration != r.__duration;
+}
+forceinline bool operator<(const TimeDuration& l, const TimeDuration& r)
+{
+    return l.__duration < r.__duration;
+}
+forceinline bool operator<=(const TimeDuration& l, const TimeDuration& r)
+{
+    return l.__duration <= r.__duration;
+}
+forceinline bool operator>(const TimeDuration& l, const TimeDuration& r)
+{
+    return l.__duration > r.__duration;
+}
+forceinline bool operator>=(const TimeDuration& l, const TimeDuration& r)
+{
+    return l.__duration >= r.__duration;
+}
+
 // in milliseconds
 struct TimeTick
 {
@@ -64,11 +89,55 @@ struct TimeTick
     static TimeDuration measure(Func func);
 
     forceinline TimeTick() : __time(0) {}
-    forceinline TimeTick(i64 ms) { __time = ms; }
+    forceinline TimeTick(i64 ms) : __time(ms) {}
+
+    forceinline TimeTick& operator+=(const TimeDuration& r)
+    {
+        __time += r.__duration;
+        return *this;
+    }
+
+    forceinline TimeTick& operator-=(const TimeDuration& r)
+    {
+        __time -= r.__duration;
+        return *this;
+    }
 
     i64 __time; // in milliseconds
 };
 
+forceinline bool operator==(const TimeTick& l, const TimeTick& r)
+{
+    return l.__time == r.__time;
+}
+forceinline bool operator!=(const TimeTick& l, const TimeTick& r)
+{
+    return l.__time != r.__time;
+}
+forceinline bool operator<(const TimeTick& l, const TimeTick& r)
+{
+    return l.__time < r.__time;
+}
+forceinline bool operator<=(const TimeTick& l, const TimeTick& r)
+{
+    return l.__time <= r.__time;
+}
+forceinline bool operator>(const TimeTick& l, const TimeTick& r)
+{
+    return l.__time > r.__time;
+}
+forceinline bool operator>=(const TimeTick& l, const TimeTick& r)
+{
+    return l.__time >= r.__time;
+}
+forceinline TimeTick operator-(const TimeTick& l, const TimeDuration& duration)
+{
+    return TimeTick{l.__time - duration.__duration};
+}
+forceinline TimeTick operator+(const TimeTick& l, const TimeDuration& duration)
+{
+    return TimeTick{l.__time + duration.__duration};
+}
 forceinline TimeDuration operator-(const TimeTick& l, const TimeTick& r)
 {
     return TimeDuration{l.__time - r.__time};

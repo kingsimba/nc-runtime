@@ -21,8 +21,17 @@ TEST(Stdlib, TimeTick)
 {
     TimeTick start = TimeTick::now();
     Thread::sleep(10);
-    TimeDuration duration = TimeTick::now() - start;
+    TimeTick newNow = TimeTick::now();
+    TimeDuration duration = newNow - start;
     EXPECT_GE(duration.ms(), 10);
+    EXPECT_EQ(start + duration, newNow);
+
+    EXPECT_GT(TimeTick::now(), start);
+    EXPECT_GE(TimeTick::now(), start);
+    EXPECT_LT(start, TimeTick::now());
+    EXPECT_LE(start, TimeTick::now());
+    EXPECT_EQ(start, start);
+    EXPECT_NE(start, TimeTick::now());
 }
 
 TEST(Stdlib, someInt)
