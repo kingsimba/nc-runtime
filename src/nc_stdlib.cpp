@@ -41,9 +41,9 @@ TimeTick TimeTick::now()
     return TimeTick{n};
 }
 
-void Thread::sleep(TimeTick tick)
+void Thread::sleep(TimeDuration duration)
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(tick.ms()));
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration.ms()));
 }
 
 void* StackOrHeapAllocator::alloc(size_t requirement)

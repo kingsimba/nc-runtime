@@ -270,7 +270,7 @@ std::thread t([&] {
 // must wait until reset
 TimeTick start = TimeTick::now();
 e.wait();
-TimeTick duration = TimeTick::now() - start;
+TickDuration duration = TimeTick::now() - start;
 EXPECT_GE(duration.ms(), 100);
 
 t.join();

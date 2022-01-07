@@ -21,7 +21,7 @@ TEST(Stdlib, TimeTick)
 {
     TimeTick start = TimeTick::now();
     Thread::sleep(10);
-    TimeTick duration = TimeTick::now() - start;
+    TimeDuration duration = TimeTick::now() - start;
     EXPECT_GE(duration.ms(), 10);
 }
 

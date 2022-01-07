@@ -41,7 +41,7 @@ public:
     void set();
     void reset();
     void wait();
-    EventWaitResult waitWithTimeout(const TimeTick& t);
+    EventWaitResult waitWithTimeout(const TimeDuration& t);
 
 private:
     std::unique_ptr<ResetableEventImple> m_imple;

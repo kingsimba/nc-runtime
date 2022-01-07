@@ -44,6 +44,16 @@ forceinline void nc_flipI32(i32& val)
 /////////////////////////////////////////////////////////////////
 // TimeTick
 
+struct TimeDuration
+{
+    forceinline TimeDuration() = default;
+    forceinline TimeDuration(i64 duration) : __duration(duration) {}
+
+    forceinline i64 ms() const { return __duration; }
+
+    i64 __duration = 0;
+};
+
 // in milliseconds
 struct TimeTick
 {
@@ -51,30 +61,29 @@ struct TimeTick
 
     // return the time used to run some code
     template <typename Func>
-    static TimeTick measure(Func func);
+    static TimeDuration measure(Func func);
 
-    TimeTick() : __time(0) {}
-    TimeTick(i64 ms) { __time = ms; }
-    forceinline i64 ms() const { return __time; }
+    forceinline TimeTick() : __time(0) {}
+    forceinline TimeTick(i64 ms) { __time = ms; }
 
     i64 __time; // in milliseconds
 };
 
-forceinline TimeTick operator-(const TimeTick& l, const TimeTick& r)
+forceinline TimeDuration operator-(const TimeTick& l, const TimeTick& r)
 {
-    return TimeTick{l.__time - r.__time};
+    return TimeDuration{l.__time - r.__time};
 }
-forceinline TimeTick operator+(const TimeTick& l, const TimeTick& r)
+forceinline TimeDuration operator+(const TimeTick& l, const TimeTick& r)
 {
-    return TimeTick{l.__time + r.__time};
+    return TimeDuration{l.__time + r.__time};
 }
 
 template <typename Func>
-TimeTick TimeTick::measure(Func func)
+TimeDuration TimeTick::measure(Func func)
 {
     TimeTick start = TimeTick::now();
     func();
-    TimeTick elapsed = TimeTick::now() - start;
+    TimeDuration elapsed = TimeTick::now() - start;
     return elapsed;
 }
 
@@ -84,7 +93,7 @@ TimeTick TimeTick::measure(Func func)
 class Thread
 {
 public:
-    static void sleep(TimeTick tick); // sleep current thread for at least some time.
+    static void sleep(TimeDuration tick); // sleep current thread for at least some time.
 };
 
 /**
