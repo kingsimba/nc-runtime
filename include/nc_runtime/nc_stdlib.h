@@ -49,6 +49,9 @@ struct TimeDuration
     forceinline TimeDuration() = default;
     forceinline TimeDuration(i64 duration) : __duration(duration) {}
 
+    forceinline static TimeDuration makeWithSeconds(float seconds) { return TimeDuration(i64(seconds * 1000 + 0.5f)); }
+    forceinline static TimeDuration makeWithSeconds(double seconds) { return TimeDuration(i64(seconds * 1000 + 0.5)); }
+
     forceinline i64 ms() const { return __duration; }
 
     i64 __duration = 0;
