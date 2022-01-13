@@ -46,6 +46,22 @@ void Thread::sleep(TimeDuration duration)
     std::this_thread::sleep_for(std::chrono::milliseconds(duration.ms()));
 }
 
+void StableRate::sleep()
+{
+    TimeTick now = TimeTick::now();
+    TimeDuration d = m_duration - (now - m_lastFireTime);
+
+    if (d.ms() > 0)
+    {
+        Thread::sleep(d);
+        m_lastFireTime = now + d;
+    }
+    else
+    {
+        m_lastFireTime = now;
+    }
+}
+
 void* StackOrHeapAllocator::alloc(size_t requirement)
 {
     void* rtn;

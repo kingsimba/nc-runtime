@@ -34,6 +34,20 @@ TEST(Stdlib, TimeTick)
     EXPECT_NE(start, TimeTick::now());
 }
 
+TEST(Stdlib, stableRate)
+{
+    StableRate rate(20);
+    TimeTick startTime = TimeTick::now();
+    int count = 0;
+    while (TimeTick::now() - startTime < TimeDuration(500))
+    {
+        count++;
+        rate.sleep();
+    }
+
+    EXPECT_EQ(count, 10);
+}
+
 TEST(Stdlib, someInt)
 {
     Some<int> v;

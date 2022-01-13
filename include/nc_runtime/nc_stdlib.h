@@ -52,6 +52,18 @@ struct TimeDuration
     forceinline static TimeDuration makeWithSeconds(float seconds) { return TimeDuration(i64(seconds * 1000 + 0.5f)); }
     forceinline static TimeDuration makeWithSeconds(double seconds) { return TimeDuration(i64(seconds * 1000 + 0.5)); }
 
+    const TimeDuration& operator+=(const TimeDuration& d)
+    {
+        __duration += d.__duration;
+        return *this;
+    }
+
+    const TimeDuration& operator-=(const TimeDuration& d)
+    {
+        __duration -= d.__duration;
+        return *this;
+    }
+
     forceinline i64 ms() const { return __duration; }
 
     i64 __duration = 0;
@@ -64,6 +76,14 @@ forceinline bool operator==(const TimeDuration& l, const TimeDuration& r)
 forceinline bool operator!=(const TimeDuration& l, const TimeDuration& r)
 {
     return l.__duration != r.__duration;
+}
+forceinline TimeDuration operator+(const TimeDuration& l, const TimeDuration& r)
+{
+    return TimeDuration(l.__duration + r.__duration);
+}
+forceinline TimeDuration operator-(const TimeDuration& l, const TimeDuration& r)
+{
+    return TimeDuration(l.__duration - r.__duration);
 }
 forceinline bool operator<(const TimeDuration& l, const TimeDuration& r)
 {
@@ -158,6 +178,33 @@ TimeDuration TimeTick::measure(Func func)
     TimeDuration elapsed = TimeTick::now() - start;
     return elapsed;
 }
+
+/**
+ * Loop rate control
+ *
+ * ```
+ * StableRate rate(10);
+ * TimeTick startTime = TimeTick::now();
+ * int count = 0;
+ * while (TimeTick::now() - startTime < TimeDuration(1000))
+ * {
+ *     count++;
+ *     rate.sleep();
+ * }
+ * EXPECT_EQ(count, 10);
+ * ```
+ */
+class StableRate
+{
+public:
+    StableRate(float hz) : m_duration((i64)(1000 / hz)) { m_lastFireTime = TimeTick::now(); }
+
+    void sleep();
+
+private:
+    TimeDuration m_duration;
+    TimeTick m_lastFireTime;
+};
 
 /////////////////////////////////////////////////////////////////
 // Thread
