@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-01-19 Add `RectF::isNegtiveMinimum(), RectF::expand(float width, float height)`.
 - 2022-01-13 Add `StableRate` for loop rate control.
 - 2022-01-07 Add `TimeDuration`. Add a lot of operator overloads for `TimeDuration` and `TimeTick`.
 - 2021-12-31 Add default constructor for `Some<T>`.

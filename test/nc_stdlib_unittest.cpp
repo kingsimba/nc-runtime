@@ -192,12 +192,31 @@ TEST(Stdlib, rectFSetAsNegativeMinimum)
 {
     RectF area;
     area.setAsNegativeMinimum();
-    area.combinePoint(-1.0f, -2.0f);
+    EXPECT_TRUE(area.isNegtiveMinimum());
 
+    area.combinePoint(-1.0f, -2.0f);
     EXPECT_EQ(area.left, -1.0f);
     EXPECT_EQ(area.right, -1.0f);
     EXPECT_EQ(area.top, -2.0f);
     EXPECT_EQ(area.bottom, -2.0f);
+}
+
+TEST(Stdlib, rectFExpand)
+{
+    RectF area;
+    area.set(.0f, .0f, .0f, .0f);
+    area.expand(1.0f);
+    EXPECT_EQ(area.left, -1.0f);
+    EXPECT_EQ(area.right, 1.0f);
+    EXPECT_EQ(area.top, -1.0f);
+    EXPECT_EQ(area.bottom, 1.0f);
+
+    area.set(.0f, .0f, .0f, .0f);
+    area.expand(1.0f, 0.3f);
+    EXPECT_EQ(area.left, -1.0f);
+    EXPECT_EQ(area.right, 1.0f);
+    EXPECT_EQ(area.top, -0.3f);
+    EXPECT_EQ(area.bottom, 0.3f);
 }
 
 namespace

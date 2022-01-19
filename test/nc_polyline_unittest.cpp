@@ -39,3 +39,15 @@ TEST(NcPolylineTest, isPointInPolygon)
     EXPECT_FALSE(ploygon->testPoint({1.f, 2.f}));
     EXPECT_FALSE(ploygon->testPoint({0.f, 2.1f}));
 }
+
+TEST(NcPolylineTest, calculateBBox)
+{
+    vector<Vector2> points{{0, 0}, {3, 0}, {3, 3}, {0, 3}};
+
+    sp<NcPolyline> ploygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
+    RectF boundingBox = ploygon->calculateBBox();
+    EXPECT_EQ(boundingBox.left, .0f);
+    EXPECT_EQ(boundingBox.right, 3.0f);
+    EXPECT_EQ(boundingBox.top, .0f);
+    EXPECT_EQ(boundingBox.bottom, 3.0f);
+}
