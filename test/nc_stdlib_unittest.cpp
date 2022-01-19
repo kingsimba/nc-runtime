@@ -212,7 +212,7 @@ TEST(Stdlib, rectFExpand)
     EXPECT_EQ(area.bottom, 1.0f);
 
     area.set(.0f, .0f, .0f, .0f);
-    area.expand(1.0f, 0.3f);
+    area.expand2Directions(1.0f, 0.3f);
     EXPECT_EQ(area.left, -1.0f);
     EXPECT_EQ(area.right, 1.0f);
     EXPECT_EQ(area.top, -0.3f);

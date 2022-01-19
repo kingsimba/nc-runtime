@@ -32,9 +32,9 @@ struct RectF
         this->left -= radius, this->top -= radius, this->right += radius, this->bottom += radius;
     }
 
-    void expand(float width, float height)
+    void expand2Directions(float horizontal, float vertical)
     {
-        this->left -= width, this->top -= height, this->right += width, this->bottom += height;
+        this->left -= horizontal, this->top -= vertical, this->right += horizontal, this->bottom += vertical;
     }
 
     void intersectWith(RectF r)
