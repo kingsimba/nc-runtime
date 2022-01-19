@@ -32,6 +32,11 @@ struct RectF
         this->left -= radius, this->top -= radius, this->right += radius, this->bottom += radius;
     }
 
+    void expand2Directions(float horizontal, float vertical)
+    {
+        this->left -= horizontal, this->top -= vertical, this->right += horizontal, this->bottom += vertical;
+    }
+
     void intersectWith(RectF r)
     {
         this->left = nc_max(r.left, this->left);
@@ -54,6 +59,11 @@ struct RectF
     {
         this->left = this->top = FLT_MAX;
         this->right = this->bottom = -FLT_MAX;
+    }
+
+    bool isNegtiveMinimum()
+    {
+        return this->left == FLT_MAX && this->top == FLT_MAX && this->right == -FLT_MAX && this->bottom == -FLT_MAX;
     }
 
     void combinePoint(float x, float y)
