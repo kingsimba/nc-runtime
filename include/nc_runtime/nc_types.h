@@ -225,15 +225,16 @@ template <typename T>
 class Some
 {
 public:
-    forceinline Some() : m_hasValue(false) { }
+    forceinline Some() : m_hasValue(false) {}
     forceinline Some(const NoValueType& v) : m_hasValue(false) { UNUSED_VAR(v); }
     forceinline Some(const T& v) : m_hasValue(true), m_value(v) {}
     forceinline Some(const T&& v) : m_hasValue(true), m_value(std::move(v)) {}
 
     forceinline T& value() { return m_value; }
-    forceinline bool hasValue() { return m_hasValue; }
+    forceinline const T& value() const { return m_value; }
+    forceinline bool hasValue() const { return m_hasValue; }
 
-    forceinline const T& Or(const T& r) { return m_hasValue ? m_value : r; }
+    forceinline const T& Or(const T& r) const { return m_hasValue ? m_value : r; }
 
 private:
     bool m_hasValue;
