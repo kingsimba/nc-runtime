@@ -67,6 +67,7 @@ public:
 
     static sp<NcImageU8> allocWithSize(Size size);
     static sp<NcImageU8> allocWithFileName(const StringSlice& fileName);
+    static sp<NcImageU8> allocWithData(const void* data, int lengthInBytes);
 
     // The image doesn't own the memory. The user must keep it valid.
     static sp<NcImageU8> allocWithBytesNoCopy(u8* bytes, Size size);
@@ -83,6 +84,7 @@ public:
 protected:
     bool initWithSize(Size size);
     bool initWithFileName(const StringSlice& fileName);
+    bool initWithData(const void* data, int lengthInBytes);
 
 protected:
     bool m_shouldFreePixels = false;

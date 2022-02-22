@@ -1,5 +1,6 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/nc_image.h"
+#include "nc_runtime/nc_data.h"
 
 class NcImageTest : public ::testing::Test
 {
@@ -92,6 +93,33 @@ TEST_F(NcImageTest, u8NoCopy)
     const u8* pixels = o->pixels();
     EXPECT_EQ(pixels[0], 1);
     EXPECT_EQ(pixels[1], 2);
+}
+
+TEST_F(NcImageTest, u8AllocWithImageBuffer)
+{
+    auto o = m_image8;
+
+    EXPECT_TRUE(o->saveAs("test_data/output/test_greyscale.png"));
+    auto img1 = NcImageU8::allocWithFileName("test_data/output/test_greyscale.png");
+
+    auto d = NcData::allocWithContentsOfFile("test_data/output/test_greyscale.png");
+    ASSERT_NE(d, nullptr);
+    ASSERT_NE(d->bytes(), nullptr);
+    ASSERT_NE(d->length(), 0);
+
+    auto img2 = NcImageU8::allocWithData(d->bytes(), d->length());
+
+    ASSERT_TRUE(img1 != nullptr);
+    ASSERT_TRUE(img2 != nullptr);
+
+    EXPECT_EQ(img1->size(), img2->size());
+    const u8* pixels = img1->pixels();
+    EXPECT_EQ(pixels[0], 0);
+    EXPECT_EQ(pixels[1], 1);
+
+    pixels = img2->pixels();
+    EXPECT_EQ(pixels[0], 0);
+    EXPECT_EQ(pixels[1], 1);
 }
 
 TEST_F(NcImageTest, u16saveToU8)

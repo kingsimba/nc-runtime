@@ -106,6 +106,20 @@ bool NcImageU8::initWithFileName(const StringSlice& fileName)
     return false;
 }
 
+bool NcImageU8::initWithData(const void* data, int lengthInBytes)
+{
+    int w, h, channelsInFile;
+    u8* pixels = stbi_load_from_memory((const stbi_uc*)data, lengthInBytes, &w, &h, &channelsInFile, 1);
+    if (pixels != NULL)
+    {
+        m_shouldFreePixels = true;
+        m_pixels = pixels;
+        m_size = Size_make(w, h);
+        return true;
+    }
+    return false;
+}
+
 NcImageU8::~NcImageU8()
 {
     if (m_shouldFreePixels)
@@ -139,6 +153,14 @@ sp<NcImageU8> NcImageU8::allocWithFileName(const StringSlice& fileName)
 {
     sp<NcImageU8> o = alloc<NcImageU8>();
     if (!o->initWithFileName(fileName))
+        o.reset();
+    return o;
+}
+
+sp<NcImageU8> NcImageU8::allocWithData(const void* data, int lengthInBytes)
+{
+    sp<NcImageU8> o = alloc<NcImageU8>();
+    if (!o->initWithData(data, lengthInBytes))
         o.reset();
     return o;
 }
