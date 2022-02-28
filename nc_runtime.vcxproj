@@ -86,6 +86,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <ClInclude Include="include\nc_runtime\base64.h" />
+    <ClInclude Include="include\nc_runtime\circular_array.h" />
     <ClInclude Include="include\nc_runtime\costmap_inflator.h" />
     <ClInclude Include="include\nc_runtime\image_painter.h" />
     <ClInclude Include="include\nc_runtime\json_node.h" />

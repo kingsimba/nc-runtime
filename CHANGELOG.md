@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-02-28 Add `FixedCircularArray`.
 - 2022-02-22 Add `ImageU8::allocWithData()`.
 - 2022-01-19 Add `RectF::isNegtiveMinimum(), RectF::expand(float width, float height)`.
 - 2022-01-13 Add `StableRate` for loop rate control.
