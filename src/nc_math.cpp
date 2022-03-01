@@ -365,3 +365,42 @@ bool Math_clipSegmentByRectI(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2)
 {
     return _clipLineByRect<Rect, Vector2i, BoundaryInt>(rect, p1, p2);
 }
+
+float Math_rectPointDistance(nc::Vector2 pt, RectF rect, nc::Vector2* nearestPtOut)
+{
+    RectRegionCode code = _calcRectRegionCode<RectF, Vector2, BoundaryFloat>(rect, pt);
+    if (code == RectRegionCode::inside)
+    {
+        *nearestPtOut = pt;
+        return 0.0f;
+    }
+
+    nc::Vector2 nearest;
+    if (code & RectRegionCode::left)
+    {
+        nearest.x = rect.left;
+    }
+    else if (code & RectRegionCode::right)
+    {
+        nearest.x = rect.right;
+    }
+    else
+    {
+        nearest.x = pt.x;
+    }
+    if (code & RectRegionCode::bottom)
+    {
+        nearest.y = rect.bottom;
+    }
+    else if (code & RectRegionCode::top)
+    {
+        nearest.y = rect.top;
+    }
+    else
+    {
+        nearest.y = pt.y;
+    }
+
+    *nearestPtOut = nearest;
+    return hypotf(nearest.x - pt.x, nearest.y - pt.y);
+}

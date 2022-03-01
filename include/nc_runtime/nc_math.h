@@ -23,6 +23,9 @@ float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc:
 // calculate distance from a line segment to a point
 float Math_segmentPointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* nearestPtOut);
 
+// calculate distance from a rectangle to a point
+float Math_rectPointDistance(nc::Vector2 pt, RectF rect, nc::Vector2* nearestPtOut);
+
 // determine if two line segments intersect
 bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::Vector2 b2);
 
