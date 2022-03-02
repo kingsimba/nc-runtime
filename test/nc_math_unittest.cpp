@@ -155,30 +155,39 @@ TEST(Math, rectPointDistance)
     RectF rect(1.0f, 3.0f, 2.0f, 5.0f);
     Vector2 nearest;
 
+    EXPECT_EQ(Math_rectPointDistance({1.2f, 3.4f}, rect, nullptr), 0.0f);
     EXPECT_EQ(Math_rectPointDistance({1.2f, 3.4f}, rect, &nearest), 0.0f);
     EXPECT_EQ(nearest, Vector2(1.2f, 3.4f));
 
+    EXPECT_EQ(Math_rectPointDistance({1.2f, -3.4f}, rect, nullptr), 6.4f);
     EXPECT_EQ(Math_rectPointDistance({1.2f, -3.4f}, rect, &nearest), 6.4f);
     EXPECT_EQ(nearest, Vector2(1.2f, 3.0f));
 
+    EXPECT_EQ(Math_rectPointDistance({6.0f, 0.0f}, rect, nullptr), 5.0f);
     EXPECT_EQ(Math_rectPointDistance({6.0f, 0.0f}, rect, &nearest), 5.0f);
     EXPECT_EQ(nearest, Vector2(2.0f, 3.0f));
 
+    EXPECT_EQ(Math_rectPointDistance({6.0f, 4.2f}, rect, nullptr), 4.0f);
     EXPECT_EQ(Math_rectPointDistance({6.0f, 4.2f}, rect, &nearest), 4.0f);
     EXPECT_EQ(nearest, Vector2(2.0f, 4.2f));
 
+    EXPECT_EQ(Math_rectPointDistance({5.0f, 9.0f}, rect, nullptr), 5.0f);
     EXPECT_EQ(Math_rectPointDistance({5.0f, 9.0f}, rect, &nearest), 5.0f);
     EXPECT_EQ(nearest, Vector2(2.0f, 5.0f));
 
+    EXPECT_EQ(Math_rectPointDistance({1.9f, 6.0f}, rect, nullptr), 1.0f);
     EXPECT_EQ(Math_rectPointDistance({1.9f, 6.0f}, rect, &nearest), 1.0f);
     EXPECT_EQ(nearest, Vector2(1.9f, 5.0f));
 
+    EXPECT_EQ(Math_rectPointDistance({-3.0f, 8.0f}, rect, nullptr), 5.0f);
     EXPECT_EQ(Math_rectPointDistance({-3.0f, 8.0f}, rect, &nearest), 5.0f);
     EXPECT_EQ(nearest, Vector2(1.0f, 5.0f));
 
+    EXPECT_EQ(Math_rectPointDistance({-3.0f, 3.5f}, rect, nullptr), 4.0f);
     EXPECT_EQ(Math_rectPointDistance({-3.0f, 3.5f}, rect, &nearest), 4.0f);
     EXPECT_EQ(nearest, Vector2(1.0f, 3.5f));
 
+    EXPECT_EQ(Math_rectPointDistance({-2.0f, -1.0f}, rect, nullptr), 5.0f);
     EXPECT_EQ(Math_rectPointDistance({-2.0f, -1.0f}, rect, &nearest), 5.0f);
     EXPECT_EQ(nearest, Vector2(1.0f, 3.0f));
 }

@@ -371,7 +371,8 @@ float Math_rectPointDistance(nc::Vector2 pt, RectF rect, nc::Vector2* nearestPtO
     RectRegionCode code = _calcRectRegionCode<RectF, Vector2, BoundaryFloat>(rect, pt);
     if (code == RectRegionCode::inside)
     {
-        *nearestPtOut = pt;
+        if (nearestPtOut != nullptr)
+            *nearestPtOut = pt;
         return 0.0f;
     }
 
@@ -401,6 +402,7 @@ float Math_rectPointDistance(nc::Vector2 pt, RectF rect, nc::Vector2* nearestPtO
         nearest.y = pt.y;
     }
 
-    *nearestPtOut = nearest;
+    if (nearestPtOut != nullptr)
+        *nearestPtOut = nearest;
     return hypotf(nearest.x - pt.x, nearest.y - pt.y);
 }
