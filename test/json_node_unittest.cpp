@@ -112,3 +112,21 @@ TEST(JsonNodeTest, dumps)
     StringSlice s = n.dump();
     EXPECT_TRUE(s.length() == 0);
 }
+
+TEST(JsonNodeTest, array)
+{
+    auto json = JsonNode::array();
+    EXPECT_EQ(json.dump(), "[]");
+    EXPECT_EQ(json.arraySize(), 0);
+
+    json.append(JsonNode::integer(1));
+    EXPECT_EQ(json.arraySize(), 1);
+    json.append(JsonNode::string("hello"));
+    EXPECT_EQ(json.arraySize(), 2);
+    json.append(JsonNode::boolean(true));
+    EXPECT_EQ(json.arraySize(), 3);
+
+    EXPECT_EQ(json[0].asInt().value(), 1);
+    EXPECT_EQ(strcmp(json[1].asString().value(), "hello"), 0);
+    EXPECT_EQ(json[2].asBool().value(), true);
+}

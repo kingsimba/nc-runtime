@@ -100,6 +100,11 @@ JsonNode JsonNode::operator[](const char* key)
     return nodeForKey(key);
 }
 
+void JsonNode::append(const JsonNode& node)
+{
+    json_array_append(m_root, node.m_root);
+}
+
 JsonNode JsonNode::operator[](int index)
 {
     if (json_is_array(m_root))

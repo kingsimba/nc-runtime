@@ -81,6 +81,12 @@ public:
         o.m_root = json_object();
         return o;
     }
+    static JsonNode array()
+    {
+        JsonNode o;
+        o.m_root = json_array();
+        return o;
+    }
     static JsonNode nullObject()
     {
         JsonNode o;
@@ -94,6 +100,8 @@ public:
     bool remove(const char* key);
     JsonNode nodeForKey(const char* key);
     JsonNode operator[](const char* key);
+
+    void append(const JsonNode& node);
     JsonNode operator[](int index);
 
     //////////////////////////////////////////////////////////////////////////
