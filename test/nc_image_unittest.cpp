@@ -107,7 +107,7 @@ TEST_F(NcImageTest, u8AllocWithImageBuffer)
     ASSERT_NE(d->bytes(), nullptr);
     ASSERT_NE(d->length(), 0);
 
-    auto img2 = NcImageU8::allocWithData(d->bytes(), d->length());
+    auto img2 = NcImageU8::allocWithData(d->bytes(), (int)d->length());
 
     ASSERT_TRUE(img1 != nullptr);
     ASSERT_TRUE(img2 != nullptr);
