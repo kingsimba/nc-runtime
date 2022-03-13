@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-03-13 Add operator `==` and `!=` for `Pose2`.
 - 2022-03-13 Add `JsonNode::array()` and `JsonNode:append()`.
 - 2022-03-01 Add `Math_rectPointDistance()`.
 - 2022-02-28 Add `FixedCircularArray`.
