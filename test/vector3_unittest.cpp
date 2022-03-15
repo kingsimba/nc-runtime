@@ -1,6 +1,7 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/vector3.h"
-#include "nc_runtime/vector3i.h"
+
+using namespace nc;
 
 TEST(Vector3, basic)
 {
@@ -10,8 +11,8 @@ TEST(Vector3, basic)
     EXPECT_EQ(v1 + v2, Vector3(3, 5, 7));
     EXPECT_EQ(v1 - v2, Vector3(-1, -1, -1));
 
-    EXPECT_EQ(v1 * 2, Vector3(2, 4, 6));
-    EXPECT_EQ(v1 / 2, Vector3(0.5f, 1.0f, 1.5f));
+    EXPECT_EQ(v1 * 2.0f, Vector3(2, 4, 6));
+    EXPECT_EQ(v1 / 2.0f, Vector3(0.5f, 1.0f, 1.5f));
 
     EXPECT_EQ(Vector3(3, 4, 5).length(), sqrtf(50));
     EXPECT_EQ(Vector3(3, 4, 5).lengthSquared(), 50);

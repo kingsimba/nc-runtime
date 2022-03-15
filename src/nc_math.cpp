@@ -50,7 +50,7 @@ static T _mod(T x, T y)
     if (0. == y)
         return x;
 
-    T m = x - y * (T)floor(x / y);
+    T m = x - y * std::floor(x / y);
 
     // handle boundary cases resulted from floating-point cut off:
 
@@ -92,6 +92,16 @@ float Math_mod(float x, float y)
 double Math_mod(double x, double y)
 {
     return _mod(x, y);
+}
+
+float Math_wrapTwoPi(float angle)
+{
+    return _mod(angle, NC_TWO_PI);
+}
+
+double Math_wrapTwoPi(double angle)
+{
+    return _mod(angle, NC_TWO_PI_D);
 }
 
 float Math_turnAngle(float from, float to)

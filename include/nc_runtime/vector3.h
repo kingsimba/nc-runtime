@@ -5,42 +5,42 @@
 namespace nc
 {
 
-class Vector3
+template <typename T>
+class Vector3T
 {
 public:
-    using TYPE = float;
-    float x, y, z;
+    T x, y, z;
 
-    Vector3() = default;
-    forceinline Vector3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
+    Vector3T() = default;
+    forceinline Vector3T(T x_, T y_, T z_) : x(x_), y(y_), z(z_) {}
 
-    forceinline void set(float x_, float y_, float z_) { x = x_, y = y_, z = z_; }
+    forceinline void set(T x_, T y_, T z_) { x = x_, y = y_, z = z_; }
     forceinline void setZero() { x = y = z = 0; }
-    forceinline float length() const { return (TYPE)sqrt(x * x + y * y + z * z); }
-    forceinline float lengthSquared() const { return x * x + y * y + z * z; }
+    forceinline T length() const { return (T)std::sqrt(x * x + y * y + z * z); }
+    forceinline T lengthSquared() const { return x * x + y * y + z * z; }
 
-    forceinline void operator+=(Vector3 r)
+    forceinline void operator+=(Vector3T r)
     {
         x += r.x;
         y += r.y;
         z += r.z;
     }
 
-    forceinline void operator-=(Vector3 r)
+    forceinline void operator-=(Vector3T r)
     {
         x -= r.x;
         y -= r.y;
         z -= r.z;
     }
 
-    forceinline void operator*=(float r)
+    forceinline void operator*=(T r)
     {
         x *= r;
         y *= r;
         z *= r;
     }
 
-    forceinline void operator/=(float r)
+    forceinline void operator/=(T r)
     {
         x /= r;
         y /= r;
@@ -48,49 +48,58 @@ public:
     }
 };
 
-forceinline float Vector3_dot(Vector3 l, Vector3 r)
+template <typename T>
+forceinline T Vector3_dot(Vector3T<T> l, Vector3T<T> r)
 {
     return l.x * r.x + l.y * r.y + l.z * r.z;
 }
 
-forceinline Vector3 Vector3_cross(Vector3 l, Vector3 r)
+template <typename T>
+forceinline Vector3T<T> Vector3_cross(Vector3T<T> l, Vector3T<T> r)
 {
-    return Vector3{l.y * r.z - l.z * r.y, l.x * r.z - l.z * r.x, l.x * r.y - l.y * r.x};
+    return Vector3T<T>{l.y * r.z - l.z * r.y, l.x * r.z - l.z * r.x, l.x * r.y - l.y * r.x};
 }
 
-NC_DEPRECATED forceinline Vector3 vec3(float x, float y, float z)
-{
-    return Vector3(x, y, z);
-}
-
-forceinline bool operator==(Vector3 l, Vector3 r)
+template <typename T>
+forceinline bool operator==(Vector3T<T> l, Vector3T<T> r)
 {
     return l.x == r.x && l.y == r.y && l.z == r.z;
 }
 
-forceinline bool operator!=(Vector3 l, Vector3 r)
+template <typename T>
+forceinline bool operator!=(Vector3T<T> l, Vector3T<T> r)
 {
     return l.x != r.x || l.y != r.y || l.z != r.z;
 }
 
-forceinline Vector3 operator-(Vector3 l, Vector3 r)
+template <typename T>
+forceinline Vector3T<T> operator-(Vector3T<T> l, Vector3T<T> r)
 {
-    return Vector3{l.x - r.x, l.y - r.y, l.z - r.z};
+    return Vector3T<T>{l.x - r.x, l.y - r.y, l.z - r.z};
 }
 
-forceinline Vector3 operator+(Vector3 l, Vector3 r)
+template <typename T>
+forceinline Vector3T<T> operator+(Vector3T<T> l, Vector3T<T> r)
 {
-    return Vector3{l.x + r.x, l.y + r.y, l.z + r.z};
+    return Vector3T<T>{l.x + r.x, l.y + r.y, l.z + r.z};
 }
 
-forceinline Vector3 operator*(Vector3 l, float scaler)
+template <typename T>
+forceinline Vector3T<T> operator*(Vector3T<T> l, T scaler)
 {
-    return Vector3{l.x * scaler, l.y * scaler, l.z * scaler};
+    return Vector3T<T>{l.x * scaler, l.y * scaler, l.z * scaler};
 }
 
-forceinline Vector3 operator/(Vector3 l, float scaler)
+template <typename T>
+forceinline Vector3T<T> operator/(Vector3T<T> l, T scaler)
 {
-    return Vector3{l.x / scaler, l.y / scaler, l.z / scaler};
+    return Vector3T<T>{l.x / scaler, l.y / scaler, l.z / scaler};
 }
+
+////////////////////////////////////////////////////////////////////
+
+typedef Vector3T<float> Vector3;
+typedef Vector3T<double> Vector3d;
+typedef Vector3T<int> Vector3i;
 
 } // namespace nc

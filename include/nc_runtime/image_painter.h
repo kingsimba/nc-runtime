@@ -1,6 +1,5 @@
 #pragma once
 
-#include "vector2i.h"
 #include "_raytrace.h"
 
 template <typename ImageType>

@@ -2,7 +2,6 @@
 
 #include "nc_types.h"
 #include "vector2.h"
-#include "vector2i.h"
 
 u32 Math_hashString(const char* str);
 u32 Math_hashU32(u32 o);
@@ -16,15 +15,8 @@ float Math_mod(float x, float y);
 double Math_mod(double x, double y);
 
 // wrap a angle between [0, NC_TWO_PI)
-forceinline float Math_wrapTwoPi(float angle)
-{
-    return Math_mod(angle, NC_TWO_PI);
-}
-
-forceinline double Math_wrapTwoPi(double angle)
-{
-    return Math_mod(angle, NC_TWO_PI_D);
-}
+float Math_wrapTwoPi(float angle);
+double Math_wrapTwoPi(double angle);
 
 /**
  * Calculate the nearest turn angle between two directions.

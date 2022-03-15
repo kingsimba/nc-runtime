@@ -3,9 +3,7 @@
 #include <ostream>
 #include "nc_types.h"
 #include "vector2.h"
-#include "vector2i.h"
 #include "vector3.h"
-#include "vector3i.h"
 #include "quaternion.h"
 #include "pose2.h"
 #include "string_slice.h"

@@ -103,7 +103,6 @@
     <ClInclude Include="include\nc_runtime\nc_polyline.h" />
     <ClInclude Include="include\nc_runtime\pose2.h" />
     <ClInclude Include="include\nc_runtime\quaternion.h" />
-    <ClInclude Include="include\nc_runtime\quaternion_d.h" />
     <ClInclude Include="include\nc_runtime\nc_stdlib.h" />
     <ClInclude Include="include\nc_runtime\nc_string.h" />
     <ClInclude Include="include\nc_runtime\nc_types.h" />
@@ -126,15 +125,11 @@
     <ClCompile Include="src\nc_string.cpp" />
     <ClCompile Include="src\nc_gtest_extension.cpp" />
     <ClCompile Include="src\quaternion.cpp" />
-    <ClCompile Include="src\quaternion_d.cpp" />
     <ClCompile Include="src\nc_event.cpp" />
     <ClCompile Include="src\stdafx_nc_runtime.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="include\nc_runtime\vector2i.h" />
     <ClInclude Include="include\nc_runtime\vector3.h" />
-    <ClInclude Include="include\nc_runtime\vector3d.h" />
-    <ClInclude Include="include\nc_runtime\vector3i.h" />
     <ClInclude Include="include\nc_runtime\_raytrace.h" />
     <ClInclude Include="include\nc_runtime\_rect.h" />
     <ClInclude Include="include\nc_runtime\_rectf.h" />

@@ -4,88 +4,95 @@
 
 namespace nc
 {
-
-class Vector2
+template <typename T>
+class Vector2T
 {
 public:
-    float x, y;
+    T x, y;
 
-    Vector2() = default;
-    forceinline Vector2(float x_, float y_) : x(x_), y(y_) {}
+    Vector2T() = default;
+    forceinline Vector2T(T x_, T y_) : x(x_), y(y_) {}
 
-    forceinline void set(float x_, float y_) { x = x_, y = y_; }
+    forceinline void set(T x_, T y_) { x = x_, y = y_; }
     forceinline void setZero() { x = y = 0; }
-    forceinline float length() const { return sqrtf(x * x + y * y); }
-    forceinline float lengthSquared() const { return x * x + y * y; }
+    forceinline T length() const { return (T)std::sqrt(x * x + y * y); }
+    forceinline T lengthSquared() const { return x * x + y * y; }
 
-    forceinline void operator+=(Vector2 r)
+    forceinline void operator+=(Vector2T r)
     {
         x += r.x;
         y += r.y;
     }
 
-    forceinline void operator-=(Vector2 r)
+    forceinline void operator-=(Vector2T r)
     {
         x -= r.x;
         y -= r.y;
     }
 
-    forceinline void operator*=(float r)
+    forceinline void operator*=(T r)
     {
         x *= r;
         y *= r;
     }
 
-    forceinline void operator/=(float r)
+    forceinline void operator/=(T r)
     {
         x /= r;
         y /= r;
     }
 };
 
-NC_DEPRECATED forceinline Vector2 vec2(float x, float y)
-{
-    return Vector2(x, y);
-}
-
-forceinline float Vector2_dot(Vector2 l, Vector2 r)
+template <typename T>
+forceinline T Vector2_dot(Vector2T<T> l, Vector2T<T> r)
 {
     return l.x * r.x + l.y * r.y;
 }
 
-forceinline float Vector2_cross(Vector2 l, Vector2 r)
+template <typename T>
+forceinline T Vector2_cross(Vector2T<T> l, Vector2T<T> r)
 {
     return l.x * r.y - l.y * r.x;
 }
 
-forceinline bool operator==(Vector2 l, Vector2 r)
+template <typename T>
+forceinline bool operator==(Vector2T<T> l, Vector2T<T> r)
 {
     return l.x == r.x && l.y == r.y;
 }
 
-forceinline bool operator!=(Vector2 l, Vector2 r)
+template <typename T>
+forceinline bool operator!=(Vector2T<T> l, Vector2T<T> r)
 {
     return l.x != r.x || l.y != r.y;
 }
 
-forceinline Vector2 operator-(Vector2 l, Vector2 r)
+template <typename T>
+forceinline Vector2T<T> operator-(Vector2T<T> l, Vector2T<T> r)
 {
-    return Vector2{l.x - r.x, l.y - r.y};
+    return Vector2T<T>{l.x - r.x, l.y - r.y};
 }
 
-forceinline Vector2 operator+(Vector2 l, Vector2 r)
+template <typename T>
+forceinline Vector2T<T> operator+(Vector2T<T> l, Vector2T<T> r)
 {
-    return Vector2{l.x + r.x, l.y + r.y};
+    return Vector2T<T>{l.x + r.x, l.y + r.y};
 }
 
-forceinline Vector2 operator*(Vector2 l, float scaler)
+template <typename T>
+forceinline Vector2T<T> operator*(Vector2T<T> l, T scaler)
 {
-    return Vector2{l.x * scaler, l.y * scaler};
+    return Vector2T<T>{l.x * scaler, l.y * scaler};
 }
 
-forceinline Vector2 operator/(Vector2 l, float scaler)
+template <typename T>
+forceinline Vector2T<T> operator/(Vector2T<T> l, T scaler)
 {
-    return Vector2{l.x / scaler, l.y / scaler};
+    return Vector2T<T>{l.x / scaler, l.y / scaler};
 }
+
+typedef Vector2T<float> Vector2;
+typedef Vector2T<double> Vector2d;
+typedef Vector2T<int> Vector2i;
 
 } // namespace nc

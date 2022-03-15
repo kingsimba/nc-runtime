@@ -43,9 +43,6 @@
     <ClCompile Include="src\quaternion.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\quaternion_d.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\nc_math.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -120,9 +117,6 @@
     <ClInclude Include="src\costmap_inflator_imple.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="include\nc_runtime\quaternion_d.h">
-      <Filter>inc</Filter>
-    </ClInclude>
     <ClInclude Include="include\nc_runtime\quaternion.h">
       <Filter>inc</Filter>
     </ClInclude>
@@ -141,9 +135,6 @@
     <ClInclude Include="include\nc_runtime\nc_event.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="include\nc_runtime\vector3i.h">
-      <Filter>inc</Filter>
-    </ClInclude>
     <ClInclude Include="include\nc_runtime\mutex.h">
       <Filter>inc</Filter>
     </ClInclude>
@@ -157,9 +148,6 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\_rectf.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\nc_runtime\vector2i.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\state_machine.h">
@@ -184,9 +172,6 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\circular_array.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\nc_runtime\vector3d.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>

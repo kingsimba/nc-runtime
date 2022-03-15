@@ -6,20 +6,22 @@
 namespace nc
 {
 
-struct RollPitchYaw
+template <typename T>
+struct RollPitchYawT
 {
-    float roll, pitch, yaw;
+    T roll, pitch, yaw;
 };
 
-class Quaternion
+template <typename T>
+class QuaternionT
 {
 public:
-    float x, y, z, w;
+    T x, y, z, w;
 
-    Quaternion() = default;
-    Quaternion(float x_, float y_, float z_, float w_) : x(x_), y(y_), z(z_), w(w_) {}
+    QuaternionT() = default;
+    QuaternionT(T x_, T y_, T z_, T w_) : x(x_), y(y_), z(z_), w(w_) {}
 
-    forceinline void init(float x_, float y_, float z_, float w_)
+    forceinline void init(T x_, T y_, T z_, T w_)
     {
         this->x = x_;
         this->y = y_;
@@ -33,20 +35,24 @@ public:
         this->w = 1;
     }
 
-    void initWithRPY(float roll, float pitch, float yaw);
-    forceinline void initWithRPY(RollPitchYaw rpy) { initWithRPY(rpy.roll, rpy.pitch, rpy.yaw); }
+    void initWithRPY(T roll, T pitch, T yaw);
+    forceinline void initWithRPY(RollPitchYawT<T> rpy) { initWithRPY(rpy.roll, rpy.pitch, rpy.yaw); }
 
-    void multiply(const Quaternion& r);
-    Vector3 transformVector(Vector3 value);
+    void multiply(const QuaternionT& r);
+    Vector3T<T> transformVector(Vector3T<T> value);
 
-    RollPitchYaw toRPY();
+    RollPitchYawT<T> toRPY();
 };
 
-NC_DEPRECATED forceinline Quaternion quaternion(float x, float y, float z, float w)
-{
-    return Quaternion{x, y, z, w};
-}
+template <typename T>
+QuaternionT<T> Quaternion_multiply(const QuaternionT<T>& second, const QuaternionT<T>& first);
 
-Quaternion Quaternion_multiply(const Quaternion& second, const Quaternion& first);
+////////////////////////////////////////////////////////////////////
+
+typedef RollPitchYawT<float> RollPitchYaw;
+typedef RollPitchYawT<double> RollPitchYawD;
+
+typedef QuaternionT<float> Quaternion;
+typedef QuaternionT<double> QuaternionD;
 
 } // namespace nc
