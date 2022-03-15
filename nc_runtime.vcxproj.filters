@@ -186,6 +186,9 @@
     <ClInclude Include="include\nc_runtime\circular_array.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="include\nc_runtime\vector3d.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

@@ -8,6 +8,7 @@ namespace nc
 class Vector3
 {
 public:
+    using TYPE = float;
     float x, y, z;
 
     Vector3() = default;
@@ -15,7 +16,7 @@ public:
 
     forceinline void set(float x_, float y_, float z_) { x = x_, y = y_, z = z_; }
     forceinline void setZero() { x = y = z = 0; }
-    forceinline float length() const { return sqrtf(x * x + y * y + z * z); }
+    forceinline float length() const { return (TYPE)sqrt(x * x + y * y + z * z); }
     forceinline float lengthSquared() const { return x * x + y * y + z * z; }
 
     forceinline void operator+=(Vector3 r)

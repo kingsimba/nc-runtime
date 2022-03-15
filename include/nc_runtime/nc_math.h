@@ -9,11 +9,32 @@ u32 Math_hashU32(u32 o);
 u64 Math_hashU64(u64 o);
 size_t Math_hashSizeT(size_t o);
 
-// wrap a angle between [0, NC_TWO_PI)
-float Math_wrapTwoPi(float angle);
+// Floating-point modulo
+// The result (the remainder) has same sign as the divisor.
+// Similar to matlab's mod(); Not similar to fmod() -   Mod(-3,4)= 1   fmod(-3,4)= -3
+float Math_mod(float x, float y);
+double Math_mod(double x, double y);
 
-// calculate the nearest turn angle between two directions.
+// wrap a angle between [0, NC_TWO_PI)
+forceinline float Math_wrapTwoPi(float angle)
+{
+    return Math_mod(angle, NC_TWO_PI);
+}
+
+forceinline double Math_wrapTwoPi(double angle)
+{
+    return Math_mod(angle, NC_TWO_PI_D);
+}
+
+/**
+ * Calculate the nearest turn angle between two directions.
+ *
+ * @return
+ *   [NC_PI, 0] means turn left.
+ *   [0, -NC_PI] means turn right.
+ */
 float Math_turnAngle(float from, float to);
+double Math_turnAngle(double from, double to);
 
 bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt);
 

@@ -8,6 +8,7 @@ namespace nc
 class Vector3i
 {
 public:
+    using TYPE = int;
     int x, y, z;
 
     Vector3i() = default;
@@ -15,7 +16,7 @@ public:
 
     forceinline void set(int x_, int y_, int z_) { x = x_, y = y_, z = z_; }
     forceinline void setZero() { x = y = z = 0; }
-    forceinline int length() const { return (int)sqrtf((float)(x * x + y * y + z * z)); }
+    forceinline int length() const { return (TYPE)sqrtf((float)(x * x + y * y + z * z)); }
     forceinline int lengthSquared() const { return x * x + y * y + z * z; }
 
     forceinline void operator+=(Vector3i r)

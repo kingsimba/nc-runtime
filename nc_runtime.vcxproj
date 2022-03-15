@@ -133,6 +133,7 @@
     </ClCompile>
     <ClInclude Include="include\nc_runtime\vector2i.h" />
     <ClInclude Include="include\nc_runtime\vector3.h" />
+    <ClInclude Include="include\nc_runtime\vector3d.h" />
     <ClInclude Include="include\nc_runtime\vector3i.h" />
     <ClInclude Include="include\nc_runtime\_raytrace.h" />
     <ClInclude Include="include\nc_runtime\_rect.h" />

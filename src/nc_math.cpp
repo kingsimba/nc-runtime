@@ -50,7 +50,7 @@ static T _mod(T x, T y)
     if (0. == y)
         return x;
 
-    float m = x - y * floorf(x / y);
+    T m = x - y * (T)floor(x / y);
 
     // handle boundary cases resulted from floating-point cut off:
 
@@ -84,9 +84,14 @@ static T _mod(T x, T y)
     return m;
 }
 
-float Math_wrapTwoPi(float angle)
+float Math_mod(float x, float y)
 {
-    return _mod(angle, NC_TWO_PI);
+    return _mod(x, y);
+}
+
+double Math_mod(double x, double y)
+{
+    return _mod(x, y);
 }
 
 float Math_turnAngle(float from, float to)
@@ -98,6 +103,18 @@ float Math_turnAngle(float from, float to)
         diff -= NC_TWO_PI;
     else if (diff < -NC_PI)
         diff += NC_TWO_PI;
+    return diff;
+}
+
+double Math_turnAngle(double from, double to)
+{
+    from = Math_wrapTwoPi(from);
+    to = Math_wrapTwoPi(to);
+    double diff = to - from;
+    if (diff > NC_PI_D)
+        diff -= NC_TWO_PI_D;
+    else if (diff < -NC_PI_D)
+        diff += NC_TWO_PI_D;
     return diff;
 }
 
