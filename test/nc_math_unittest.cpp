@@ -308,3 +308,19 @@ TEST(Math, resampler)
 
     EXPECT_EQ(counter, 70);
 }
+
+TEST(Math, resamplerDefault)
+{
+    Resampler o;
+
+    int counter = 0;
+    for (int i = 0; i < 100; i++)
+    {
+        if (o.sample())
+        {
+            counter++;
+        }
+    }
+
+    EXPECT_EQ(counter, 100);
+}

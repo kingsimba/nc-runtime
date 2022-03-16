@@ -54,6 +54,7 @@ bool Math_clipSegmentByRectI(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2);
 class Resampler
 {
 public:
+    Resampler() = default;
     Resampler(int numerator, int denominator) : m_numerator(numerator), m_denominator(denominator) {}
 
     bool sample()
@@ -70,6 +71,6 @@ public:
 
 private:
     int m_index = 0;
-    int m_numerator;
-    int m_denominator;
+    int m_numerator = 0;
+    int m_denominator = 0;
 };
