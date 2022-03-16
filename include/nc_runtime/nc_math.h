@@ -50,3 +50,26 @@ bool Math_segmentsIntersect(nc::Vector2 a1, nc::Vector2 a2, nc::Vector2 b1, nc::
  */
 bool Math_clipSegmentByRect(RectF rect, nc::Vector2* p1, nc::Vector2* p2);
 bool Math_clipSegmentByRectI(Rect rect, nc::Vector2i* p1, nc::Vector2i* p2);
+
+class Resampler
+{
+public:
+    Resampler(int numerator, int denominator) : m_numerator(numerator), m_denominator(denominator) {}
+
+    bool sample()
+    {
+        m_index += m_numerator;
+        if (m_index >= m_denominator)
+        {
+            m_index -= m_denominator;
+            return true;
+        }
+
+        return false;
+    }
+
+private:
+    int m_index = 0;
+    int m_numerator;
+    int m_denominator;
+};

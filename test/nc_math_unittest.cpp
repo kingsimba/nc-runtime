@@ -292,3 +292,19 @@ TEST(Math, clipSegmentByRectIntVersion)
     EXPECT_EQ(p1, Vector2i(10, 19));
     EXPECT_EQ(p2, Vector2i(19, 10));
 }
+
+TEST(Math, resampler)
+{
+    Resampler o(7, 30);
+
+    int counter = 0;
+    for (int i = 0; i < 300; i++)
+    {
+        if (o.sample())
+        {
+            counter++;
+        }
+    }
+
+    EXPECT_EQ(counter, 70);
+}

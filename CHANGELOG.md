@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-03-16 Add `Resampler`.
 - 2022-03-15 Use template for Vector3 and Quaternion.
 - 2022-03-15 Add `double` version of some functions - `nc_wrapToTwoPi()`, `Math_mod()`, `Math_turnAngle()`.
 - 2022-03-13 Add operator `==` and `!=` for `Pose2`.
