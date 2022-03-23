@@ -40,7 +40,7 @@ TEST(StringSlice, iter)
 TEST(StringSlice, tokenize)
 {
     auto tokens = "Whoa! Fireworks!?"_s.tokenize(" ,?!");
-    ASSERT_EQ(tokens.size(), 2);
+    ASSERT_EQ(tokens.size(), 2u);
     ASSERT_EQ(tokens[0], "Whoa");
     ASSERT_EQ(tokens[1], "Fireworks");
 }
@@ -76,7 +76,7 @@ TEST(StringSlice, splitAndJoin)
                          "naming your first born child.");
     {
         auto pieces = s.split("分隔符 ");
-        ASSERT_EQ(pieces.size(), 3);
+        ASSERT_EQ(pieces.size(), 3u);
         EXPECT_EQ(pieces[0], "You should name a ");
         EXPECT_EQ(pieces[1], "variable with the same care ");
         EXPECT_EQ(pieces[2], "as you are naming your first born child.");
@@ -103,7 +103,7 @@ TEST(StringSlice, splitBug1)
     auto s = "Fireworks-------Fireworks-------Fireworks-------Fireworks--"_s;
     StringSlice slice;
     auto slices = s.split("-------"_s);
-    ASSERT_EQ(slices.size(), 4);
+    ASSERT_EQ(slices.size(), 4u);
     EXPECT_EQ(slices.back(), "Fireworks--");
 }
 
@@ -112,7 +112,7 @@ TEST(StringSlice, splitNonexistSep)
     // non-exist splitter should produce a single result
     auto s = "hello world"_s;
     auto pieces = s.split("non-exist");
-    ASSERT_EQ(pieces.size(), 1);
+    ASSERT_EQ(pieces.size(), 1u);
     EXPECT_EQ(pieces[0], s);
 }
 
@@ -122,7 +122,7 @@ TEST(StringSlice, splitShouldKeepEmptySlices)
     auto s = ",,,"_s;
     StringSlice slice;
     auto slices = s.split(","_s);
-    ASSERT_EQ(slices.size(), 4);
+    ASSERT_EQ(slices.size(), 4u);
     EXPECT_EQ(slices.back(), "");
 }
 

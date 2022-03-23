@@ -41,8 +41,54 @@ catkin_package(
   CATKIN_DEPENDS
 )
 
-file(GLOB_RECURSE SRC "src/*.c" "src/*.cpp" "src/*.h" "include/*.h")
-file(GLOB_RECURSE JANSSON "3rd-party/src/jansson/*.cpp" "3rd-party/include/jansson/*.h")
+file(GLOB_RECURSE SRC 
+./src/nc_string.cpp
+./src/nc_argparse.cpp
+./src/base64.cpp
+./src/nc_array.cpp
+./src/nc_file.cpp
+./src/nc_log.cpp
+./src/turbo_base64/turbob64c.cpp
+./src/turbo_base64/turbob64d.cpp
+./src/nc_math.cpp
+./src/nc_object.cpp
+./src/nc_gtest_extension.cpp
+./src/stdafx_nc_runtime.cpp
+./src/nc_polyline.cpp
+./src/nc_image.cpp
+./src/string_slice.cpp
+./src/nc_event.cpp
+./src/quaternion.cpp
+./src/nc_stdlib.cpp
+./src/costmap_inflator_imple.cpp
+./src/json_node.cpp
+./src/nc_data.cpp
+./3rd-party/src/jansson/utf.cpp
+./test/nc_event_unittest.cpp
+./test/nc_image_unittest.cpp
+./test/mutex_unittest.cpp
+./test/image_painter_unittest.cpp
+./test/json_node_unittest.cpp
+./test/nc_stdlib_unittest.cpp
+./test/stdafx_nc_runtime_test.cpp
+./test/costmap_inflator_unittest.cpp
+./test/circular_array_unittest.cpp
+./test/nc_string_unittest.cpp
+./test/nc_log_unittest.cpp
+./test/main.cpp
+./test/nc_math_unittest.cpp
+./test/vector3_unittest.cpp
+./test/nc_array_unittest.cpp
+./test/nc_file_unittest.cpp
+./test/nc_object_unittest.cpp
+./test/string_slice_unittest.cpp
+./test/base64_unittest.cpp
+./test/nc_data_unittest.cpp
+./test/quaternion_unittest.cpp
+./test/nc_polyline_unittest.cpp
+)
+
+file(GLOB_RECURSE JANSSON 3rd-party/src/jansson/utf.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SRC} ${JANSSON})
 target_compile_options(${PROJECT_NAME} PRIVATE "-O2")

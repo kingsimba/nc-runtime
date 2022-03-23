@@ -18,7 +18,7 @@ TEST(ArrayTest, basic)
 
         auto pieces = str->split(" "_s);
         EXPECT_EQ(str->retainCount(), 5); // +2 because slices holds reference to the string
-        ASSERT_EQ(pieces.size(), 2);
+        ASSERT_EQ(pieces.size(), 2u);
         for (auto s : pieces)
         {
             v->addObject(NcString::allocWithSlice(s));

@@ -105,7 +105,7 @@ TEST_F(NcImageTest, u8AllocWithImageBuffer)
     auto d = NcData::allocWithContentsOfFile("test_data/output/test_greyscale.png");
     ASSERT_NE(d, nullptr);
     ASSERT_NE(d->bytes(), nullptr);
-    ASSERT_NE(d->length(), 0);
+    ASSERT_NE(d->length(), 0u);
 
     auto img2 = NcImageU8::allocWithData(d->bytes(), (int)d->length());
 

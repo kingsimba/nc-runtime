@@ -14,7 +14,7 @@ TEST(Stdlib, stackOrHeapAllocator)
         EXPECT_GT((size_t)(allocator.allocArray<u8>(40960) - stack), 4096u);
     }
 
-    EXPECT_EQ(allocator._moreHeapPointerCount(), 93);
+    EXPECT_EQ(allocator._moreHeapPointerCount(), 93u);
 }
 
 TEST(Stdlib, TimeTick)
@@ -264,7 +264,7 @@ TEST(Stdlib, stateMachine)
         o.spinOnce();
     }
 
-    ASSERT_EQ(g_stateLogs.size(), 6);
+    ASSERT_EQ(g_stateLogs.size(), 6u);
     EXPECT_STREQ(g_stateLogs[0], "IdleState begin");
     EXPECT_STREQ(g_stateLogs[1], "IdleState update");
     EXPECT_STREQ(g_stateLogs[2], "IdleState end");
