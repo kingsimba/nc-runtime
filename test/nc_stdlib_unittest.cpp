@@ -34,6 +34,14 @@ TEST(Stdlib, TimeTick)
     EXPECT_NE(start, TimeTick::now());
 }
 
+TEST(Stdlib, TimeDuration)
+{
+    EXPECT_EQ(TimeDuration::makeWithString("5s").ms(), 5000);
+    EXPECT_EQ(TimeDuration::makeWithString("3m5.1s").ms(), 185100);
+    EXPECT_EQ(TimeDuration::makeWithString("1d2h3m5.1s").ms(), 24 * 3600000 + 7200000 + 180000 + 5100);
+    EXPECT_EQ(TimeDuration::makeWithString("3.5m").ms(), 180000 + 30000);
+}
+
 TEST(Stdlib, stableRate)
 {
     StableRate rate(20);

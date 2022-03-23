@@ -3,6 +3,7 @@
 #include <chrono>
 #include <mutex>
 #include <condition_variable>
+#include <regex>
 
 char* nc_strtok(char* s, const char* delim, char** savePtr)
 {
@@ -39,6 +40,40 @@ TimeTick TimeTick::now()
     using namespace std::chrono;
     i64 n = (i64)(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
     return TimeTick{n};
+}
+
+TimeDuration TimeDuration::makeWithString(const char* str)
+{
+    std::regex rgx("(([0-9]*[.])?[0-9]+d)?(([0-9]*[.])?[0-9]+h)?(([0-9]*[.])?[0-9]+m)?(([0-9]*[.])?[0-9]+s)?");
+    std::cmatch matches;
+    if (std::regex_search(str, matches, rgx))
+    {
+        double d = 0, h = 0, m = 0, s = 0;
+        if (matches[1].matched)
+        {
+            d = atof(matches[1].str().c_str());
+        }
+        if (matches[3].matched)
+        {
+            h = atof(matches[3].str().c_str());
+        }
+        if (matches[5].matched)
+        {
+            m = atof(matches[5].str().c_str());
+        }
+        if (matches[7].matched)
+        {
+            s = atof(matches[7].str().c_str());
+        }
+
+        return TimeDuration::makeWithSeconds((d * 24 + h) * 3600 + m * 60 + s);
+    }
+    else
+    {
+        // not match
+    }
+
+    return TimeDuration(0);
 }
 
 void Thread::sleep(TimeDuration duration)

@@ -47,8 +47,13 @@ forceinline void nc_flipI32(i32& val)
 struct TimeDuration
 {
     forceinline TimeDuration() = default;
-    forceinline TimeDuration(i64 duration) : __duration(duration) {}
+    forceinline TimeDuration(i64 ms) : __duration(ms) {}
 
+    /**
+     * @param str
+     *   something like "5.3s", "3d", "2.5d", "6h", "1m", "60s", "1m30s", "3d6h3m20s"
+     */
+    static TimeDuration makeWithString(const char* str);
     forceinline static TimeDuration makeWithSeconds(float seconds) { return TimeDuration(i64(seconds * 1000 + 0.5f)); }
     forceinline static TimeDuration makeWithSeconds(double seconds) { return TimeDuration(i64(seconds * 1000 + 0.5)); }
 
