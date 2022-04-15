@@ -63,8 +63,8 @@ public:
      *  @param [in] points
      *      The point data to cluster.
      *  @param [out] clusterIdsOut
-     *      Cluseter ID for each point in @p points
-     *      Positive values area valid.
+     *      Cluster ID for each point in @p points
+     *      Positive values are valid.
      *      May contain negative values: ClusterId::noise(-2).
      */
     void run(const std::vector<PointType>& points, std::vector<int>* clusterIdsOut)
