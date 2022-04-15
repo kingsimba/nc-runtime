@@ -3,6 +3,15 @@
 namespace nc
 {
 
+namespace ClusterId
+{
+enum
+{
+    unclassified = -1,
+    noise = -2
+};
+} // namespace ClusterId
+
 /**
 
     @brief DBSCAN clustering algorithm
@@ -50,16 +59,13 @@ public:
     Dbscan(int minPts, float eps) : m_minPoints(minPts), m_epsilon(eps) {}
     ~Dbscan() {}
 
-    static constexpr int UNCLASSIFIED = -1;
-    static constexpr int NOISE = -2;
-
     /**
      *  @param [in] points
      *      The point data to cluster.
      *  @param [out] clusterIdsOut
      *      Cluseter ID for each point in @p points
      *      Positive values area valid.
-     *      May contain negative values: NOISE(-2).
+     *      May contain negative values: ClusterId::noise(-2).
      */
     void run(const std::vector<PointType>& points, std::vector<int>* clusterIdsOut)
     {
@@ -68,12 +74,12 @@ public:
 
         int clusterId = 1;
         clusterIdsOut->clear();
-        clusterIdsOut->resize(points.size(), UNCLASSIFIED);
+        clusterIdsOut->resize(points.size(), ClusterId::unclassified);
         m_clusterIds = clusterIdsOut->data();
 
         for (int idx = 0; idx < m_pointCount; ++idx)
         {
-            if (m_clusterIds[idx] == UNCLASSIFIED)
+            if (m_clusterIds[idx] == ClusterId::unclassified)
             {
                 if (_expandCluster(idx, clusterId))
                     clusterId += 1;
@@ -85,9 +91,9 @@ private:
     bool _expandCluster(int idx, int clusterId)
     {
         _calculateCluster(m_points[idx], &m_clusterSeeds);
-        if (m_clusterSeeds.size() < m_minPoints)
+        if ((int)m_clusterSeeds.size() < m_minPoints)
         {
-            m_clusterIds[idx] = NOISE;
+            m_clusterIds[idx] = ClusterId::noise;
             return false;
         }
 
@@ -107,15 +113,15 @@ private:
         {
             _calculateCluster(m_points[m_clusterSeeds[seedIdx]], &m_clusterNeighors);
 
-            if (m_clusterNeighors.size() >= m_minPoints)
+            if ((int)m_clusterNeighors.size() >= m_minPoints)
             {
                 for (size_t nbIdx = 0; nbIdx < m_clusterNeighors.size(); ++nbIdx)
                 {
                     int& id = m_clusterIds[m_clusterNeighors[nbIdx]];
 
-                    if (id == UNCLASSIFIED || id == NOISE)
+                    if (id == ClusterId::unclassified || id == ClusterId::noise)
                     {
-                        if (id == UNCLASSIFIED)
+                        if (id == ClusterId::unclassified)
                         {
                             m_clusterSeeds.push_back(m_clusterNeighors[nbIdx]);
                         }
