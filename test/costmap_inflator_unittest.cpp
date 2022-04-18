@@ -113,3 +113,22 @@ TEST(CostmapInflator, tooLargeInflationRadius)
     EXPECT_GT(o->pixelAt(50, 50), (u8)0);
     EXPECT_LT(o->pixelAt(50, 50), (u8)CostValue::inflatedObstacle);
 }
+
+TEST(CostmapInflator, costFunc)
+{
+    CostmapInflatorParams params;
+    params.costScalingFactor = 8.0f;
+    params.inflationRadius = 0.45f;
+    params.inscribedRadius = 0.248f;
+
+    for (auto resolution : {0.05f, 0.02f})
+    {
+        params.resolution = resolution;
+        CostmapInflator inflator(params);
+        int v = (int)inflator.computeCost((0.248f + 0.10f) / params.resolution);
+
+        EXPECT_TRUE((int)CostValue::freeSpace < v && v < (int)CostValue::inflatedObstacle);
+
+        printf("resolution = %f, cost = %d\n", resolution, v);
+    }
+}

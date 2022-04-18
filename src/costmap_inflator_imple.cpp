@@ -9,12 +9,12 @@ CostmapInflatorImple::CostmapInflatorImple(const CostmapInflatorParams& params, 
     m_seed = CostValue::obstacle;
     m_params = params;
     m_customInflationFunc = func;
-    init();
+    _init();
 }
 
 CostmapInflatorImple::~CostmapInflatorImple()
 {
-    cleanup();
+    _cleanup();
 }
 
 sp<NcImageU8> CostmapInflatorImple::inflate(NcImageU8* inputImg, Rect region)
@@ -114,7 +114,15 @@ void CostmapInflatorImple::inflateInplace(NcImageU8* img, Rect region)
     }
 }
 
-void CostmapInflatorImple::init()
+CostValue CostmapInflatorImple::computeCost(float distanceInPixel)
+{
+    if (m_customInflationFunc == nullptr)
+        return _computeCost(distanceInPixel);
+
+    return (*m_customInflationFunc)(distanceInPixel, m_params);
+}
+
+void CostmapInflatorImple::_init()
 {
     m_cellInflationRadius = static_cast<int>(max(0.0f, m_params.inflationRadius / m_params.resolution));
 
@@ -133,7 +141,7 @@ void CostmapInflatorImple::init()
             {
                 float distance = hypotf((float)x, (float)y);
                 ARRAY_AT(m_cachedDistances, x, y) = distance;
-                ARRAY_AT(m_cachedCosts, x, y) = computeCost(distance);
+                ARRAY_AT(m_cachedCosts, x, y) = _computeCost(distance);
             }
         }
     }
@@ -151,7 +159,7 @@ void CostmapInflatorImple::init()
     }
 }
 
-void CostmapInflatorImple::cleanup()
+void CostmapInflatorImple::_cleanup()
 {
     delete[] m_cachedDistances;
     m_cachedDistances = nullptr;
@@ -159,7 +167,7 @@ void CostmapInflatorImple::cleanup()
     m_cachedCosts = nullptr;
 }
 
-CostValue CostmapInflatorImple::computeCost(float distance)
+CostValue CostmapInflatorImple::_computeCost(float distance)
 {
     CostValue cost = CostValue::freeSpace;
     if (distance == 0)
@@ -200,4 +208,9 @@ void CostmapInflator::inflateInplace(NcImageU8* img, Rect region)
 void CostmapInflator::setSeed(CostValue seed)
 {
     m_imple->setSeed(seed);
+}
+
+CostValue CostmapInflator::computeCost(float distanceInPixel)
+{
+    return m_imple->computeCost(distanceInPixel);
 }
