@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-04-18 Add DBSCAN clustering algorithm: `nc::Dbscan`.
 - 2022-03-23 Add `TimeDuration::makeWithString()`.
 - 2022-03-16 Add `Resampler`.
 - 2022-03-15 Use template for Vector3 and Quaternion.
