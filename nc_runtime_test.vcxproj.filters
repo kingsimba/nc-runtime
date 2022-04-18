@@ -67,6 +67,9 @@
     <ClCompile Include="test\circular_array_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="test\dbscan_unittest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

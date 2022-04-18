@@ -86,6 +86,7 @@ file(GLOB_RECURSE SRC
 ./test/nc_data_unittest.cpp
 ./test/quaternion_unittest.cpp
 ./test/nc_polyline_unittest.cpp
+./test/dbscan_unittest.cpp
 )
 
 file(GLOB_RECURSE JANSSON 3rd-party/src/jansson/utf.cpp)
