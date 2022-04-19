@@ -28,10 +28,12 @@ public:
     sp<NcImageU8> inflate(NcImageU8* inputImg, Rect region);
     void inflateInplace(NcImageU8* img, Rect region);
 
+    CostValue computeCost(float distanceInPixel);
+
 private:
-    void init();
-    void cleanup();
-    CostValue computeCost(float distance);
+    void _init();
+    void _cleanup();
+    CostValue _computeCost(float distance);
     CustomInflationFunc m_customInflationFunc;
 
     std::map<float, std::vector<CellData>> m_inflationCells;

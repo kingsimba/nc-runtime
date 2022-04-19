@@ -37,6 +37,8 @@ public:
     /** Default value:: CostValue::obstacle */
     void setSeed(CostValue seed);
 
+    CostValue computeCost(float distanceInPixel);
+
 private:
     std::unique_ptr<CostmapInflatorImple> m_imple;
 };
