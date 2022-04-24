@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-04-24 Add `StringSlice::makeWithArgs()`.
 - 2022-04-18 Add DBSCAN clustering algorithm: `nc::Dbscan`.
 - 2022-03-23 Add `TimeDuration::makeWithString()`.
 - 2022-03-16 Add `Resampler`.

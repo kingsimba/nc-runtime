@@ -18,9 +18,20 @@ TEST(StringSlice, compare)
     EXPECT_FALSE("blood"_s.equalsCaseInsensitive("BLOOM"_s));
 }
 
+static StringSlice _testStringSliceArgs(const char* format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    auto str = StringSlice::makeWithArgs(format, va);
+    va_end(va);
+    return str;
+}
+
 TEST(StringSlice, format)
 {
     EXPECT_EQ(StringSlice::format("%s %s", "hello", "world"), "hello world");
+
+    EXPECT_EQ(_testStringSliceArgs("%s %s", "hello", "world"), "hello world");
 }
 
 TEST(StringSlice, iter)

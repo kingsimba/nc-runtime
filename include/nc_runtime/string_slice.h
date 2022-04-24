@@ -1,5 +1,6 @@
 #pragma once
 #include <nc_runtime/nc_types.h>
+#include <stdarg.h>
 
 class NcString;
 class StringSlice;
@@ -124,6 +125,7 @@ public:
     static StringSlice makeEphemeralWithBytes(const char* str, size_t len); // make NO copy of buffer
     static StringSlice makeWithString(NcString* str);
     static Some<StringSlice> makeWithContentsOfFile(const StringSlice& filename);
+    static StringSlice makeWithArgs(const char* format, va_list va);
 
     forceinline StringSlice(StringSlice&& r) noexcept
     {

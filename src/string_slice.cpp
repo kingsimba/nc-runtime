@@ -4,7 +4,6 @@
 #include "../3rd-party/include/jansson/utf.h"
 #include "nc_runtime/nc_string.h"
 #include "nc_runtime/nc_data.h"
-#include <stdarg.h>
 
 bool StringCharIter::next(wchar32* cOut, int* consumedBytesOut)
 {
@@ -244,13 +243,19 @@ Some<StringSlice> StringSlice::makeWithContentsOfFile(const StringSlice& filenam
     return StringSlice::makeWithBytes((const char*)data->bytes(), data->length());
 }
 
+StringSlice StringSlice::makeWithArgs(const char* format, va_list va)
+{
+    auto str = NcString::formatVa(format, va);
+    return StringSlice::makeWithString(str.get());
+}
+
 StringSlice StringSlice::format(const char* format, ...)
 {
     va_list va;
     va_start(va, format);
-    auto str = NcString::formatVa(format, va);
+    auto str = StringSlice::makeWithArgs(format, va);
     va_end(va);
-    return StringSlice::makeWithString(str.get());
+    return str;
 }
 
 StringSlice StringSlice::join(const std::vector<StringSlice>& slices)
