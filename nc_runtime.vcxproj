@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\base64.cpp" />
+    <ClCompile Include="src\line_simplifier.cpp" />
     <ClCompile Include="src\turbo_base64\turbob64c.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
@@ -91,6 +92,7 @@
     <ClInclude Include="include\nc_runtime\dbscan.h" />
     <ClInclude Include="include\nc_runtime\image_painter.h" />
     <ClInclude Include="include\nc_runtime\json_node.h" />
+    <ClInclude Include="include\nc_runtime\line_simplifier.h" />
     <ClInclude Include="include\nc_runtime\mutex.h" />
     <ClInclude Include="include\nc_runtime\nc_argparse.h" />
     <ClInclude Include="include\nc_runtime\nc_array.h" />

@@ -95,6 +95,7 @@
     <ClCompile Include="test\dbscan_unittest.cpp" />
     <ClCompile Include="test\image_painter_unittest.cpp" />
     <ClCompile Include="test\json_node_unittest.cpp" />
+    <ClCompile Include="test\line_simplifier_unittest.cpp" />
     <ClCompile Include="test\main.cpp" />
     <ClCompile Include="test\mutex_unittest.cpp" />
     <ClCompile Include="test\nc_array_unittest.cpp" />
