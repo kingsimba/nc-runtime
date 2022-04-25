@@ -63,6 +63,7 @@ file(GLOB_RECURSE SRC
 ./src/costmap_inflator_imple.cpp
 ./src/json_node.cpp
 ./src/nc_data.cpp
+./src/line_simplifier.cpp
 ./3rd-party/src/jansson/utf.cpp
 ./test/nc_event_unittest.cpp
 ./test/nc_image_unittest.cpp
@@ -87,6 +88,7 @@ file(GLOB_RECURSE SRC
 ./test/quaternion_unittest.cpp
 ./test/nc_polyline_unittest.cpp
 ./test/dbscan_unittest.cpp
+./test/line_simplifier_unitest.cpp
 )
 
 file(GLOB_RECURSE JANSSON 3rd-party/src/jansson/utf.cpp)
