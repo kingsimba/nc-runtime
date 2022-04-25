@@ -67,6 +67,9 @@
     <ClCompile Include="src\base64.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\line_simplifier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nc_runtime\nc_array.h">
@@ -175,6 +178,9 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="include\nc_runtime\dbscan.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nc_runtime\line_simplifier.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
