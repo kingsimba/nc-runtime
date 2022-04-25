@@ -3,23 +3,25 @@
 #include <vector>
 #include "vector2.h"
 
-/** @brief 折线段抽稀器 */
 class LineSimplifier
 {
 public:
     /**
-     *  @brief 使用 Douglas-Peucker 算法抽稀指定的折线段
+     *  @brief Simplify specified polyline with Douglas-Peucker algorithm
      *  @param [in, out] points
-     *      指定折线段上的点，抽稀结果也保存在这里。
+     *      Points of the specified polyline. The simplification result is also stored here.
      *  @param [in] count
-     *      指定折线段上的点的数目。
+     *      Count of points in the specified polyline.
      *  @param [in] tolerance
-     *      距离允许偏差。
+     *      Distance tolerance.
      *  @param [in] maxResultCount
-     *      抽稀结果中最多允许的点数。如不限制，可传入 INT_MAX。
+     *      Maximum count of points in the simplification result.
+     *      Passing INT_MAX to ignore this parameter.
      *  @returns
-     *      抽稀结果中的点数。
-     *      抽稀结果也存储在 @p points 中。
+     *      Count of points in the simplification result.
+     *      The result points is stored in @p points.
+     *  @note
+     *      If @p maxResultCount conflicts @p tolerance, @p maxResultCount takes precedence.
      *  @sa
      *      https://martinfleischmann.net/line-simplification-algorithms/
      */
