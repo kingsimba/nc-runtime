@@ -74,18 +74,16 @@ int LineSimplifier::douglasPeucker(nc::Vector2* points, int count, float toleran
 int LineSimplifier::_compactBySelection(nc::Vector2* points, int count)
 {
     int p1 = 0;
-    int p2 = 0;
-
-    while (p2 != count)
+    while (p1 != count && m_selection[p1])
     {
-        while (p1 != count && m_selection[p1])
-        {
-            p1++;
-        }
-        if (p1 == count)
-            break;
+        p1++;
+    }
+    if (p1 == count)
+        return p1;
 
-        p2 = p1 + 1;
+    int p2 = p1 + 1;
+    for (;;)
+    {
         while (p2 != count && !m_selection[p2])
         {
             p2++;
