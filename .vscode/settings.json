@@ -74,7 +74,8 @@
         "set": "cpp",
         "string": "cpp",
         "string_view": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "shared_mutex": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/opt/ax-platform/lib/python2.7/dist-packages",

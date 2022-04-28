@@ -3,21 +3,55 @@
 
 sp<NcFile> NcFile::alloc(const StringSlice& fileName, FileOpenFlag flags)
 {
-    char mode[5];
-    mode[0] = 0;
-    if (flags & FileOpenFlag::read)
+    const char* mode = nullptr;
+    bool openExisting = flags & FileOpenFlag::openExisting;
+    bool createAlways = flags & FileOpenFlag::createAlways;
+
+    if (openExisting && createAlways)
     {
-        strcat(mode, "r");
+        NC_ASSERT("openExisting & createAlways cannot coexist");
+        return nullptr;
     }
-    if (flags & FileOpenFlag::write)
+
+    if (openExisting)
     {
-        strcat(mode, "w");
+        if (flags & FileOpenFlag::write)
+        {
+            mode = "r+b";
+        }
+        else if (flags & FileOpenFlag::read)
+        {
+            mode = "rb";
+        }
     }
-    strcat(mode, "b");
+    else if (createAlways)
+    {
+        if (flags & FileOpenFlag::read)
+        {
+            mode = "w+b";
+        }
+        else if (flags & FileOpenFlag::write)
+        {
+            mode = "wb";
+        }
+    }
+    else // OpenIfExists
+    {
+        if (flags & FileOpenFlag::write)
+        {
+            mode = "r+b";
+        }
+        else
+        {
+            mode = "rb";
+        }
+    }
 
     FILE* fp = fopen(fileName.cstr(), mode);
     if (fp == NULL)
         return NULL;
+
+    fseek(fp, 0, SEEK_SET);
 
     sp<NcFile> o = NcObject::alloc<NcFile>();
     o->m_fp = fp;
