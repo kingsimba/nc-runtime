@@ -51,7 +51,14 @@ sp<NcFile> NcFile::alloc(const StringSlice& fileName, FileOpenFlag flags)
     if (fp == NULL)
         return NULL;
 
-    fseek(fp, 0, SEEK_SET);
+    if ((flags & FileOpenFlag::append) && (flags & FileOpenFlag::write))
+    {
+        fseek(fp, 0, SEEK_END);
+    }
+    else
+    {
+        fseek(fp, 0, SEEK_SET);
+    }
 
     sp<NcFile> o = NcObject::alloc<NcFile>();
     o->m_fp = fp;

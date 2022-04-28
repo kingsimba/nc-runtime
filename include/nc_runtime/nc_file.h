@@ -8,7 +8,8 @@ enum class FileOpenFlag
     read = 1,
     write = 2,
     openExisting = 4,
-    createAlways = 8
+    createAlways = 8,
+    append = 16 // After openning a file, seek to end immediately.
 };
 
 forceinline FileOpenFlag operator|(FileOpenFlag l, FileOpenFlag r)

@@ -7,3 +7,4 @@
 /out
 /.vs
 *.user
+/test_data/*

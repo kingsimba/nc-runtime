@@ -38,4 +38,12 @@ TEST(NcFile, write)
     o->close();
 
     EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/hello.txt").value(), " world"_s);
+
+    o = NcFile::alloc("test_data/hello.txt"_s, FileOpenFlag::write | FileOpenFlag::append);
+    ASSERT_TRUE(o != nullptr);
+    EXPECT_EQ(o->length(), 6);
+    ASSERT_EQ(o->write(" world", 6), 6);
+    o->close();
+
+    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/hello.txt").value(), " world world"_s);
 }
