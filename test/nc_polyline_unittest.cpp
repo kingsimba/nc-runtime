@@ -44,10 +44,22 @@ TEST(NcPolylineTest, calculateBBox)
 {
     vector<Vector2> points{{0, 0}, {3, 0}, {3, 3}, {0, 3}};
 
-    sp<NcPolyline> ploygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
-    RectF boundingBox = ploygon->calculateBBox();
+    sp<NcPolyline> polygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
+    RectF boundingBox = polygon->calculateBBox();
     EXPECT_EQ(boundingBox.left, .0f);
     EXPECT_EQ(boundingBox.right, 3.0f);
     EXPECT_EQ(boundingBox.top, .0f);
     EXPECT_EQ(boundingBox.bottom, 3.0f);
+}
+
+TEST(NcPolylineTest, calculateCentroid)
+{
+    vector<Vector2> points1{{0, 0}, {3, 0}, {3, 3}, {0, 3}};
+    sp<NcPolyline> polygon1 = NcPolyline::alloc(points1.data(), (int)points1.size(), true);
+    EXPECT_EQ(polygon1->calculateCentroid(), Vector2(1.5f, 1.5f));
+
+    // case with duplicate points
+    vector<Vector2> points2{{0, 0}, {3, 0}, {3, 3}, {3, 3}, {3, 3}, {3, 3}, {0, 3}};
+    sp<NcPolyline> polygon2 = NcPolyline::alloc(points2.data(), (int)points2.size(), true);
+    EXPECT_EQ(polygon2->calculateCentroid(), Vector2(1.5f, 1.5f));
 }

@@ -33,6 +33,12 @@ public:
 
     RectF calculateBBox();
 
+    /**
+     *  @sa
+     *      https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+     */
+    nc::Vector2 calculateCentroid();
+
 protected:
     bool m_closed;
     bool m_shouldFree;
