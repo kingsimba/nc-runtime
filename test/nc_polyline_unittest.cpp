@@ -63,3 +63,10 @@ TEST(NcPolylineTest, calculateCentroid)
     sp<NcPolyline> polygon2 = NcPolyline::alloc(points2.data(), (int)points2.size(), true);
     EXPECT_EQ(polygon2->calculateCentroid(), Vector2(1.5f, 1.5f));
 }
+
+TEST(NcPolylineTest, calculateCentroidBugCase1)
+{
+    vector<Vector2> points{{1, 2}, {4, 2}, {4, 5}, {1, 5}};
+    sp<NcPolyline> polygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
+    EXPECT_EQ(polygon->calculateCentroid(), Vector2(2.5f, 3.5f));
+}

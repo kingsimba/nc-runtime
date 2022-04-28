@@ -42,12 +42,14 @@ nc::Vector2 NcPolyline::calculateCentroid()
 {
     float twiceArea = 0.0f;
     nc::Vector2 c = {0.0f, 0.0f};
-    for (int i = 0; i < m_pointCount - 1; i++)
+    for (int i = 0; i < m_pointCount; i++)
     {
-        float d = (m_points[i].x * m_points[i + 1].y - m_points[i + 1].x * m_points[i].y);
+        int n = (i + 1) % m_pointCount;
+
+        float d = (m_points[i].x * m_points[n].y - m_points[n].x * m_points[i].y);
         twiceArea += d;
-        c.x += (m_points[i].x + m_points[i + 1].x) * d;
-        c.y += (m_points[i].y + m_points[i + 1].y) * d;
+        c.x += (m_points[i].x + m_points[n].x) * d;
+        c.y += (m_points[i].y + m_points[n].y) * d;
     }
 
     c /= 3 * twiceArea;
