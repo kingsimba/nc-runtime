@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-05-05 Add `Thread::setName()`.
 - 2022-04-28 Implement `FileOpenFlag::createAlways` and `FileOpenFlag::openExisting`.
 - 2022-04-28 Add `NcPolyline::calculateCentroid()`.
 - 2022-04-25 Add `LineSimplifier`.

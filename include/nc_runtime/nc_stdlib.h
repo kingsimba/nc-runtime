@@ -218,6 +218,7 @@ class Thread
 {
 public:
     static void sleep(TimeDuration tick); // sleep current thread for at least some time.
+    static void setName(const char* name); // set the name of current thread
 };
 
 /**

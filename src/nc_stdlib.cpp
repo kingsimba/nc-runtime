@@ -5,6 +5,11 @@
 #include <condition_variable>
 #include <regex>
 
+#ifdef NC_OS_WIN
+#    include <windows.h>
+#    include <processthreadsapi.h>
+#endif
+
 char* nc_strtok(char* s, const char* delim, char** savePtr)
 {
     char* end;
@@ -79,6 +84,27 @@ TimeDuration TimeDuration::makeWithString(const char* str)
 void Thread::sleep(TimeDuration duration)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(duration.ms()));
+}
+
+#if defined(NC_OS_WIN)
+static std::wstring _s2ws(const char* str)
+{
+    int strLen = (int)strlen(str);
+    int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, str, strLen, NULL, 0);
+    std::wstring wstrTo(sizeNeeded, 0);
+    MultiByteToWideChar(CP_UTF8, 0, str, strLen, &wstrTo[0], sizeNeeded);
+    return wstrTo;
+}
+#endif
+
+void Thread::setName(const char* name)
+{
+#if defined(NC_OS_WIN)
+    std::wstring wname = _s2ws(name);
+    SetThreadDescription(GetCurrentThread(), wname.c_str());
+#else
+    pthread_setname_np(pthread_self(), name);
+#endif
 }
 
 void StableRate::sleep()
