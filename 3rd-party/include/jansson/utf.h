@@ -9,6 +9,7 @@
 #define UTF_H
 
 #include <stdint.h>
+#include <cstddef>
 
 int utf8_encode(int32_t codepoint, char *buffer, size_t *size);
 
