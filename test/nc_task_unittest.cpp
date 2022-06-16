@@ -44,7 +44,6 @@ TEST(TaskTest, basic)
 TEST(TaskTest, withoutWait)
 {
     static bool exited = false;
-    static bool resultCallbackCalled = false;
     static bool resultIsDiscarded = false;
 
     sp<NcArray<NcString>> taskResult = NcArray<NcString>::alloc();
