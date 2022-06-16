@@ -14,36 +14,36 @@ TEST(NcFile, read)
 
 TEST(NcFile, write)
 {
-    auto o = NcFile::alloc("test_data/hello.txt"_s, FileOpenFlag::write | FileOpenFlag::createAlways);
+    auto o = NcFile::alloc("test_data/test.txt"_s, FileOpenFlag::write | FileOpenFlag::createAlways);
     ASSERT_TRUE(o != nullptr);
     EXPECT_EQ(o->length(), 0);
     ASSERT_EQ(o->write("hello", 5), 5);
     o->close();
 
-    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/hello.txt").value(), "hello"_s);
+    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/test.txt").value(), "hello"_s);
 
-    o = NcFile::alloc("test_data/hello.txt"_s, FileOpenFlag::write);
+    o = NcFile::alloc("test_data/test.txt"_s, FileOpenFlag::write);
     ASSERT_TRUE(o != nullptr);
     EXPECT_EQ(o->length(), 5);
     o->seek(FileSeekOrigin::end, 0);
     ASSERT_EQ(o->write(" world", 6), 6);
     o->close();
 
-    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/hello.txt").value(), "hello world"_s);
+    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/test.txt").value(), "hello world"_s);
 
-    o = NcFile::alloc("test_data/hello.txt"_s, FileOpenFlag::write | FileOpenFlag::createAlways);
+    o = NcFile::alloc("test_data/test.txt"_s, FileOpenFlag::write | FileOpenFlag::createAlways);
     ASSERT_TRUE(o != nullptr);
     EXPECT_EQ(o->length(), 0);
     ASSERT_EQ(o->write(" world", 6), 6);
     o->close();
 
-    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/hello.txt").value(), " world"_s);
+    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/test.txt").value(), " world"_s);
 
-    o = NcFile::alloc("test_data/hello.txt"_s, FileOpenFlag::write | FileOpenFlag::append);
+    o = NcFile::alloc("test_data/test.txt"_s, FileOpenFlag::write | FileOpenFlag::append);
     ASSERT_TRUE(o != nullptr);
     EXPECT_EQ(o->length(), 6);
     ASSERT_EQ(o->write(" world", 6), 6);
     o->close();
 
-    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/hello.txt").value(), " world world"_s);
+    EXPECT_EQ(StringSlice::makeWithContentsOfFile("test_data/test.txt").value(), " world world"_s);
 }
