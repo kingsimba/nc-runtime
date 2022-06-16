@@ -19,7 +19,15 @@ public:
 
     sp<NcObject> doTask() override
     {
-        Thread::sleep(100);
+        int count = 50;
+        while (count-- != 0)
+        {
+            if (cancelled())
+            {
+                return nullptr;
+            }
+            Thread::sleep(1);
+        }
         return NcString::format("%s %s", m_str1->cstr(), m_str2->cstr());
     }
 
@@ -39,6 +47,22 @@ TEST(TaskTest, basic)
     // 等待任务结束，拿结果
     task->wait();
     EXPECT_EQ(taskResult, "hello world"_str);
+}
+
+TEST(TaskTest, cancel)
+{
+    TimeTick start = TimeTick::now();
+    sp<NcString> taskResult;
+    auto task = MyStringConcatTask::alloc(
+        [&taskResult](sp<NcObject> result) { taskResult = static_pointer_cast<NcString>(result); }, "hello"_str,
+        "world"_str);
+    task->start();
+    task->cancel();
+    EXPECT_TRUE(task->cancelled());
+
+    task->wait();
+    EXPECT_TRUE(taskResult == nullptr);
+    EXPECT_LT((TimeTick::now() - start).ms(), 5);
 }
 
 TEST(TaskTest, withoutWait)

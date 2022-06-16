@@ -21,9 +21,9 @@ public:
         }
     }
 
-    forceinline void cancel() { m_shouldExit = true; }
+    forceinline void cancel() { m_cancelled = true; }
 
-    forceinline bool shouldExit() const { return m_shouldExit; }
+    forceinline bool cancelled() const { return m_cancelled; }
 
     void wait()
     {
@@ -40,6 +40,10 @@ public:
         m_thread = std::thread(&Task::doTaskAndGetResult, retain(this));
     }
 
+    /**
+     * doTask() should access cancelled() as often as possible and
+     * return null when task is cancelled.
+     */
     virtual sp<NcObject> doTask() = 0;
 
 private:
@@ -48,13 +52,16 @@ private:
         sp<NcObject> result = this->doTask();
 
         // callback result
-        m_delegate(result);
+        if (!m_cancelled && result != nullptr)
+        {
+            m_delegate(result);
+        }
 
         release(this);
     }
 
 private:
-    bool m_shouldExit = false;
+    volatile bool m_cancelled = false;
     std::thread m_thread;
     // std::future<void> m_asyncTask;
     TaskCallback m_delegate;
