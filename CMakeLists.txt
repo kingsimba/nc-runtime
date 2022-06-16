@@ -66,36 +66,9 @@ file(GLOB_RECURSE SRC
 ./src/nc_data.cpp
 ./src/line_simplifier.cpp
 ./3rd-party/src/jansson/utf.cpp
-./test/nc_event_unittest.cpp
-./test/nc_image_unittest.cpp
-./test/mutex_unittest.cpp
-./test/image_painter_unittest.cpp
-./test/json_node_unittest.cpp
-./test/nc_stdlib_unittest.cpp
-./test/stdafx_nc_runtime_test.cpp
-./test/costmap_inflator_unittest.cpp
-./test/circular_array_unittest.cpp
-./test/nc_string_unittest.cpp
-./test/nc_log_unittest.cpp
-./test/main.cpp
-./test/nc_math_unittest.cpp
-./test/vector3_unittest.cpp
-./test/nc_array_unittest.cpp
-./test/nc_file_unittest.cpp
-./test/nc_object_unittest.cpp
-./test/string_slice_unittest.cpp
-./test/base64_unittest.cpp
-./test/nc_data_unittest.cpp
-./test/quaternion_unittest.cpp
-./test/nc_polyline_unittest.cpp
-./test/dbscan_unittest.cpp
-./test/line_simplifier_unitest.cpp
-./test/nc_task_unittest.cpp
 )
 
-file(GLOB_RECURSE JANSSON 3rd-party/src/jansson/utf.cpp)
-
-add_library(${PROJECT_NAME} STATIC ${SRC} ${JANSSON})
+add_library(${PROJECT_NAME} STATIC ${SRC})
 target_compile_options(${PROJECT_NAME} PRIVATE "-O2")
 target_include_directories(${PROJECT_NAME} PRIVATE "src" "include" "3rd-party/include")
 add_definitions(-D_CRTDBG_MAP_ALLOC)
@@ -108,7 +81,33 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "src/stdafx_nc_runtime.h")
 if (NOT ${NC_PLATFORM} MATCHES "pi64")
 	project(nc_runtime_test)
 
-	file(GLOB_RECURSE TEST_SRC "test/*.cpp" "test/*.h")
+	file(GLOB_RECURSE TEST_SRC
+		./test/nc_event_unittest.cpp
+		./test/nc_image_unittest.cpp
+		./test/mutex_unittest.cpp
+		./test/image_painter_unittest.cpp
+		./test/json_node_unittest.cpp
+		./test/nc_stdlib_unittest.cpp
+		./test/stdafx_nc_runtime_test.cpp
+		./test/costmap_inflator_unittest.cpp
+		./test/circular_array_unittest.cpp
+		./test/nc_string_unittest.cpp
+		./test/nc_log_unittest.cpp
+		./test/main.cpp
+		./test/nc_math_unittest.cpp
+		./test/vector3_unittest.cpp
+		./test/nc_array_unittest.cpp
+		./test/nc_file_unittest.cpp
+		./test/nc_object_unittest.cpp
+		./test/string_slice_unittest.cpp
+		./test/base64_unittest.cpp
+		./test/nc_data_unittest.cpp
+		./test/quaternion_unittest.cpp
+		./test/nc_polyline_unittest.cpp
+		./test/dbscan_unittest.cpp
+		./test/line_simplifier_unitest.cpp
+		./test/nc_task_unittest.cpp
+	)
 	add_executable(${PROJECT_NAME} ${TEST_SRC})
 	target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb jansson GTest::gtest)
 
