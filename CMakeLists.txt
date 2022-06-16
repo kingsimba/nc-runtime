@@ -52,6 +52,7 @@ file(GLOB_RECURSE SRC
 ./src/turbo_base64/turbob64d.cpp
 ./src/nc_math.cpp
 ./src/nc_object.cpp
+./src/nc_task.cpp
 ./src/nc_gtest_extension.cpp
 ./src/stdafx_nc_runtime.cpp
 ./src/nc_polyline.cpp
@@ -89,6 +90,7 @@ file(GLOB_RECURSE SRC
 ./test/nc_polyline_unittest.cpp
 ./test/dbscan_unittest.cpp
 ./test/line_simplifier_unitest.cpp
+./test/nc_task_unittest.cpp
 )
 
 file(GLOB_RECURSE JANSSON 3rd-party/src/jansson/utf.cpp)
