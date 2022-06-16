@@ -78,6 +78,7 @@
   <ItemGroup>
     <ClCompile Include="src\base64.cpp" />
     <ClCompile Include="src\line_simplifier.cpp" />
+    <ClCompile Include="src\nc_task.cpp" />
     <ClCompile Include="src\turbo_base64\turbob64c.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
@@ -104,6 +105,7 @@
     <ClInclude Include="include\nc_runtime\nc_math.h" />
     <ClInclude Include="include\nc_runtime\nc_object.h" />
     <ClInclude Include="include\nc_runtime\nc_polyline.h" />
+    <ClInclude Include="include\nc_runtime\nc_task.h" />
     <ClInclude Include="include\nc_runtime\pose2.h" />
     <ClInclude Include="include\nc_runtime\quaternion.h" />
     <ClInclude Include="include\nc_runtime\nc_stdlib.h" />
