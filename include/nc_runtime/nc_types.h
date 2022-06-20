@@ -132,6 +132,14 @@ inline bool operator!=(Size l, Size r)
 // Rgba8
 struct Rgba8
 {
+    Rgba8() = default;
+    forceinline Rgba8(u32 rgba)
+    {
+        // flip endian
+        value = ((rgba << 8) & 0xFF00FF00) | ((rgba >> 8) & 0xFF00FF);
+        value = (value << 16) | (value >> 16);
+    }
+    forceinline Rgba8(u8 r_, u8 g_, u8 b_, u8 a_) : r(r_), g(g_), b(b_), a(a_) {}
     union {
         struct
         {
@@ -141,10 +149,9 @@ struct Rgba8
     };
 };
 
-inline Rgba8 Rgba8_make(u8 r, u8 g, u8 b, u8 a)
+NC_DEPRECATED inline Rgba8 Rgba8_make(u8 r, u8 g, u8 b, u8 a)
 {
-    Rgba8 o;
-    o.r = r, o.b = b, o.g = g, o.a = a;
+    Rgba8 o(r, g, b, a);
     return o;
 }
 

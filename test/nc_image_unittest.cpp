@@ -13,7 +13,7 @@ public:
             Rgba8* pixels = m_image->mutablePixels();
             for (int i = 0; i < 256; i++)
             {
-                pixels[i] = Rgba8_make((u8)(255 - i), (u8)i, 0, 255);
+                pixels[i] = Rgba8((u8)(255 - i), (u8)i, 0, 255);
             }
         }
 
@@ -48,8 +48,10 @@ sp<NcImage> NcImageTest::m_image;
 sp<NcImageU8> NcImageTest::m_image8;
 sp<NcImageU16> NcImageTest::m_image16;
 
-TEST_F(NcImageTest, basic)
+TEST_F(NcImageTest, basicPng)
 {
+    EXPECT_EQ(Rgba8(254, 1, 0, 255), Rgba8(0xfe0100ff));
+
     auto o = m_image;
 
     EXPECT_TRUE(o->saveAs("test_data/output/test.png"));
@@ -58,8 +60,18 @@ TEST_F(NcImageTest, basic)
     ASSERT_TRUE(loaded != nullptr);
     EXPECT_EQ(loaded->size(), Size_make(16, 16));
     const Rgba8* pixels = loaded->pixels();
-    EXPECT_EQ(pixels[0], Rgba8_make(255, 0, 0, 255));
-    EXPECT_EQ(pixels[1], Rgba8_make(254, 1, 0, 255));
+    EXPECT_EQ(pixels[0], Rgba8(255, 0, 0, 255));
+    EXPECT_EQ(pixels[1], Rgba8(254, 1, 0, 255));
+}
+
+TEST_F(NcImageTest, basicJpg)
+{
+    auto loaded = NcImage::allocWithFileName("test_data/test.jpg");
+    ASSERT_TRUE(loaded != nullptr);
+    ASSERT_EQ(loaded->size(), Size_make(16, 16));
+    const Rgba8* pixels = loaded->pixels();
+    EXPECT_EQ(pixels[0], Rgba8(0xf36523ff));
+    EXPECT_EQ(pixels[16 * 16 - 1], Rgba8(0xee0d51ff));
 }
 
 TEST_F(NcImageTest, u8)
