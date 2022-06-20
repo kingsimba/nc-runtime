@@ -22,6 +22,13 @@ public:
     ~MyString(){};
 };
 
+TEST(NcObject, selfCopy)
+{
+    auto box = MyBox::alloc();
+    box = box;
+    EXPECT_EQ(box->retainCount(), 1);
+}
+
 TEST(NcObject, weak)
 {
     auto box = MyBox::alloc();

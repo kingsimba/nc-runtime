@@ -129,10 +129,11 @@ public:
 
     sp<T>& operator=(const sp<T>& p)
     {
+        T* rRaw = p.get();
+        if (rRaw)
+            rRaw->_retain();
         release(m_ptr);
-        m_ptr = p.get();
-        if (m_ptr)
-            m_ptr->_retain();
+        m_ptr = rRaw;
         return *this;
     }
 
