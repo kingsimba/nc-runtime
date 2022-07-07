@@ -106,8 +106,13 @@ typedef size_t Handle;
 
 struct Size
 {
+    Size() = default;
+    Size(int w, int h) : width(w), height(h) {}
+
     int width;
     int height;
+
+    int area() const { return this->width * this->height; }
 };
 
 inline Size Size_make(int w, int h)
