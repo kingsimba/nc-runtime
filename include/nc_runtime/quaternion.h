@@ -9,8 +9,24 @@ namespace nc
 template <typename T>
 struct RollPitchYawT
 {
+    RollPitchYawT() = default;
+    RollPitchYawT(T r, T p, T y) : roll(r), pitch(p), yaw(y) {}
     T roll, pitch, yaw;
 };
+
+template <typename T>
+forceinline bool operator==(RollPitchYawT<T> l, RollPitchYawT<T> r)
+{
+    return l.roll == r.roll && l.pitch == r.pitch && l.yaw == r.yaw;
+}
+
+template <typename T>
+forceinline bool operator!=(RollPitchYawT<T> l, RollPitchYawT<T> r)
+{
+    return l.roll != r.roll || l.pitch != r.pitch || l.yaw != r.yaw;
+}
+
+////////////////////////////////
 
 template <typename T>
 class QuaternionT
@@ -46,6 +62,18 @@ public:
 
 template <typename T>
 QuaternionT<T> Quaternion_multiply(const QuaternionT<T>& second, const QuaternionT<T>& first);
+
+template <typename T>
+forceinline bool operator==(QuaternionT<T> l, QuaternionT<T> r)
+{
+    return l.x == r.x && l.y == r.y && l.z == r.z && l.w == r.w;
+}
+
+template <typename T>
+forceinline bool operator!=(QuaternionT<T> l, QuaternionT<T> r)
+{
+    return l.x != r.x || l.y != r.y || l.z != r.z || l.w != r.w;
+}
 
 ////////////////////////////////////////////////////////////////////
 
