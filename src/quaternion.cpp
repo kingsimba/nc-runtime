@@ -24,7 +24,7 @@ void QuaternionT<T>::initWithRPY(T roll, T pitch, T yaw)
 }
 
 template <typename T>
-RollPitchYawT<T> QuaternionT<T>::toRPY()
+RollPitchYawT<T> QuaternionT<T>::toRPY() const
 {
     RollPitchYawT<T> angles;
 
@@ -75,7 +75,7 @@ QuaternionT<T> Quaternion_multiply(const QuaternionT<T>& second, const Quaternio
 }
 
 template <typename T>
-Vector3T<T> QuaternionT<T>::transformVector(Vector3T<T> v)
+Vector3T<T> QuaternionT<T>::transformVector(Vector3T<T> v) const
 {
     Vector3T<T> rtn;
 

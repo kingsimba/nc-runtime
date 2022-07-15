@@ -55,9 +55,9 @@ public:
     forceinline void initWithRPY(RollPitchYawT<T> rpy) { initWithRPY(rpy.roll, rpy.pitch, rpy.yaw); }
 
     void multiply(const QuaternionT& r);
-    Vector3T<T> transformVector(Vector3T<T> value);
+    Vector3T<T> transformVector(Vector3T<T> value) const;
 
-    RollPitchYawT<T> toRPY();
+    RollPitchYawT<T> toRPY() const;
 };
 
 template <typename T>
