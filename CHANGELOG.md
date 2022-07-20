@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-07-20 Add `Vector3::zero()`, `Vector3::fill()`, `Quaternion::zero()`, `Quaternion::identity()`.
 - 2022-06-20 Fix `sp<>` self-assignment.
 - 2022-06-16 Add `Task`.
 - 2022-05-18 Add `raytraceLineF()`.

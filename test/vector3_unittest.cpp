@@ -1,10 +1,22 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/vector3.h"
+#include "nc_runtime/nc_gtest_extension.h"
 
 using namespace nc;
 
-TEST(Vector3, basic)
+class Vector3Test : public ::testing::Test
 {
+protected:
+    Vector3 m_v3 = Vector3::zero();
+    Vector3 m_v3Fill = Vector3::fill(1.2f);
+    Vector3i m_v3i = Vector3i::zero();
+};
+
+TEST_F(Vector3Test, basicFloat)
+{
+    EXPECT_EQ(m_v3, Vector3(0, 0, 0));
+    EXPECT_EQ(m_v3Fill, Vector3(1.2f, 1.2f, 1.2f));
+
     Vector3 v1(1, 2, 3);
     Vector3 v2(2, 3, 4);
 
@@ -18,8 +30,10 @@ TEST(Vector3, basic)
     EXPECT_EQ(Vector3(3, 4, 5).lengthSquared(), 50);
 }
 
-TEST(Vector3i, basic)
+TEST_F(Vector3Test, basicInt)
 {
+    EXPECT_EQ(m_v3i, Vector3i(0, 0, 0));
+
     Vector3i v1(1, 2, 3);
     Vector3i v2(2, 3, 4);
 

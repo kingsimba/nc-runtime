@@ -11,6 +11,9 @@ class Vector3T
 public:
     T x, y, z;
 
+    static Vector3T zero() { return Vector3T{0, 0, 0}; }
+    static Vector3T fill(T v) { return Vector3T{v, v, v}; }
+
     Vector3T() = default;
     forceinline Vector3T(T x_, T y_, T z_) : x(x_), y(y_), z(z_) {}
 

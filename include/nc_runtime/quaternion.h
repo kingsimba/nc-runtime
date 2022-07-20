@@ -34,6 +34,9 @@ class QuaternionT
 public:
     T x, y, z, w;
 
+    static QuaternionT zero() { return QuaternionT{0, 0, 0, 0}; }
+    static QuaternionT identity() { return QuaternionT{0, 0, 0, 1}; }
+
     QuaternionT() = default;
     QuaternionT(T x_, T y_, T z_, T w_) : x(x_), y(y_), z(z_), w(w_) {}
 
@@ -64,13 +67,13 @@ template <typename T>
 QuaternionT<T> Quaternion_multiply(const QuaternionT<T>& second, const QuaternionT<T>& first);
 
 template <typename T>
-forceinline bool operator==(QuaternionT<T> l, QuaternionT<T> r)
+forceinline bool operator==(const QuaternionT<T>& l, const QuaternionT<T>& r)
 {
     return l.x == r.x && l.y == r.y && l.z == r.z && l.w == r.w;
 }
 
 template <typename T>
-forceinline bool operator!=(QuaternionT<T> l, QuaternionT<T> r)
+forceinline bool operator!=(const QuaternionT<T>& l, const QuaternionT<T>& r)
 {
     return l.x != r.x || l.y != r.y || l.z != r.z || l.w != r.w;
 }

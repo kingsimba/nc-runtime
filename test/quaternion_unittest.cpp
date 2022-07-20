@@ -1,8 +1,16 @@
 #include "stdafx_nc_runtime_test.h"
 #include "nc_runtime/quaternion.h"
 
-TEST(Quaternion, basic)
+class QuaternionTest : public ::testing::Test
 {
+protected:
+    Quaternion m_q = Quaternion::identity();
+};
+
+TEST_F(QuaternionTest, basic)
+{
+    EXPECT_EQ(m_q, Quaternion(0, 0, 0, 1));
+
     Quaternion q;
     q.initWithRPY(1, 0, 0);
     RollPitchYaw angles = q.toRPY();
@@ -37,7 +45,7 @@ TEST(Quaternion, basic)
     EXPECT_FLOAT_EQ(r.z, 0);
 }
 
-TEST(Quaternion, multiply)
+TEST_F(QuaternionTest, multiply)
 {
     Quaternion q1, q2, q3;
     q1.initWithRPY(1, 0, 0);

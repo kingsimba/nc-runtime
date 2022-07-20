@@ -10,6 +10,9 @@ class Vector2T
 public:
     T x, y;
 
+    static Vector2T zero() { return Vector2T{0, 0}; }
+    static Vector2T fill(T v) { return Vector2T{v, v}; }
+
     Vector2T() = default;
     forceinline Vector2T(T x_, T y_) : x(x_), y(y_) {}
 
