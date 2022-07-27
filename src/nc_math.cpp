@@ -214,6 +214,18 @@ bool Math_pointInPolygon(const Vector2* pgon, size_t numverts, Vector2 pt)
     return inside;
 }
 
+float Math_polygonArea(const nc::Vector2* points, size_t count)
+{
+    float twiceArea = 0.0f;
+    for (size_t i = 0; i < count; i++)
+    {
+        int n = (i + 1) % count;
+        twiceArea += points[i].x * points[n].y - points[n].x * points[i].y;
+    }
+
+    return twiceArea / 2;
+}
+
 float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* projectionOut)
 {
     Vector2 v = p2 - p1;
