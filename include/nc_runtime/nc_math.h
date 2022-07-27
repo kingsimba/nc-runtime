@@ -30,6 +30,8 @@ double Math_turnAngle(double from, double to);
 
 bool Math_pointInPolygon(const nc::Vector2* points, size_t count, nc::Vector2 pt);
 
+float Math_polygonArea(const nc::Vector2* points, size_t count);
+
 // calculate distance from a straight line to a point
 float Math_linePointDistance(nc::Vector2 pt, nc::Vector2 p1, nc::Vector2 p2, nc::Vector2* projectionOut);
 

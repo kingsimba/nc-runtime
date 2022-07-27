@@ -59,6 +59,23 @@ TEST(Math, Math_pointInPolygon)
     }
 }
 
+TEST(Math, polygonArea)
+{
+    // 0, 1, or 2 points
+    {
+        vector<Vector2> points{{0, 0}, {10, 0}};
+        EXPECT_EQ(Math_polygonArea(points.data(), 0), 0.0f);
+        EXPECT_EQ(Math_polygonArea(points.data(), 1), 0.0f);
+        EXPECT_EQ(Math_polygonArea(points.data(), 2), 0.0f);
+    }
+
+    // more points
+    {
+        vector<Vector2> points{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        EXPECT_EQ(Math_polygonArea(points.data(), points.size()), 2.0f);
+    }
+}
+
 // #define POINT_COUNT 100000000
 #define POINT_COUNT 100
 static vector<Vector2> g_points;
