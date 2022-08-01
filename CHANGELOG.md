@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-08-01 Add `NC_ASSERT_NEAR()`
 - 2022-07-27 Add `Math_polygonArea()`.
 - 2022-07-20 Add `Vector3::zero()`, `Vector3::fill()`, `Quaternion::zero()`, `Quaternion::identity()`.
 - 2022-06-20 Fix `sp<>` self-assignment.

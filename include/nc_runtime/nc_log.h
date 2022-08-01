@@ -43,4 +43,6 @@ extern "C"
 #  endif
 #endif
 
+#define NC_ASSERT_NEAR(a, b, margin) NC_ASSERT(nc_abs((a) - (b)) <= (margin))
+
 // clang-format on
