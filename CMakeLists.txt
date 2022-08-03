@@ -65,6 +65,7 @@ file(GLOB_RECURSE SRC
 ./src/json_node.cpp
 ./src/nc_data.cpp
 ./src/line_simplifier.cpp
+./src/line_parser.cpp
 ./3rd-party/src/jansson/utf.cpp
 )
 
@@ -107,6 +108,7 @@ if (NOT ${NC_PLATFORM} MATCHES "pi64")
 		./test/dbscan_unittest.cpp
 		./test/line_simplifier_unitest.cpp
 		./test/nc_task_unittest.cpp
+		./test/line_parser_unittest.cpp
 	)
 	add_executable(${PROJECT_NAME} ${TEST_SRC})
 	target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb jansson GTest::gtest)
