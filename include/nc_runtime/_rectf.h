@@ -61,7 +61,7 @@ struct RectF
         this->right = this->bottom = -FLT_MAX;
     }
 
-    bool isNegtiveMinimum()
+    bool isNegativeMinimum()
     {
         return this->left == FLT_MAX && this->top == FLT_MAX && this->right == -FLT_MAX && this->bottom == -FLT_MAX;
     }

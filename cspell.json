@@ -3,8 +3,17 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": [],
+    "words": [
+        "polyline",
+        "greyscale",
+        "Resetable",
+        "resampler",
+        "costmap",
+        "raytrace"
+    ],
     "ignoreWords": [
+        "imple",
+        "stbi",
         "STREQ"
     ],
     "import": []

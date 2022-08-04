@@ -22,22 +22,22 @@ TEST(NcPolylineTest, polygon)
     vector<Vector2> points{{0, 0}, {1, 0}, {0, 2}};
 
     // create on stack
-    NcPolyline ploygon = NcPolyline::makeWithPointsNoCopy(points.data(), (int)points.size(), true);
-    EXPECT_EQ(ploygon.pointCount(), 3);
-    EXPECT_TRUE(ploygon.isClosed());
+    NcPolyline polygon = NcPolyline::makeWithPointsNoCopy(points.data(), (int)points.size(), true);
+    EXPECT_EQ(polygon.pointCount(), 3);
+    EXPECT_TRUE(polygon.isClosed());
 }
 
 TEST(NcPolylineTest, isPointInPolygon)
 {
     vector<Vector2> points{{0, 0}, {1, 0}, {0, 2}};
 
-    sp<NcPolyline> ploygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
-    EXPECT_EQ(ploygon->pointCount(), 3);
-    EXPECT_TRUE(ploygon->isClosed());
-    EXPECT_TRUE(ploygon->testPoint({0.5f, 0.6f}));
-    EXPECT_TRUE(ploygon->testPoint({0.001f, 1.99f}));
-    EXPECT_FALSE(ploygon->testPoint({1.f, 2.f}));
-    EXPECT_FALSE(ploygon->testPoint({0.f, 2.1f}));
+    sp<NcPolyline> polygon = NcPolyline::alloc(points.data(), (int)points.size(), true);
+    EXPECT_EQ(polygon->pointCount(), 3);
+    EXPECT_TRUE(polygon->isClosed());
+    EXPECT_TRUE(polygon->testPoint({0.5f, 0.6f}));
+    EXPECT_TRUE(polygon->testPoint({0.001f, 1.99f}));
+    EXPECT_FALSE(polygon->testPoint({1.f, 2.f}));
+    EXPECT_FALSE(polygon->testPoint({0.f, 2.1f}));
 }
 
 TEST(NcPolylineTest, calculateBBox)

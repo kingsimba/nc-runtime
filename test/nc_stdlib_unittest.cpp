@@ -200,7 +200,7 @@ TEST(Stdlib, rectFSetAsNegativeMinimum)
 {
     RectF area;
     area.setAsNegativeMinimum();
-    EXPECT_TRUE(area.isNegtiveMinimum());
+    EXPECT_TRUE(area.isNegativeMinimum());
 
     area.combinePoint(-1.0f, -2.0f);
     EXPECT_EQ(area.left, -1.0f);

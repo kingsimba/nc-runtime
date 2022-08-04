@@ -26,7 +26,7 @@ TEST(NcObject, selfCopy)
 {
     auto box = MyBox::alloc();
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#pragma clang diagnostic ignored "-Wself-assign-overloaded" // cspell:disable-line
     box = box;
 #pragma clang diagnostic pop
     EXPECT_EQ(box->retainCount(), 1);
