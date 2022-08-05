@@ -109,6 +109,7 @@ if (NOT ${NC_PLATFORM} MATCHES "pi64")
 		./test/line_simplifier_unitest.cpp
 		./test/nc_task_unittest.cpp
 		./test/line_parser_unittest.cpp
+		./test/pose3_unittest.cpp
 	)
 	add_executable(${PROJECT_NAME} ${TEST_SRC})
 	target_link_libraries(${PROJECT_NAME} PRIVATE nc_runtime stb jansson GTest::gtest)

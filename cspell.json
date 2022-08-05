@@ -9,7 +9,8 @@
         "Resetable",
         "resampler",
         "costmap",
-        "raytrace"
+        "raytrace",
+        "subslice"
     ],
     "ignoreWords": [
         "imple",

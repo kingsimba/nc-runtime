@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-08-05 Add `Pose3`.
 - 2022-08-03 Add `LineParser`.
 - 2022-08-01 Add `NC_ASSERT_NEAR()`
 - 2022-07-27 Add `Math_polygonArea()`.

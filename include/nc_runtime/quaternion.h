@@ -36,6 +36,18 @@ public:
 
     static QuaternionT zero() { return QuaternionT{0, 0, 0, 0}; }
     static QuaternionT identity() { return QuaternionT{0, 0, 0, 1}; }
+    static forceinline QuaternionT makeWithRPY(const RollPitchYawT<T>& rpy)
+    {
+        QuaternionT q;
+        q.initWithRPY(rpy.roll, rpy.pitch, rpy.yaw);
+        return q;
+    }
+    static forceinline QuaternionT makeWithRPY(float roll, float pitch, float yaw)
+    {
+        QuaternionT q;
+        q.initWithRPY(roll, pitch, yaw);
+        return q;
+    }
 
     QuaternionT() = default;
     QuaternionT(T x_, T y_, T z_, T w_) : x(x_), y(y_), z(z_), w(w_) {}

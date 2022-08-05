@@ -18,12 +18,12 @@ public:
     Pose2(float x, float y, float ori_) : pos(x, y), ori(ori_) {}
 };
 
-forceinline bool operator==(Pose2 l, Pose2 r)
+forceinline bool operator==(const Pose2& l, const Pose2& r)
 {
     return l.pos == r.pos && l.ori == r.ori;
 }
 
-forceinline bool operator!=(Pose2 l, Pose2 r)
+forceinline bool operator!=(const Pose2& l, const Pose2& r)
 {
     return l.pos != r.pos || l.ori != r.ori;
 }
