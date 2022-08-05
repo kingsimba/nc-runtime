@@ -12,10 +12,12 @@ public:
     Vector2 pos;
     float ori;
 
-    float oriInDegree() const { return nc_radianToDegree(this->ori); }
+    forceinline float oriInDegree() const { return nc_radianToDegree(this->ori); }
 
     Pose2() = default;
-    Pose2(float x, float y, float ori_) : pos(x, y), ori(ori_) {}
+    forceinline Pose2(const Pose2& r) : pos(r.pos), ori(r.ori) {}
+    forceinline Pose2(const Vector2& pos_, float ori_) : pos(pos_), ori(ori_) {}
+    forceinline Pose2(float x, float y, float ori_) : pos(x, y), ori(ori_) {}
 };
 
 forceinline bool operator==(const Pose2& l, const Pose2& r)

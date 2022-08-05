@@ -10,7 +10,8 @@
         "${workspaceFolder}/../3rd-party/include",
         "/opt/ros/melodic/include/**",
         "/opt/ax-platform/include/**",
-        "/usr/include/**"
+        "/usr/include/**",
+        "/opt/ros/noetic/include"
       ],
       "name": "ROS"
     }

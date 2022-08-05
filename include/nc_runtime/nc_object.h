@@ -1,5 +1,7 @@
 #pragma once
 
+// cspell:ignore -Wunused
+
 #include "nc_types.h"
 #include "string_slice.h"
 

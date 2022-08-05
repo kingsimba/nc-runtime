@@ -60,6 +60,14 @@ public:
         this->w = w_;
     }
 
+    forceinline void set(T x_, T y_, T z_, T w_)
+    {
+        this->x = x_;
+        this->y = y_;
+        this->z = z_;
+        this->w = w_;
+    }
+
     forceinline void initWithIdentity()
     {
         this->x = this->y = this->z = 0;
