@@ -1,8 +1,7 @@
 #include "stdafx_nc_runtime_test.h"
-#include "nc_runtime/pose2.h"
 #include "nc_runtime/pose3.h"
 
-TEST(PoseTest, pose3)
+TEST(Pose3Test, pose3)
 {
     Pose3 pose;
 
@@ -28,7 +27,7 @@ TEST(PoseTest, pose3)
     EXPECT_NEAR(pose.ori.toRPY().yaw, 0.3, 0.0001);
 }
 
-TEST(PoseTest, inverse)
+TEST(Pose3Test, inverse)
 {
     Quaternion ori = Quaternion::makeWithRPY(0.1f, 0.2f, 0.3f);
     Pose3 pose(Vector3(1, 2, 3), ori);
@@ -37,7 +36,7 @@ TEST(PoseTest, inverse)
     EXPECT_EQ(pose.ori, ori.inverse());
 }
 
-TEST(PoseTest, concatenate)
+TEST(Pose3Test, concatenate)
 {
     Pose3 pose(Vector3(0, 1, 0), Quaternion::makeWithRPY(0, 0, NC_PI_4));
     Pose3 pose2(Vector3(sqrt(2) / 2, sqrt(2) / 2, 0), Quaternion::makeWithRPY(0, 0, NC_PI_4));

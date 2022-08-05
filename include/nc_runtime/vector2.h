@@ -46,6 +46,12 @@ public:
     }
 
     forceinline Vector2T operator-() const { return Vector2T(-x, -y); }
+    forceinline Vector2T rotate(float angle) const
+    {
+        float c = cosf(angle);
+        float s = sinf(angle);
+        return Vector2T(c * x - s * y, s * x + c * y);
+    }
 };
 
 template <typename T>
