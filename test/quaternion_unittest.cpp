@@ -10,6 +10,7 @@ protected:
 TEST_F(QuaternionTest, basic)
 {
     EXPECT_EQ(m_q, Quaternion(0, 0, 0, 1));
+    EXPECT_EQ(Quaternion(0, 0, 0, 1).inverse(), Quaternion(0, 0, 0, -1));
 
     Quaternion q;
     q.initWithRPY(1, 0, 0);

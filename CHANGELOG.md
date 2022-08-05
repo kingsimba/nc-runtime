@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-08-05 Add `Quaternion::inverse()`, `Pose::inverse()`, Pose concatenation. Vector unary minus operator.
 - 2022-08-05 Add ROS type conversion for `Vector3`, `Quaternion` and `Pose`.
 - 2022-08-05 Add `Pose3`.
 - 2022-08-03 Add `LineParser`.

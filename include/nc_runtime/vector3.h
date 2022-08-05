@@ -49,6 +49,8 @@ public:
         y /= r;
         z /= r;
     }
+
+    forceinline Vector3T operator-() const { return Vector3T(-x, -y, -z); }
 };
 
 template <typename T>

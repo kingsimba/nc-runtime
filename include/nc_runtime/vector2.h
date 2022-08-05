@@ -44,6 +44,8 @@ public:
         x /= r;
         y /= r;
     }
+
+    forceinline Vector2T operator-() const { return Vector2T(-x, -y); }
 };
 
 template <typename T>

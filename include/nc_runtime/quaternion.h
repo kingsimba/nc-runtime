@@ -74,6 +74,8 @@ public:
         this->w = 1;
     }
 
+    forceinline QuaternionT inverse() const { return QuaternionT(x, y, z, -w); }
+
     void initWithRPY(T roll, T pitch, T yaw);
     forceinline void initWithRPY(RollPitchYawT<T> rpy) { initWithRPY(rpy.roll, rpy.pitch, rpy.yaw); }
 
@@ -85,6 +87,18 @@ public:
 
 template <typename T>
 QuaternionT<T> Quaternion_multiply(const QuaternionT<T>& second, const QuaternionT<T>& first);
+
+template <typename T>
+forceinline QuaternionT<T> operator*(const QuaternionT<T>& second, const QuaternionT<T>& first)
+{
+    return Quaternion_multiply(second, first);
+}
+
+template <typename T>
+forceinline Vector3T<T> operator*(const QuaternionT<T>& ori, const Vector3T<T>& v)
+{
+    return ori.transformVector(v);
+}
 
 template <typename T>
 forceinline bool operator==(const QuaternionT<T>& l, const QuaternionT<T>& r)

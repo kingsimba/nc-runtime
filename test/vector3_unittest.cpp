@@ -28,6 +28,8 @@ TEST_F(Vector3Test, basicFloat)
 
     EXPECT_EQ(Vector3(3, 4, 5).length(), sqrtf(50));
     EXPECT_EQ(Vector3(3, 4, 5).lengthSquared(), 50);
+
+    EXPECT_EQ(-Vector3(1, 2, 3), Vector3(-1, -2, -3));
 }
 
 TEST_F(Vector3Test, basicInt)

@@ -22,6 +22,8 @@ public:
         return Pose3(Vector3(pose2.pos.x, pose2.pos.y, 0), Quaternion::makeWithRPY(0, 0, pose2.ori));
     }
 
+    forceinline Pose3 inverse() const { return Pose3(-this->pos, this->ori.inverse()); }
+
     forceinline Pose2 toPose2() const { return Pose2(this->pos.x, this->pos.y, this->ori.toRPY().yaw); }
 };
 
@@ -33,6 +35,11 @@ forceinline bool operator==(const Pose3& l, const Pose3& r)
 forceinline bool operator!=(const Pose3& l, const Pose3& r)
 {
     return l.pos != r.pos || l.ori != r.ori;
+}
+
+forceinline Pose3 operator*(const Pose3& l, const Pose3& r)
+{
+    return Pose3(l.pos + l.ori * r.pos, l.ori * r.ori);
 }
 
 } // namespace nc
