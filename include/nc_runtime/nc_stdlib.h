@@ -41,23 +41,23 @@ forceinline void nc_flipI32(i32& val)
     val = (i32)(((u32)(val) << 16) | ((u32)(val) >> 16));
 }
 
-forceinline u16 nc_swapU16(u16 val)
+forceinline u16 nc_swapEndian(u16 val)
 {
     return (val << 8) | (val >> 8);
 }
 
-forceinline u32 nc_swapU32(u32 val)
+forceinline u32 nc_swapEndian(u32 val)
 {
     val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
     return (val << 16) | (val >> 16);
 }
 
-forceinline i16 nc_swapI16(i16 val)
+forceinline i16 nc_swapEndian(i16 val)
 {
     return (i16)((u16)(val) << 8) | ((u16)(val) >> 8);
 }
 
-forceinline i32 nc_swapI32(i32 val)
+forceinline i32 nc_swapEndian(i32 val)
 {
     val = (i32)((((u32)(val) << 8) & 0xFF00FF00) | (((u32)(val) >> 8) & 0xFF00FF));
     return (i32)(((u32)(val) << 16) | ((u32)(val) >> 16));
