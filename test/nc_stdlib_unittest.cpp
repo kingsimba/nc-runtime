@@ -150,11 +150,11 @@ TEST(Stdlib, flip)
     EXPECT_EQ(a, 0x04030201u);
     EXPECT_EQ(b, 0x0201u);
 
-    EXPECT_EQ(nc_swapU16(0x0102), 0x0201);
-    EXPECT_EQ(nc_swapU32(0x01020304), 0x04030201);
+    EXPECT_EQ(nc_swapEndian(0x0102u), 0x0201u);
+    EXPECT_EQ(nc_swapEndian(0x01020304u), 0x04030201u);
 
-    EXPECT_EQ(nc_swapI16((i16)0x0102), (i16)0x0201);
-    EXPECT_EQ(nc_swapI32((i32)0x01020304), (i32)0x04030201);
+    EXPECT_EQ(nc_swapEndian((i16)0x0102), (i16)0x0201);
+    EXPECT_EQ(nc_swapEndian((i32)0x01020304), (i32)0x04030201);
 }
 
 TEST(Stdlib, rect)
