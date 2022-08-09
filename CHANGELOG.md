@@ -1,5 +1,6 @@
 # Changelog
 
+- 2022-08-09 Add `nc_swapI16`, `nc_swapI32`, `nc_swapU16`, `nc_swapU32`.
 - 2022-08-05 Add `Quaternion::inverse()`, `Pose::inverse()`, Pose concatenation. Vector unary minus operator.
 - 2022-08-05 Add ROS type conversion for `Vector3`, `Quaternion` and `Pose`.
 - 2022-08-05 Add `Pose3`.

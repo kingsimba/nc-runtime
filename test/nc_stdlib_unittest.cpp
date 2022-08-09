@@ -139,13 +139,22 @@ TEST(Stdlib, absMinMaxClampSwap)
 
     EXPECT_EQ(nc_ntohl(0x01020304), 0x04030201u);
     EXPECT_EQ(nc_ntohs(0x0102), 0x0201u);
+}
 
+TEST(Stdlib, flip)
+{
     u32 a = 0x01020304;
     u16 b = 0x0102;
     nc_flipU32(a);
     nc_flipU16(b);
     EXPECT_EQ(a, 0x04030201u);
     EXPECT_EQ(b, 0x0201u);
+
+    EXPECT_EQ(nc_swapU16(0x0102), 0x0201);
+    EXPECT_EQ(nc_swapU32(0x01020304), 0x04030201);
+
+    EXPECT_EQ(nc_swapI16((i16)0x0102), (i16)0x0201);
+    EXPECT_EQ(nc_swapI32((i32)0x01020304), (i32)0x04030201);
 }
 
 TEST(Stdlib, rect)
