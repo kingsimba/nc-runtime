@@ -22,13 +22,16 @@ public:
     ~MyString(){};
 };
 
-TEST(NcObject, selfCopy)
+TEST(NcObject, selfAssign)
 {
     auto box = MyBox::alloc();
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wself-assign-overloaded" // cspell:disable-line
+#ifdef __clang__
+#    pragma clang diagnostic ignored "-Wself-assign-overloaded" // cspell:disable-line
+#endif
     box = box;
-#pragma clang diagnostic pop
+#ifdef __clang__
+#    pragma clang diagnostic pop
+#endif
     EXPECT_EQ(box->retainCount(), 1);
 }
 
