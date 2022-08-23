@@ -111,6 +111,7 @@ public:
     Some<u32> asU32();
     Some<const char*> asString();
     Some<float> asFloat();
+    Some<double> asDouble();
     Some<bool> asBool();
     JsonNode asArray();
     int arraySize();

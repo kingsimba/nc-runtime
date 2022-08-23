@@ -153,6 +153,14 @@ Some<float> JsonNode::asFloat()
         return noValue;
 }
 
+Some<double> JsonNode::asDouble()
+{
+    if (json_is_number(m_root))
+        return (double)json_number_value(m_root);
+    else
+        return noValue;
+}
+
 Some<bool> JsonNode::asBool()
 {
     if (json_is_boolean(m_root))
